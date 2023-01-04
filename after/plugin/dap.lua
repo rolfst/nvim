@@ -1,0 +1,298 @@
+local global = require("rolfst.global")
+print('setting up dap')
+local dapui_status_ok, dapui = pcall(require, "dapui")
+if not dapui_status_ok then
+    return
+end
+local dap_status_ok, dap = pcall(require, "dap")
+if not dap_status_ok then
+    return
+end
+dapui.setup({
+    icons = {
+        expanded = "▾",
+        collapsed = "▸",
+    },
+    mappings = {
+        expand = {
+            "<CR>",
+            "<2-LeftMouse>",
+        },
+        open = "o",
+        remove = "d",
+        edit = "e",
+        repl = "r",
+    },
+    layouts = {
+        {
+            elements = {
+                { id = "scopes", size = 0.33 },
+                { id = "breakpoints", size = 0.17 },
+                { id = "stacks", size = 0.25 },
+                { id = "watches", size = 0.25 },
+            },
+            size = 0.33,
+            position = "right",
+        },
+        {
+            elements = {
+                { id = "repl", size = 0.45 },
+                { id = "console", size = 0.55 },
+            },
+            size = 0.27,
+            position = "bottom",
+        },
+    },
+    floating = {
+        max_height = 0.9,
+        max_width = 0.5, -- Floats will be treated as percentage of your screen.
+        border = vim.g.border_chars, -- Border style. Can be 'single', 'double' or 'rounded'
+        mappings = {
+            close = { "q", "<Esc>" },
+        },
+    },
+    windows = {
+        indent = 1,
+    },
+    controls = {
+        enabled = true,
+        element = "repl",
+        icons = {
+            pause = "",
+            play = "",
+            step_over = "",
+            step_into = "",
+            step_back = "",
+            step_out = "",
+            run_last = "",
+            terminate = "",
+        },
+    },
+})
+dap.listeners.after.event_initialized["dapui_config"] = function()
+    dapui.open({})
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+    dapui.close({})
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+    dapui.close({})
+end
+vim.fn.sign_define("DapBreakpoint", {
+    text = "",
+    texthl = "",
+    linehl = "",
+    numhl = "",
+})
+vim.fn.sign_define("DapStopped", {
+    text = "",
+    texthl = "",
+    linehl = "",
+    numhl = "",
+})
+vim.fn.sign_define("DapLogPoint", {
+    text = "▶",
+    texthl = "",
+    linehl = "",
+    numhl = "",
+})
+vim.api.nvim_create_user_command("LuaDapLaunch", 'lua require"osv".run_this()', {})
+vim.api.nvim_create_user_command("DapToggleBreakpoint", 'lua require("dap").toggle_breakpoint()', {})
+vim.api.nvim_create_user_command("DapContinue", 'lua require"dap".continue()', {})
+vim.api.nvim_create_user_command("DapStepInto", 'lua require"dap".step_into()', {})
+vim.api.nvim_create_user_command("DapStepOver", 'lua require"dap".step_over()', {})
+vim.api.nvim_create_user_command("DapStepOut", 'lua require"dap".step_out()', {})
+vim.api.nvim_create_user_command("DapUp", 'lua require"dap".up()', {})
+vim.api.nvim_create_user_command("DapDown", 'lua require"dap".down()', {})
+vim.api.nvim_create_user_command("DapPause", 'lua require"dap".pause()', {})
+vim.api.nvim_create_user_command("DapClose", 'lua require"dap".close()', {})
+vim.api.nvim_create_user_command("DapDisconnect", 'lua require"dap".disconnect()', {})
+vim.api.nvim_create_user_command("DapRestart", 'lua require"dap".restart()', {})
+vim.api.nvim_create_user_command("DapToggleRepl", 'lua require"dap".repl.toggle()', {})
+vim.api.nvim_create_user_command("DapGetSession", 'lua require"dap".session()', {})
+vim.api.nvim_create_user_command(
+    "DapUIClose",
+    'lua require"dap".close(); require"dap".disconnect(); require"dapui".close()',
+    {}
+)
+vim.keymap.set("n", "<A-1>", function()
+    dap.toggle_breakpoint()
+end, { noremap = true, silent = true, desc = "DapToggleBreakpoint" })
+vim.keymap.set("n", "<A-2>", function()
+    dap.continue()
+end, { noremap = true, silent = true, desc = "DapContinue" })
+vim.keymap.set("n", "<A-3>", function()
+    dap.step_into()
+end, { noremap = true, silent = true, desc = "DapStepInto" })
+vim.keymap.set("n", "<A-4>", function()
+    dap.step_over()
+end, { noremap = true, silent = true, desc = "DapStepOver" })
+vim.keymap.set("n", "<A-5>", function()
+    dap.step_out()
+end, { noremap = true, silent = true, desc = "DapStepOut" })
+vim.keymap.set("n", "<A-6>", function()
+    dap.up()
+end, { noremap = true, silent = true, desc = "DapUp" })
+vim.keymap.set("n", "<A-7>", function()
+    dap.down()
+end, { noremap = true, silent = true, desc = "DapDown" })
+vim.keymap.set("n", "<A-8>", function()
+    dap.close()
+    dap.disconnect()
+    dapui.close()
+end, { noremap = true, silent = true, desc = "DapUIClose" })
+vim.keymap.set("n", "<A-9>", function()
+    dap.restart()
+end, { noremap = true, silent = true, desc = "DapRestart" })
+vim.keymap.set("n", "<A-0>", function()
+    dap.repl.toggle()
+end, { noremap = true, silent = true, desc = "DapToggleRepl" })
+
+local dap_vscode_js_status_ok, dap_vscode_js = pcall(require, "dap-vscode-js")
+if not dap_vscode_js_status_ok then
+    return
+end
+dap_vscode_js.setup({
+    node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+    debugger_path = global.mason_path .. "/bin/vscode-js-debug", -- Path to vscode-js-debug installation.
+    debugger_cmd = { "js-debug-adapter" }, -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+    adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }, -- which adapters to register in nvim-dap
+})
+
+dap.configurations.javascript = {
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Launch file",
+        program = "${file}",
+        cwd = "${workspaceFolder}",
+    },
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Choose file",
+        program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+        end,
+        cwd = "${workspaceFolder}",
+    },
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Debug Jest Tests",
+        -- trace = true, -- include debugger info
+        runtimeExecutable = "node",
+        runtimeArgs = {
+            "./node_modules/jest/bin/jest.js",
+            "--runInBand",
+        },
+        rootPath = "${workspaceFolder}",
+        cwd = "${workspaceFolder}",
+        console = "integratedTerminal",
+        internalConsoleOptions = "neverOpen",
+    },
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Debug Mocha Tests",
+        -- trace = true, -- include debugger info
+        runtimeExecutable = "node",
+        runtimeArgs = {
+            "./node_modules/mocha/bin/mocha.js",
+        },
+        rootPath = "${workspaceFolder}",
+        cwd = "${workspaceFolder}",
+        console = "integratedTerminal",
+        internalConsoleOptions = "neverOpen",
+    },
+    {
+        type = "pwa-node",
+        request = "attach",
+        name = "Attach",
+        processId = require("dap.utils").pick_process,
+        cwd = "${workspaceFolder}",
+    },
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Debug Jest Tests",
+        trace = true,
+        runtimeExecutable = "node",
+        runtimeArgs = {
+            "./node_modules/jest/bin/jest.js",
+            "--runInBand",
+        },
+        rootPath = "${workspaceFolder}",
+        cwd = "${workspaceFolder}",
+        console = "integratedTerminal",
+        internalConsoleOptions = "neverOpen",
+    },
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Debug Mocha Tests",
+        trace = true,
+        runtimeExecutable = "node",
+        runtimeArgs = {
+            "./node_modules/mocha/bin/mocha.js",
+        },
+        rootPath = "${workspaceFolder}",
+        cwd = "${workspaceFolder}",
+        console = "integratedTerminal",
+        internalConsoleOptions = "neverOpen",
+    },
+}
+dap.configurations.typescript = {
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Launch file",
+        program = "${file}",
+        cwd = "${workspaceFolder}",
+    },
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Choose file",
+        program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+        end,
+        cwd = "${workspaceFolder}",
+    },
+    {
+        type = "pwa-node",
+        request = "attach",
+        name = "Attach",
+        processId = require("dap.utils").pick_process,
+        cwd = "${workspaceFolder}",
+    },
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Debug Jest Tests",
+        trace = true, -- include debugger info
+        runtimeExecutable = "node",
+        runtimeArgs = {
+            "./node_modules/jest/bin/jest.js",
+            "--runInBand",
+        },
+        rootPath = "${workspaceFolder}",
+        cwd = "${workspaceFolder}",
+        console = "integratedTerminal",
+        internalConsoleOptions = "neverOpen",
+    },
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Debug Mocha Tests",
+        trace = true, -- include debugger info
+        runtimeExecutable = "node",
+        runtimeArgs = {
+            "./node_modules/mocha/bin/mocha.js",
+        },
+        rootPath = "${workspaceFolder}",
+        cwd = "${workspaceFolder}",
+        console = "integratedTerminal",
+        internalConsoleOptions = "neverOpen",
+    },
+}

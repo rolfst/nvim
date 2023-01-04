@@ -1,0 +1,6 @@
+vim.keymap.set("n", "<C-n>", function()
+    vim.cmd("BufSurfForward")
+end, { noremap = true, silent = true, desc = "BufSurfForward" })
+vim.keymap.set("n", "<C-p>", function()
+    vim.cmd("BufSurfBack")
+end, { noremap = true, silent = true, desc = "BufSurfBack" })
