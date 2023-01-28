@@ -13,7 +13,7 @@ M.default_config = function(file_types)
 		autostart = true,
 		filetypes = file_types,
 		on_attach = function(client, bufnr)
-			languages_setup.keymaps(client, bufnr)
+			-- languages_setup.keymaps(client, bufnr)
 			languages_setup.omni(client, bufnr)
 			languages_setup.tag(client, bufnr)
 			languages_setup.document_highlight(client, bufnr)
@@ -35,7 +35,7 @@ M.without_formatting = function(file_types)
 		autostart = true,
 		filetypes = file_types,
 		on_attach = function(client, bufnr)
-			languages_setup.keymaps(client, bufnr)
+			-- languages_setup.keymaps(client, bufnr)
 			languages_setup.omni(client, bufnr)
 			languages_setup.tag(client, bufnr)
 			languages_setup.document_highlight(client, bufnr)
@@ -70,7 +70,7 @@ M.cpp_config = function(file_types)
 		filetypes = file_types,
 		on_attach = function(client, bufnr)
 			client.offset_encoding = "utf-16"
-			languages_setup.keymaps(client, bufnr)
+			-- languages_setup.keymaps(client, bufnr)
 			languages_setup.omni(client, bufnr)
 			languages_setup.tag(client, bufnr)
 			languages_setup.document_highlight(client, bufnr)
@@ -93,7 +93,7 @@ M.omnisharp_config = function(file_types)
 		autostart = true,
 		filetypes = file_types,
 		on_attach = function(client, bufnr)
-			languages_setup.keymaps(client, bufnr)
+			-- languages_setup.keymaps(client, bufnr)
 			languages_setup.omni(client, bufnr)
 			languages_setup.tag(client, bufnr)
 			languages_setup.document_highlight(client, bufnr)
@@ -116,7 +116,7 @@ M.elixir_config = function(file_types)
 		autostart = true,
 		filetypes = file_types,
 		on_attach = function(client, bufnr)
-			languages_setup.keymaps(client, bufnr)
+			-- languages_setup.keymaps(client, bufnr)
 			languages_setup.omni(client, bufnr)
 			languages_setup.tag(client, bufnr)
 			languages_setup.document_highlight(client, bufnr)
@@ -138,7 +138,7 @@ M.go = function(file_types)
 		autostart = true,
 		filetypes = file_types,
 		on_attach = function(client, bufnr)
-			languages_setup.keymaps(client, bufnr)
+			-- languages_setup.keymaps(client, bufnr)
 			languages_setup.omni(client, bufnr)
 			languages_setup.tag(client, bufnr)
 			languages_setup.document_highlight(client, bufnr)
@@ -226,7 +226,7 @@ M.angular_config = function(file_types)
 		autostart = true,
 		filetypes = file_types,
 		on_attach = function(client, bufnr)
-			languages_setup.keymaps(client, bufnr)
+			-- languages_setup.keymaps(client, bufnr)
 			languages_setup.omni(client, bufnr)
 			languages_setup.tag(client, bufnr)
 			languages_setup.document_highlight(client, bufnr)
@@ -245,7 +245,7 @@ M.ember_config = function(file_types)
 		autostart = true,
 		filetypes = file_types,
 		on_attach = function(client, bufnr)
-			languages_setup.keymaps(client, bufnr)
+			-- languages_setup.keymaps(client, bufnr)
 			languages_setup.omni(client, bufnr)
 			languages_setup.tag(client, bufnr)
 			languages_setup.document_highlight(client, bufnr)
