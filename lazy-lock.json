@@ -19,6 +19,7 @@
   "lightspeed.nvim": { "branch": "main", "commit": "299eefa6a9e2d881f1194587c573dad619fdb96f" },
   "lsp-inlayhints.nvim": { "branch": "main", "commit": "84ca3abe8aaecbb5b30ad89e4701d4a9c821b72c" },
   "lsp-zero.nvim": { "branch": "main", "commit": "40bbc05831ff63c52793571b0ec68932a8fd6620" },
+  "markdown-preview.nvim": { "branch": "master", "commit": "02cc3874738bc0f86e4b91f09b8a0ac88aef8e96" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "c29f9a9f9b01528ca6a44cd14814f5af20778f7a" },
   "mason.nvim": { "branch": "main", "commit": "e7303a1632c004ebd2dcd0be1aaa4354586c030b" },
   "neogen": { "branch": "main", "commit": "465af9d6c6fb7f360175991dcc23fc10917e3a06" },
