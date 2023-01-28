@@ -14,7 +14,7 @@ vim.opt.sessionoptions = "curdir,help,tabpages,winsize"
 vim.opt.clipboard = "unnamedplus"
 vim.opt.wildignorecase = true
 vim.opt.wildignore =
-".git,.hg,.svn,*.pyc,*.o,*.out,*.jpg,*.jpeg,*.png,*.gif,*.zip,**/tmp/**,*.DS_Store,**/node_modules/**,**/bower_modules/**"
+	".git,.hg,.svn,*.pyc,*.o,*.out,*.jpg,*.jpeg,*.png,*.gif,*.zip,**/tmp/**,*.DS_Store,**/node_modules/**,**/bower_modules/**"
 vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.swapfile = false
@@ -96,7 +96,7 @@ vim.opt.foldenable = true
 vim.opt.signcolumn = "yes"
 vim.opt.conceallevel = 2
 vim.opt.concealcursor = "nc"
-vim.opt.foldmethod = "indent"
+vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.cursorline = true
 vim.opt.colorcolumn = "100"

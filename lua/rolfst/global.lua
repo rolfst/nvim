@@ -24,6 +24,7 @@ function global:load_variables()
     self.modules_path = home .. "/.config/nvim/lua/modules"
     self.global_config = home .. "/.config/nvim/lua/config/global"
     self.custom_config = home .. "/.config/nvim/lua/config/custom"
+    self.languages = {}
     self.home = home
     self.mason_path = home .. "/.local/share/nvim/mason"
 end
