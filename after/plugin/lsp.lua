@@ -254,7 +254,6 @@ local null_ls_options = lsp.build_options("null-ls", {})
 null_ls.setup({
 	debug = false,
 	on_attach = function(client, bufnr)
-		print("setting up null-ls")
 		null_ls_options.on_attach(client, bufnr)
 		if client.server_capabilities.documentFormattingProvider then
 			vim.api.nvim_create_autocmd("BufWritePre", {

@@ -23,10 +23,6 @@ require("lazy").setup({
 		"ibhagwan/fzf-lua",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		cmd = "FzfLua",
-		-- config = function()
-		-- 	require("rolfst.modules.fzf-lua").setup()
-		-- end,
-		-- lazy = true,
 	},
 	-- { "nvim-telescope/telescope-fzf-native.nvim", lazy = true },
 	-- { "nvim-telescope/telescope-file-browser.nvim", lazy = true },
@@ -197,12 +193,6 @@ require("lazy").setup({
 	},
 	-- Test plugins
 
-	"rouge8/neotest-rust",
-	"nvim-neotest/neotest-python",
-	"MrcJkb/neotest-haskell",
-	-- "jfpedroza/neotest-elixir",
-	-- "nvim-neotest/neotest-go",
-	-- "olimorris/neotest-phpunit",
 	{
 		"nvim-neotest/neotest",
 		dependencies = {
@@ -242,8 +232,8 @@ require("lazy").setup({
 			"nvim-lua/plenary.nvim",
 		},
 	},
-	-- UI plugins
 
+	-- UI plugins
 	{ "nvim-tree/nvim-web-devicons" },
 	{ "SmiteshP/nvim-navic" },
 	{
@@ -260,12 +250,6 @@ require("lazy").setup({
 		end,
 		lazy = true,
 	},
-	-- {"simrat39/inlay-hints.nvim",
-	--     config = function()
-	--         require("rolfst.modules.lsp-inlayhints").setup()
-	--     end,
-	-- },
-	-- Search
 	{ "ggandor/lightspeed.nvim", dependencies = {
 		"tpope/vim-repeat",
 	} },
