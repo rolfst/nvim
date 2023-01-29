@@ -101,9 +101,6 @@ require("lazy").setup({
 	-- Util plugins
 	{ "tpope/vim-repeat" },
 	{ "folke/trouble.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
-	{ "ton/vim-bufsurf", event = {
-		"BufRead",
-	} },
 	{
 		"numToStr/Comment.nvim",
 		event = {
@@ -113,25 +110,12 @@ require("lazy").setup({
 			require("rolfst.modules.comment").setup()
 		end,
 	},
-	{ "winston0410/rg.nvim", event = {
-		"BufRead",
-	} },
 	{
 		"vim-ctrlspace/vim-ctrlspace",
 		keys = {
 			{ "<space><space>", "<Cmd>CtrlSpace<CR>", desc = "CtrlSpace" },
 		},
 		cmd = "CtrlSpace",
-	},
-
-	{
-		"nanozuki/tabby.nvim",
-		dependencies = {
-			"vim-ctrlspace/vim-ctrlspace",
-		},
-		event = {
-			"BufRead",
-		},
 	},
 	{
 		"windwp/nvim-autopairs",

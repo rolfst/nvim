@@ -42,11 +42,8 @@ provides. Plugins are installed using [Lazy](https://github.com/folke/lazy.nvim)
     danymat/neogen
     tpope/vim-repeat
     folke/trouble.nvim
-    ton/vim-bufsurf
     numToStr/Comment.nvim
-    winston0410/rg.nvim
     vim-ctrlspace/vim-ctrlspace
-    nanozuki/tabby.nvim
     windwp/nvim-autopairs
     kylechui/nvim-surround
     pechorin/any-jump.vim
@@ -55,6 +52,7 @@ provides. Plugins are installed using [Lazy](https://github.com/folke/lazy.nvim)
     kevinhwang91/nvim-bqf
     yorickpeterse/nvim-pqf
     dnlhc/glance.nvim
+    iamcco/markdown-preview.nvim
 ### DAP plugins
     mfussenegger/nvim-dap
     mxsdev/nvim-dap-vscode-js
