@@ -3,6 +3,7 @@ if not status_ok then
 	return false
 end
 
+local actions = require("fzf-lua.actions")
 fzf_lua.setup({
 	winopts = {
 		height = 0.90,
@@ -19,12 +20,28 @@ fzf_lua.setup({
 			scrollbar = "float",
 		},
 	},
+	actions = {
+		files = {
+			["default"] = actions.file_edit_or_qf,
+			["ctrl-h"] = actions.file_split,
+			["ctrl-v"] = actions.file_vsplit,
+			["alt-q"] = actions.file_sel_to_qf,
+			["alt-l"] = actions.file_sel_to_ll,
+		},
+		buffers = {
+			["default"] = actions.buf_edit,
+			["ctrl-h"] = actions.buf_split,
+			["ctrl-v"] = actions.buf_vsplit,
+		},
+	},
 	keymap = {
 		builtin = {
+			["<F1>"] = "toggle-help",
+			["<F2>"] = "toggle-fullscreen",
 			["<F10>"] = "toggle-preview",
-			["<F11>"] = "toggle-fullscreen",
-			["<S-Down>"] = "preview-page-down",
-			["<S-Up>"] = "preview-page-up",
+			["<F11>"] = "toggle-preview-ccw",
+			["<ctrl-d>"] = "preview-page-down",
+			["<ctrl-u>"] = "preview-page-up",
 		},
 		fzf = {
 			["ctrl-a"] = "toggle-all",
