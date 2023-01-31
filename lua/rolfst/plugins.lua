@@ -243,4 +243,5 @@ require("lazy").setup({
 	{ "ggandor/lightspeed.nvim", dependencies = {
 		"tpope/vim-repeat",
 	} },
+	{ "kevinhwang91/nvim-ufo", dependencies = { "kevinhwang91/promise-async" } },
 })
