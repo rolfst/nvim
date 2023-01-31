@@ -27,7 +27,6 @@ vim.api.nvim_create_user_command("LspImplementation", "lua vim.lsp.buf.implement
 vim.api.nvim_create_user_command("LspIncomingCalls", "lua vim.lsp.buf.incoming_calls()", {})
 vim.api.nvim_create_user_command("LspOutgoingCalls", "lua vim.lsp.buf.outgoing_calls()", {})
 vim.api.nvim_create_user_command("LspFormat", "lua vim.lsp.buf.format {async = true}", {})
-vim.api.nvim_create_user_command("LspRename", "lua vim.lsp.buf.rename()", {})
 vim.api.nvim_create_user_command("LspSignatureHelp", "lua vim.lsp.buf.signature_help()", {})
 vim.api.nvim_create_user_command("LspShowDiagnosticCurrent", "lua require('rolfst.utils.show_diagnostic').line()", {})
 local icons = require("rolfst.icons")
@@ -44,6 +43,9 @@ if not snip_status_ok then
 	return
 end
 require("luasnip.loaders.from_vscode").lazy_load()
+require("luasnip.loaders.from_lua").lazy_load({ paths = { global.snippets_path .. "/luasnippets" } })
+vim.api.nvim_create_user_command("LuaSnipEdit", "lua require'luasnip.loaders.from_lua'.edit_snippet_files()", {})
+vim.keymap.set("n", "<space>sne", ":LuaSnipEdit<cr>", { desc = "Edit lua snippet" })
 local check_backspace = function()
 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
@@ -90,46 +92,56 @@ lsp.ensure_installed({
 	"pyright",
 	"eslint",
 })
-local cmp = require("cmp")
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings({
-	["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-	["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
-	["<C-y>"] = cmp.mapping.confirm({ select = true }),
-	["<C-space>"] = cmp.mapping.complete(cmp_select),
-	["<C-d>"] = cmp.mapping.scroll_docs(4),
-	["<C-u>"] = cmp.mapping.scroll_docs(-4),
-	["<C-c>"] = cmp.mapping.close(),
-	["<CR>"] = cmp.mapping.confirm({
-		behavior = cmp.ConfirmBehavior.Replace,
-		select = true,
+lsp.setup_nvim_cmp({
+	mapping = cmp.mapping.preset.insert({
+		["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
+		["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
+		["<C-y>"] = cmp.mapping.confirm({ select = true }),
+		["<C-space>"] = cmp.mapping.complete(cmp_select),
+		["<C-d>"] = cmp.mapping.scroll_docs(4),
+		["<C-u>"] = cmp.mapping.scroll_docs(-4),
+		["<C-c>"] = cmp.mapping.close(),
+		["<C-l>"] = cmp.mapping({
+			i = function(fallback)
+				if luasnip.choice_active() then
+					luasnip.change_choice(1)
+				else
+					fallback()
+				end -- code
+			end,
+		}),
+		["<CR>"] = cmp.mapping.confirm({
+			behavior = cmp.ConfirmBehavior.Replace,
+			select = true,
+		}),
+		["<Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			-- elseif luasnip.expandable() then
+			-- 	luasnip.expand()
+			elseif luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
+			elseif require("neogen").jumpable() then
+				require("neogen").jump_next()
+			elseif check_backspace() then
+				fallback()
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
+		["<S-Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif luasnip.jumpable(-1) then
+				luasnip.jump(-1)
+			elseif require("neogen").jumpable() then
+				require("neogen").jump_prev()
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
 	}),
-	["<Tab>"] = cmp.mapping(function(fallback)
-		if cmp.visible() then
-			cmp.select_next_item()
-		elseif luasnip.expandable() then
-			luasnip.expand()
-		elseif luasnip.expand_or_jumpable() then
-			luasnip.expand_or_jump()
-		elseif require("neogen").jumpable() then
-			require("neogen").jump_next()
-		elseif check_backspace() then
-			fallback()
-		else
-			fallback()
-		end
-	end, { "i", "s" }),
-	["<S-Tab>"] = cmp.mapping(function(fallback)
-		if cmp.visible() then
-			cmp.select_prev_item()
-		elseif luasnip.jumpable(-1) then
-			luasnip.jump(-1)
-		elseif require("neogen").jumpable() then
-			require("neogen").jump_prev()
-		else
-			fallback()
-		end
-	end, { "i", "s" }),
 })
 
 lsp.setup_nvim_cmp({
@@ -185,38 +197,20 @@ lsp.on_attach(function(client, bufnr)
 	--    ih.on_attach(client, bufnr)
 	-- end
 
-	vim.keymap.set("n", "gd", function()
-		vim.lsp.buf.definition()
-	end, describe("definition"))
-	vim.keymap.set("n", "gi", function()
-		vim.lsp.buf.implementation()
-	end, describe("Implementation"))
 	vim.keymap.set("n", "gt", function()
 		vim.lsp.buf.type_definition()
 	end, describe("LspTypeDefinition"))
-	vim.keymap.set("n", "K", function()
-		vim.lsp.buf.hover()
-	end, describe("hover signature"))
-	vim.keymap.set("n", "gws", function()
-		vim.lsp.buf.workspace_symbol()
-	end, opts)
-	vim.keymap.set("n", "gds", function()
-		vim.lsp.buf.document_symbol()
-	end, opts)
+	-- vim.keymap.set("n", "gws", function()
+	-- 	vim.lsp.buf.workspace_symbol()
+	-- end, opts)
+	-- vim.keymap.set("n", "gds", function()
+	-- 	vim.lsp.buf.document_symbol()
+	-- end, opts)
 	vim.keymap.set("n", "dc", function()
 		vim.diagnostic.open_float()
 	end, opts)
-	vim.keymap.set("n", "[d", function()
-		vim.diagnostic.goto_next()
-	end, opts)
-	vim.keymap.set("n", "]d", function()
-		vim.diagnostic.goto_prev()
-	end, opts)
 	vim.keymap.set("n", "ga", function()
 		vim.lsp.buf.code_action()
-	end, opts)
-	vim.keymap.set("n", "gr", function()
-		vim.lsp.buf.references()
 	end, opts)
 	vim.keymap.set("n", "gR", function()
 		vim.lsp.buf.rename()
@@ -244,6 +238,9 @@ lsp.on_attach(function(client, bufnr)
 	end, opts)
 end)
 
+lsp.set_preferences({
+	set_lsp_keymaps = { omit = { "<F2>", "<F4>", "gl", "go" } },
+})
 local rust_server = lsp.build_options("rust_analyzer")
 
 local null_ls_status_ok, null_ls = pcall(require, "null-ls")
