@@ -8,7 +8,7 @@ fzf_lua.setup({
 		height = 0.90,
 		width = 0.65,
 		row = 0.30,
-		col = 0.50,
+		col = 0.70,
 		hl = {
 			border = "FloatBorder",
 		},
