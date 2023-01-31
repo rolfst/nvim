@@ -118,6 +118,7 @@ require("lazy").setup({
 		},
 		cmd = "CtrlSpace",
 	},
+	{ "Dkendal/nvim-treeclimber", dependencies = { "rktjmp/lush.nvim" } },
 	{
 		"windwp/nvim-autopairs",
 		dependencies = {
