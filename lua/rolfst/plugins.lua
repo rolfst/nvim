@@ -99,6 +99,7 @@ require("lazy").setup({
 	},
 
 	-- Util plugins
+	{ "gpanders/editorconfig.nvim" },
 	{ "tpope/vim-repeat" },
 	{ "folke/trouble.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
 	{
@@ -203,7 +204,6 @@ require("lazy").setup({
 		"simrat39/rust-tools.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			-- "nvim-telescope/telescope.nvim",
 			"mfussenegger/nvim-dap",
 		},
 	},
