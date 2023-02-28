@@ -88,7 +88,7 @@ lsp.preset("recommended")
 lsp.ensure_installed({
 	"tsserver",
 	"rust_analyzer",
-	"sumneko_lua",
+	"lua_ls",
 	"pyright",
 	"eslint",
 })
@@ -117,10 +117,11 @@ lsp.setup_nvim_cmp({
 		}),
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
+				-- cmp.confirm({ select = true })
 				cmp.select_next_item()
-			-- elseif luasnip.expandable() then
-			-- 	luasnip.expand()
-			elseif luasnip.expand_or_jumpable() then
+				-- elseif luasnip.expandable() then
+				-- 	luasnip.expand()
+			elseif luasnip.expand_or_locally_jumpable() then
 				luasnip.expand_or_jump()
 			elseif require("neogen").jumpable() then
 				require("neogen").jump_next()

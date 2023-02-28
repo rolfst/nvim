@@ -9,7 +9,7 @@ language_configs["dependencies"] = { "lua-language-server", "stylua", "luacheck"
 language_configs["lsp"] = function()
 	return {
 		["language"] = "lua",
-		["language-server"] = { "sumneko_lua", sumneko_lua_config },
+		["language-server"] = { "lua_ls", sumneko_lua_config },
 	}
 end
 

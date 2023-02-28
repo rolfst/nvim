@@ -92,6 +92,10 @@ fzf_lua.setup({
 	},
 	buffers = {
 		prompt = "Buffers> ",
+		sort_lastused = true,
+		actions = {
+			["ctrl-x"] = { actions.buf_del, actions.resume },
+		},
 	},
 	blines = {
 		prompt = "BufferLines> ",
@@ -106,9 +110,6 @@ fzf_lua.setup({
 	manpages = { previewer = { _ctor = false } },
 })
 
-vim.keymap.set("n", "<A-/>", function()
-	vim.cmd("Telescope file_browser")
-end, { noremap = true, silent = true, desc = "File browser" })
 vim.keymap.set("n", "<A-b>", function()
 	vim.cmd("FzfLua buffers")
 end, { noremap = true, silent = true, desc = "Buffers" })

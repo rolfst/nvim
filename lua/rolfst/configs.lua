@@ -1,4 +1,13 @@
 local M = {}
+
+vim.diagnostic.config({
+	virtual_text = {
+		prefix = "●",
+	},
+	severity_sort = true,
+	float = { source = "always" }, -- of "if_many" },
+})
+
 M.config_diagnostic = {
 	virtual_text = false,
 	update_in_insert = true,

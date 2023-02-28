@@ -51,15 +51,15 @@ require("lazy").setup({
 		},
 		cmd = "Neogit",
 	},
-	{
-		"lewis6991/gitsigns.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-		event = {
-			"BufRead",
-		},
-	},
+	-- {
+	-- 	"lewis6991/gitsigns.nvim",
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 	},
+	-- 	event = {
+	-- 		"BufRead",
+	-- 	},
+	-- },
 	{ "akinsho/toggleterm.nvim" },
 	{ "ThePrimeagen/harpoon" },
 	{ "mbbill/undotree" },
@@ -182,6 +182,10 @@ require("lazy").setup({
 		build = function()
 			vim.fn["mkdp#util#install"]()
 		end,
+		config = function()
+			require("rolfst.modules.markdown").setup()
+		end,
+		lazy = false,
 	},
 	-- Test plugins
 
@@ -239,7 +243,6 @@ require("lazy").setup({
 		config = function()
 			require("rolfst.modules.lsp-inlayhints").setup()
 		end,
-		lazy = true,
 	},
 	{ "ggandor/lightspeed.nvim", dependencies = {
 		"tpope/vim-repeat",
@@ -247,4 +250,8 @@ require("lazy").setup({
 	{ "kevinhwang91/nvim-ufo", dependencies = { "kevinhwang91/promise-async" } },
 
 	{ "nvim-treesitter/nvim-treesitter-context" },
+	{ "folke/which-key.nvim" },
+
+	-- tools
+	{ "sotte/presenting.vim" },
 })
