@@ -22,31 +22,31 @@ fzf_lua.setup({
     },
     actions = {
         files = {
-            ["default"] = actions.file_edit_or_qf,
-            ["ctrl-h"] = actions.file_split,
-            ["ctrl-v"] = actions.file_vsplit,
-            ["alt-q"] = actions.file_sel_to_qf,
-            ["alt-l"] = actions.file_sel_to_ll,
+                ["default"] = actions.file_edit_or_qf,
+                ["ctrl-h"] = actions.file_split,
+                ["ctrl-v"] = actions.file_vsplit,
+                ["alt-q"] = actions.file_sel_to_qf,
+                ["alt-l"] = actions.file_sel_to_ll,
         },
         buffers = {
-            ["default"] = actions.buf_edit,
-            ["ctrl-h"] = actions.buf_split,
-            ["ctrl-v"] = actions.buf_vsplit,
+                ["default"] = actions.buf_edit,
+                ["ctrl-h"] = actions.buf_split,
+                ["ctrl-v"] = actions.buf_vsplit,
         },
     },
     keymap = {
         builtin = {
-            ["<F1>"] = "toggle-help",
-            ["<F2>"] = "toggle-fullscreen",
-            ["<F10>"] = "toggle-preview",
-            ["<F11>"] = "toggle-preview-ccw",
-            ["<ctrl-d>"] = "preview-page-down",
-            ["<ctrl-u>"] = "preview-page-up",
+                ["<F1>"] = "toggle-help",
+                ["<F2>"] = "toggle-fullscreen",
+                ["<F10>"] = "toggle-preview",
+                ["<F11>"] = "toggle-preview-ccw",
+                ["<ctrl-d>"] = "preview-page-down",
+                ["<ctrl-u>"] = "preview-page-up",
         },
         fzf = {
-            ["ctrl-a"] = "toggle-all",
-            ["ctrl-f"] = "half-page-down",
-            ["ctrl-b"] = "half-page-up",
+                ["ctrl-a"] = "toggle-all",
+                ["ctrl-f"] = "half-page-down",
+                ["ctrl-b"] = "half-page-up",
         },
     },
     files = {
@@ -95,7 +95,7 @@ fzf_lua.setup({
         prompt = "Buffers> ",
         sort_lastused = true,
         actions = {
-            ["ctrl-x"] = { actions.buf_del, actions.resume },
+                ["ctrl-x"] = { actions.buf_del, actions.resume },
         },
     },
     blines = {
@@ -159,3 +159,5 @@ end, { desc = "search color schemes" })
 vim.keymap.set("n", "<space>tj", function()
     fzf_lua.jumps()
 end, { desc = "search jumps" })
+vim.keymap.set("n", "<leader>ts", "<cmd>Telescope symbols<cr>", { desc = "search symbols" })
+vim.keymap.set("i", "<C-t>s", "<cmd>Telescope symbols<cr>", { desc = "search symbols" })
