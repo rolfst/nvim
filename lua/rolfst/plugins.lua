@@ -24,16 +24,15 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" },
         cmd = "FzfLua",
     },
-    -- { "nvim-telescope/telescope-fzf-native.nvim", lazy = true },
-    -- { "nvim-telescope/telescope-file-browser.nvim", lazy = true },
-    -- {
-    -- 	"nvim-telescope/telescope.nvim",
-    -- 	dependencies = {
-    -- 		"nvim-lua/plenary.nvim",
-    -- 		"nvim-telescope/telescope-fzf-native.nvim",
-    -- 		"nvim-telescope/telescope-file-browser.nvim",
-    -- 	},
-    -- },
+    {
+        "nvim-telescope/telescope.nvim",
+        dependencies = {
+            "nvim-telescope/telescope-symbols.nvim",
+            "nvim-lua/plenary.nvim",
+            -- 		"nvim-telescope/telescope-fzf-native.nvim",
+            -- 		"nvim-telescope/telescope-file-browser.nvim",
+        },
+    },
     {
         "rose-pine/neovim",
         name = "rose-pine",
@@ -242,7 +241,7 @@ require("lazy").setup({
     },
     { "onsails/diaglist.nvim" },
     { "folke/todo-comments.nvim",   dependencies = "nvim-lua/plenary.nvim" },
-    { "ray-x/sad.nvim", dependencies = { {"ray-x/guihua.lua", build = "cd lua/fzy && make" } }},
+    { "ray-x/sad.nvim",             dependencies = { { "ray-x/guihua.lua", build = "cd lua/fzy && make" } } },
     -- UI plugins
     { "nvim-tree/nvim-web-devicons" },
     { "SmiteshP/nvim-navic" },
@@ -265,4 +264,13 @@ require("lazy").setup({
 
     -- tools
     { "sotte/presenting.vim" },
+    {
+        "renerocksai/telekasten.nvim",
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
+            "renerocksai/calendar-vim",
+            "nvim-telescope/telescope-symbols.nvim",
+            -- "nvim-telescope/telescope-media-files.nvim"
+        },
+    },
 })

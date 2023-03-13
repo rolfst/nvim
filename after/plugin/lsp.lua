@@ -601,7 +601,7 @@ local servers = {
         workspace = { checkThirdParty = false },
     }),
     -- nil_ls = M.default_config("nix"),
-    marksman = M.default_config("markdown"),
+    marksman = M.default_config({ "markdown", "telekasten" }),
     -- omnisharp = M.default_config({"cs", "vb"}),
     pyright = M.default_config("python"),
     -- rust_analyzer = { configured below servers },
