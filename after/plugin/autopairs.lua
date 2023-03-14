@@ -1,4 +1,8 @@
--- local nvim_autopairs_status_ok, nvim_autopairs = pcall(require, "nvim-autopairs")
+local nvim_autopairs_status_ok, nvim_autopairs = pcall(require, "nvim-autopairs")
+if not nvim_autopairs_status_ok then
+    return
+end
+nvim_autopairs.setup({})
 -- if not nvim_autopairs_status_ok then
 --     return
 -- end
