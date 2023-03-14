@@ -55,14 +55,15 @@ require("lazy").setup({
         cmd = "Neogit",
     },
     -- {
-    -- 	"lewis6991/gitsigns.nvim",
-    -- 	dependencies = {
-    -- 		"nvim-lua/plenary.nvim",
-    -- 	},
-    -- 	event = {
-    -- 		"BufRead",
-    -- 	},
-    -- },
+    {
+        "lewis6991/gitsigns.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+        },
+        event = {
+            "BufRead",
+        },
+    },
     { "akinsho/toggleterm.nvim" },
     { "ThePrimeagen/harpoon" },
     { "mbbill/undotree" },
