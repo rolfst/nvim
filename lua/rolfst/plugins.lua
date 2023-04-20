@@ -54,7 +54,6 @@ require("lazy").setup({
         },
         cmd = "Neogit",
     },
-    -- {
     {
         "lewis6991/gitsigns.nvim",
         dependencies = {
