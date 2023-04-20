@@ -240,11 +240,9 @@ M.on_attach = function(client, bufnr)
         vim.lsp.buf.code_action()
     end, "[c]ode [a]ction")
 
-    nmap("<leader>rn", function()
-        vim.lsp.buf.rename()
-    end, "[r]e[n]ame")
+    nmap("grn", vim.cmd.LspRename, "[r]e[n]ame")
 
-    nmap("gf", vim.cmd.LspFormat, "Format")
+    nmap("<space>gf", vim.cmd.LspFormat, "Format")
     vim.keymap.set("v", "gf", function()
         local start_row, _ = unpack(vim.api.nvim_buf_get_mark(0, "<"))
         local end_row, _ = unpack(vim.api.nvim_buf_get_mark(0, ">"))
@@ -414,6 +412,7 @@ M.default_config = function(file_types, settings)
         filetypes = file_types,
         on_attach = function(client, bufnr)
             -- languages_setup.keymaps(client, bufnr)
+            M.on_attach(client, bufnr)
             M.omni(client, bufnr)
             M.tag(client, bufnr)
             M.document_highlight(client, bufnr)
@@ -437,6 +436,7 @@ M.without_formatting = function(file_types, settings)
         filetypes = file_types,
         on_attach = function(client, bufnr)
             -- languages_setup.keymaps(client, bufnr)
+            M.on_attach(client, bufnr)
             M.omni(client, bufnr)
             M.tag(client, bufnr)
             M.document_highlight(client, bufnr)
@@ -471,6 +471,7 @@ local servers = {
     --     autostart = true,
     --     filetypes = { "typescript", "html", "typescriptreact", "typescript.tsx" },
     --     on_attach = function(client, bufnr)
+    -- M.on_attach(client, bufnr)
     --         M.omni(client, bufnr)
     --         M.tag(client, bufnr)
     --         M.document_highlight(client, bufnr)
@@ -489,6 +490,7 @@ local servers = {
     --     on_attach = function(client, bufnr)
     --         client.offset_encoding = "utf-16"
     --         -- languages_setup.keymaps(client, bufnr)
+    -- M.on_attach(client, bufnr)
     --         M.omni(client, bufnr)
     --         M.tag(client, bufnr)
     --         M.document_highlight(client, bufnr)
@@ -511,6 +513,7 @@ local servers = {
     --     autostart = true,
     --     filetypes = "elixir",
     --     on_attach = function(client, bufnr)
+    -- M.on_attach(client, bufnr)
     --         -- languages_setup.keymaps(client, bufnr)
     --         M.omni(client, bufnr)
     --         M.tag(client, bufnr)
@@ -543,6 +546,7 @@ local servers = {
     --     filetypes = { "go", "gomod" },
     --     on_attach = function(client, bufnr)
     --         -- languages_setup.keymaps(client, bufnr)
+    -- M.on_attach(client, bufnr)
     --         M.omni(client, bufnr)
     --         M.tag(client, bufnr)
     --         M.document_highlight(client, bufnr)
@@ -605,7 +609,7 @@ local servers = {
     -- omnisharp = M.default_config({"cs", "vb"}),
     pyright = M.default_config("python"),
     -- rust_analyzer = { configured below servers },
-    sqls = M.default_config({ "sql", "mysql" }),
+    sqlls = M.default_config({ "sql", "mysql" }),
     stylelint_lsp = M.without_winbar_config({
         "css",
         "less",
@@ -671,6 +675,7 @@ local function start_server_java()
             bundles = jdtls_bundles,
         },
         on_attach = function(client, bufnr)
+            M.on_attach(client, bufnr)
             M.omni(client, bufnr)
             M.tag(client, bufnr)
             M.document_highlight(client, bufnr)
@@ -704,9 +709,9 @@ end, vim.api.nvim_list_bufs())
 local typescript = require("typescript")
 typescript.setup({
     disable_commands = false, -- prevent the plugin from creating Vim commands
-    debug = false,         -- enable debug logging for commands
+    debug = false,            -- enable debug logging for commands
     go_to_source_definition = {
-        fallback = true,   -- fall back to standard LSP definition on failure
+        fallback = true,      -- fall back to standard LSP definition on failure
     },
     server = {
         flags = {
@@ -769,6 +774,7 @@ rust_tools.setup({
         autostart = true,
         filetypes = { "rust" },
         on_attach = function(client, bufnr)
+            M.on_attach(client, bufnr)
             -- languages_setup.keymaps(client, bufnr)
             M.omni(client, bufnr)
             M.tag(client, bufnr)
