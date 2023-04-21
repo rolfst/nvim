@@ -9,7 +9,8 @@ if not cmp_status_ok then
     return
 end
 
-local cmp_config_compare_status_ok, cmp_config_compare = pcall(require, "cmp.config.compare")
+local cmp_config_compare_status_ok, cmp_config_compare =
+    pcall(require, "cmp.config.compare")
 if not cmp_config_compare_status_ok then
     return
 end
@@ -24,7 +25,7 @@ luasnip.config.set_config({
     updateevents = "TextChanged,TextChangedI",
     enable_autosnippets = true,
     ext_opts = {
-            [require("luasnip.util.types").choiceNode] = {
+        [require("luasnip.util.types").choiceNode] = {
             active = {
                 virt_text = { { "⬤", "GruvboxOrange" } },
             },
@@ -33,10 +34,21 @@ luasnip.config.set_config({
 })
 
 require("luasnip.loaders.from_vscode").lazy_load()
-require("luasnip.loaders.from_lua").lazy_load({ paths = { global.snippets_path .. "/luasnippets" } })
+require("luasnip.loaders.from_lua").lazy_load({
+    paths = { global.snippets_path .. "/luasnippets" },
+})
 
-vim.api.nvim_create_user_command("LuaSnipEdit", "lua require'luasnip.loaders.from_lua'.edit_snippet_files()", {})
-vim.keymap.set("n", "<space>se", ":LuaSnipEdit<cr>", { desc = "Edit lua snippet" })
+vim.api.nvim_create_user_command(
+    "LuaSnipEdit",
+    "lua require'luasnip.loaders.from_lua'.edit_snippet_files()",
+    {}
+)
+vim.keymap.set(
+    "n",
+    "<space>se",
+    ":LuaSnipEdit<cr>",
+    { desc = "Edit lua snippet" }
+)
 
 vim.keymap.set({ "i", "s" }, "<a-p>", function()
     if luasnip.expand_or_jumpable() then
@@ -66,20 +78,24 @@ end)
 
 local check_backspace = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+    return col ~= 0
+        and vim.api
+                .nvim_buf_get_lines(0, line - 1, line, true)[1]
+                :sub(col, col)
+                :match("%s")
+            == nil
 end
 
 local lsp_symbols = icons.cmp
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
-function are()
-end
+function are() end
 
 cmp.setup({
     mapping = cmp.mapping.preset.insert({
-            ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-            ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
-            ["<C-y>"] = cmp.mapping.confirm({ select = true }),
-            ["<C-space>"] = cmp.mapping(function(fallback)
+        ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
+        ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
+        ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+        ["<C-space>"] = cmp.mapping(function(fallback)
             if luasnip.expand_or_locally_jumpable() then
                 luasnip.expand_or_jump()
             elseif require("neogen").jumpable() then
@@ -88,10 +104,10 @@ cmp.setup({
                 fallback()
             end
         end),
-            ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-            ["<C-u>"] = cmp.mapping.scroll_docs(4),
-            ["<C-c>"] = cmp.mapping.close(),
-            ["<C-l>"] = cmp.mapping({
+        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-u>"] = cmp.mapping.scroll_docs(4),
+        ["<C-c>"] = cmp.mapping.close(),
+        ["<C-l>"] = cmp.mapping({
             i = function(fallback)
                 if luasnip.choice_active() then
                     luasnip.change_choice(1)
@@ -100,11 +116,11 @@ cmp.setup({
                 end -- code
             end,
         }),
-            ["<CR>"] = cmp.mapping.confirm({
+        ["<CR>"] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
         }),
-            ["<Tab>"] = cmp.mapping(function(fallback)
+        ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 -- cmp.confirm({ select = true })
                 cmp.select_next_item()
@@ -116,7 +132,7 @@ cmp.setup({
                 fallback()
             end
         end, { "i", "s" }),
-            ["<S-Tab>"] = cmp.mapping(function(fallback)
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
@@ -132,13 +148,13 @@ cmp.setup({
         format = function(entry, item)
             item.kind = lsp_symbols[item.kind]
             item.menu = ({
-                    nvim_lsp = "[LSP]",
-                    luasnip = "[Snippet]",
-                    buffer = "[Buffer]",
-                    path = "[Path]",
-                    crates = "[Crates]",
-                    latex_symbols = "[LaTex]",
-                })[entry.source.name]
+                nvim_lsp = "[LSP]",
+                luasnip = "[Snippet]",
+                buffer = "[Buffer]",
+                path = "[Path]",
+                crates = "[Crates]",
+                latex_symbols = "[LaTex]",
+            })[entry.source.name]
             return item
         end,
     },
@@ -168,26 +184,106 @@ cmp.setup({
 
 vim.api.nvim_create_user_command("LspHover", "lua vim.lsp.buf.hover()", {})
 vim.api.nvim_create_user_command("LspRename", "lua vim.lsp.buf.rename()", {})
-vim.api.nvim_create_user_command("LspAddToWorkspaceFolder", "lua vim.lsp.buf.add_workspace_folder()", {})
-vim.api.nvim_create_user_command("LspListWorkspaceFolders", "lua vim.lsp.buf.list_workspace_folders()", {})
-vim.api.nvim_create_user_command("LspRemoveWorkspaceFolder", "lua vim.lsp.buf.remove_workspace_folder()", {})
-vim.api.nvim_create_user_command("LspWorkspaceSymbol", "lua vim.lsp.buf.workspace_symbol()", {})
-vim.api.nvim_create_user_command("LspDocumentSymbol", "lua vim.lsp.buf.document_symbol()", {})
-vim.api.nvim_create_user_command("LspCodeAction", "lua vim.lsp.buf.code_action()", {})
-vim.api.nvim_create_user_command("LspCodeLensRefresh", "lua vim.lsp.codelens.refresh()", {})
-vim.api.nvim_create_user_command("LspCodeLensRun", "lua vim.lsp.codelens.run()", {})
-vim.api.nvim_create_user_command("LspDeclaration", "lua vim.lsp.buf.declaration()", {})
-vim.api.nvim_create_user_command("LspDefinition", "lua vim.lsp.buf.definition()", {})
-vim.api.nvim_create_user_command("LspTypeDefinition", "lua vim.lsp.buf.type_definition()", {})
-vim.api.nvim_create_user_command("LspReferences", "lua vim.lsp.buf.references()", {})
-vim.api.nvim_create_user_command("LspClearReferences", "lua vim.lsp.buf.clear_references()", {})
-vim.api.nvim_create_user_command("LspDocumentHighlight", "lua vim.lsp.buf.document_highlight()", {})
-vim.api.nvim_create_user_command("LspImplementation", "lua vim.lsp.buf.implementation()", {})
-vim.api.nvim_create_user_command("LspIncomingCalls", "lua vim.lsp.buf.incoming_calls()", {})
-vim.api.nvim_create_user_command("LspOutgoingCalls", "lua vim.lsp.buf.outgoing_calls()", {})
-vim.api.nvim_create_user_command("LspFormat", "lua vim.lsp.buf.format()", { desc = "Format current buffer with LSP" })
-vim.api.nvim_create_user_command("LspSignatureHelp", "lua vim.lsp.buf.signature_help()", {})
-vim.api.nvim_create_user_command("LspShowDiagnosticCurrent", "lua require('rolfst.utils.show_diagnostic').line()", {})
+vim.api.nvim_create_user_command(
+    "LspAddToWorkspaceFolder",
+    "lua vim.lsp.buf.add_workspace_folder()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspListWorkspaceFolders",
+    "lua vim.lsp.buf.list_workspace_folders()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspRemoveWorkspaceFolder",
+    "lua vim.lsp.buf.remove_workspace_folder()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspWorkspaceSymbol",
+    "lua vim.lsp.buf.workspace_symbol()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspDocumentSymbol",
+    "lua vim.lsp.buf.document_symbol()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspCodeAction",
+    "lua vim.lsp.buf.code_action()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspCodeLensRefresh",
+    "lua vim.lsp.codelens.refresh()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspCodeLensRun",
+    "lua vim.lsp.codelens.run()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspDeclaration",
+    "lua vim.lsp.buf.declaration()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspDefinition",
+    "lua vim.lsp.buf.definition()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspTypeDefinition",
+    "lua vim.lsp.buf.type_definition()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspReferences",
+    "lua vim.lsp.buf.references()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspClearReferences",
+    "lua vim.lsp.buf.clear_references()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspDocumentHighlight",
+    "lua vim.lsp.buf.document_highlight()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspImplementation",
+    "lua vim.lsp.buf.implementation()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspIncomingCalls",
+    "lua vim.lsp.buf.incoming_calls()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspOutgoingCalls",
+    "lua vim.lsp.buf.outgoing_calls()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspFormat",
+    "lua vim.lsp.buf.format()",
+    { desc = "Format current buffer with LSP" }
+)
+vim.api.nvim_create_user_command(
+    "LspSignatureHelp",
+    "lua vim.lsp.buf.signature_help()",
+    {}
+)
+vim.api.nvim_create_user_command(
+    "LspShowDiagnosticCurrent",
+    "lua require('rolfst.utils.show_diagnostic').line()",
+    {}
+)
 
 vim.diagnostic.config({
     virtual_text = false,
@@ -248,8 +344,8 @@ M.on_attach = function(client, bufnr)
         local end_row, _ = unpack(vim.api.nvim_buf_get_mark(0, ">"))
         vim.lsp.buf.format({
             range = {
-                    ["start"] = { start_row, 0 },
-                    ["end"] = { end_row, 0 },
+                ["start"] = { start_row, 0 },
+                ["end"] = { end_row, 0 },
             },
             async = true,
         })
@@ -267,8 +363,16 @@ M.on_attach = function(client, bufnr)
         vim.lsp.buf.signature_help()
     end, describe("signature help"))
 
-    nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[w]orkspace [a]dd Folder")
-    nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[w]orkspace [r]emove Folder")
+    nmap(
+        "<leader>wa",
+        vim.lsp.buf.add_workspace_folder,
+        "[w]orkspace [a]dd Folder"
+    )
+    nmap(
+        "<leader>wr",
+        vim.lsp.buf.remove_workspace_folder,
+        "[w]orkspace [r]emove Folder"
+    )
     nmap("<leader>wl", function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, "[w]orkspace [l]ist Folders")
@@ -527,7 +631,12 @@ local servers = {
     --     end,
     -- },
     -- elmls = M.default_config("elm"),
-    emmet_ls = M.without_winbar_config({ "html", "css", "javascriptreact", "typescriptreact" }),
+    emmet_ls = M.without_winbar_config({
+        "html",
+        "css",
+        "javascriptreact",
+        "typescriptreact",
+    }),
     -- erlangls = M.default_config("erlang"),
     eslint = M.without_winbar_config({
         "javascript",
@@ -571,7 +680,7 @@ local servers = {
     --     end,
     -- },
     -- graphql = M.default_config("graphql"),
-    -- hls = M.default_config({ "haskell", "lhaskell" }),
+    hls = M.default_config({ "haskell", "lhaskell" }),
     -- html = M.without_formatting("html"),
     -- java language server is configured below servers
     jsonls = M.default_config("json"),
@@ -627,21 +736,35 @@ local servers = {
 
 -- {{{ Java
 local function start_server_java()
-    local jdtls_launcher =
-        vim.fn.glob(global.mason_path .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar")
+    local jdtls_launcher = vim.fn.glob(
+        global.mason_path
+            .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
+    )
     local jdtls_bundles = {
         vim.fn.glob(
-            global.mason_path .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
+            global.mason_path
+                .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
             1
         ),
     }
     vim.list_extend(
         jdtls_bundles,
-        vim.split(vim.fn.glob(global.mason_path .. "/packages/java-test/extension/server/*.jar", 1), "\n")
+        vim.split(
+            vim.fn.glob(
+                global.mason_path
+                    .. "/packages/java-test/extension/server/*.jar",
+                1
+            ),
+            "\n"
+        )
     )
-    local jdtls_config = global.mason_path .. "/packages/jdtls/config_" .. global.os
+    local jdtls_config = global.mason_path
+        .. "/packages/jdtls/config_"
+        .. global.os
     local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-    local workspace_dir = global.cache_path .. "/workspace-root/" .. project_name
+    local workspace_dir = global.cache_path
+        .. "/workspace-root/"
+        .. project_name
     require("jdtls").start_or_attach({
         cmd = {
             "java",
@@ -665,8 +788,8 @@ local function start_server_java()
         },
         filetyps = { "java" },
         root_dir = vim.fs.dirname(vim.fs.find({ ".gradlew", ".git", "mvnw" }, {
-                upward = true,
-            })[1]),
+            upward = true,
+        })[1]),
         bundles = jdtls_bundles,
         settings = {
             java = {},
@@ -709,16 +832,21 @@ end, vim.api.nvim_list_bufs())
 local typescript = require("typescript")
 typescript.setup({
     disable_commands = false, -- prevent the plugin from creating Vim commands
-    debug = false,            -- enable debug logging for commands
+    debug = false, -- enable debug logging for commands
     go_to_source_definition = {
-        fallback = true,      -- fall back to standard LSP definition on failure
+        fallback = true, -- fall back to standard LSP definition on failure
     },
     server = {
         flags = {
             debounce_text_changes = default_debouce_time,
         },
         autostart = true,
-        filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+        filetypes = {
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+        },
         on_attach = function(client, bufnr)
             M.on_attach(client, bufnr)
             M.omni(client, bufnr)
@@ -790,7 +918,8 @@ rust_tools.setup({
     dap = {
         adapter = require("rust-tools.dap").get_codelldb_adapter(
             global.mason_path .. "/packages/codelldb/extension/adapter/codelldb",
-            global.mason_path .. "/packages/codelldb/extension/adapter/libcodelldb.so"
+            global.mason_path
+                .. "/packages/codelldb/extension/adapter/libcodelldb.so"
         ),
     },
 })
