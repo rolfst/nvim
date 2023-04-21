@@ -111,7 +111,10 @@ require("lazy").setup({
     -- Util plugins
     { "gpanders/editorconfig.nvim" },
     { "tpope/vim-repeat" },
-    { "folke/trouble.nvim",        dependencies = { "nvim-tree/nvim-web-devicons" } },
+    {
+        "folke/trouble.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+    },
     {
         "numToStr/Comment.nvim",
         event = {
@@ -168,14 +171,17 @@ require("lazy").setup({
         },
     },
 
-    { "yorickpeterse/nvim-pqf",   url = "https://gitlab.com/yorickpeterse/nvim-pqf" },
+    {
+        "yorickpeterse/nvim-pqf",
+        url = "https://gitlab.com/yorickpeterse/nvim-pqf",
+    },
     "dnlhc/glance.nvim",
     { "anuvyklack/pretty-fold.nvim" },
     { "ziontee113/neo-minimap" },
     -- DAP plugins
     { "mfussenegger/nvim-dap" },
 
-    { "mxsdev/nvim-dap-vscode-js",         lazy = true },
+    { "mxsdev/nvim-dap-vscode-js", lazy = true },
 
     { "jbyuki/one-small-step-for-vimkind", lazy = true },
     {
@@ -225,6 +231,13 @@ require("lazy").setup({
         },
     },
     {
+        "mrcjkb/haskell-tools.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope.nvim",
+        },
+    },
+    {
         "Saecki/crates.nvim",
         dependencies = {
             "nvim-lua/plenary.nvim",
@@ -234,14 +247,22 @@ require("lazy").setup({
 
     {
         "jose-elias-alvarez/typescript.nvim",
-        ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+        ft = {
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+        },
         dependencies = {
             "nvim-lua/plenary.nvim",
         },
     },
     { "onsails/diaglist.nvim" },
-    { "folke/todo-comments.nvim",   dependencies = "nvim-lua/plenary.nvim" },
-    { "ray-x/sad.nvim",             dependencies = { { "ray-x/guihua.lua", build = "cd lua/fzy && make" } } },
+    { "folke/todo-comments.nvim", dependencies = "nvim-lua/plenary.nvim" },
+    {
+        "ray-x/sad.nvim",
+        dependencies = { { "ray-x/guihua.lua", build = "cd lua/fzy && make" } },
+    },
     -- UI plugins
     { "nvim-tree/nvim-web-devicons" },
     { "SmiteshP/nvim-navic" },
@@ -258,7 +279,10 @@ require("lazy").setup({
             "tpope/vim-repeat",
         },
     },
-    { "kevinhwang91/nvim-ufo",                  dependencies = { "kevinhwang91/promise-async" } },
+    {
+        "kevinhwang91/nvim-ufo",
+        dependencies = { "kevinhwang91/promise-async" },
+    },
     { "nvim-treesitter/nvim-treesitter-context" },
     { "folke/which-key.nvim" },
 
