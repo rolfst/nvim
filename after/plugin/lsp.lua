@@ -866,6 +866,7 @@ local ht = require("haskell-tools")
 ht.start_or_attach({
     hls = {
         on_attach = function(client, bufnr)
+            local opts = { buffer = bufnr, remap = false }
             M.on_attach(client, bufnr)
             vim.keymap.set("n", "<space>ghs", ht.hoogle.hoogle_signature, opts)
             vim.keymap.set("n", "<space>gea", ht.lsp.buf_eval_all, opts)
