@@ -31,7 +31,6 @@ require("lazy").setup({
             "nvim-lua/plenary.nvim",
             "mrcjkb/telescope-manix",
             "nvim-telescope/telescope-media-files.nvim",
-            "nvim-telescope/telescope-fzf-native.nvim",
             "nvim-telescope/telescope-file-browser.nvim",
             "camgraff/telescope-tmux.nvim",
         },
