@@ -127,7 +127,6 @@ local function media_files()
     fzf_lua.files({
         cwd = "./",
         fd_opt = "-e png -e jpg, -e svgl",
-        previewer = "chafa",
         prompt = "Media  > ",
     })
 end
