@@ -208,7 +208,7 @@ fzf_lua.setup({
 --
 -- local tele_b = require("telescope.builtin")
 vim.keymap.set("n", "<space>tf", function()
-    fzf_lua.find_files()
+    fzf_lua.files()
 end, { desc = "Find Files" })
 vim.keymap.set("n", "<space>to", function()
     fzf_lua.oldfiles()

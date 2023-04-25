@@ -49,5 +49,5 @@ end
 ColorScheme()
 --------------
 -- colorize r
-local _, colorizer = pcall(require, "colorizer")
-colorizer.setup()
+-- local _, colorizer = pcall(require, "colorizer")
+-- colorizer.setup()
