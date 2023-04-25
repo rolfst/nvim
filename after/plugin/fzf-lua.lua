@@ -112,84 +112,81 @@ local status_tele_ok, telescope = pcall(require, "telescope")
 if not status_tele_ok then
     return
 end
-telescope.setup(
-{
-        defaults = {
-            prompt_prefix = "   ",
-            selection_caret = "  ",
-            entry_prefix = "  ",
-            initial_mode = "insert",
-            selection_strategy = "reset",
-            sorting_strategy = "ascending",
-            layout_strategy = "horizontal",
-            layout_config = {
-                horizontal = {
-                    prompt_position = "top",
-                    preview_width = 0.5,
-                    results_width = 0.5,
-                },
-                vertical = {
-                    mirror = false,
-                },
-                width = 0.95,
-                height = 0.95,
-                preview_cutoff = 120,
+telescope.setup({
+    defaults = {
+        prompt_prefix = "   ",
+        selection_caret = "  ",
+        entry_prefix = "  ",
+        initial_mode = "insert",
+        selection_strategy = "reset",
+        sorting_strategy = "ascending",
+        layout_strategy = "horizontal",
+        layout_config = {
+            horizontal = {
+                prompt_position = "top",
+                preview_width = 0.5,
+                results_width = 0.5,
             },
-            vimgrep_arguments = {
-                "rg",
-                "--color=never",
-                "--no-heading",
-                "--with-filename",
-                "--line-number",
-                "--column",
-                "--smart-case",
-                "--hidden",
+            vertical = {
+                mirror = false,
             },
-            file_sorter = require("telescope.sorters").get_fuzzy_file,
-            file_ignore_patterns = {
-                "node_modules",
-                ".git",
-                "target",
-                "vendor",
-            },
-            generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
-            path_display = { shorten = 5 },
-            winblend = 0,
-            border = {},
-            borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
-            color_devicons = true,
-            set_env = { ["COLORTERM"] = "truecolor" },
-            file_previewer = require("telescope.previewers").vim_buffer_cat.new,
-            grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
-            qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
-            buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
+            width = 0.95,
+            height = 0.95,
+            preview_cutoff = 120,
         },
-        pickers = {
-            file_browser = {
-                hidden = true,
-            },
-            find_files = {
-                hidden = true,
-            },
-            live_grep = {
-                hidden = true,
-                only_sort_text = true,
-            },
+        vimgrep_arguments = {
+            "rg",
+            "--color=never",
+            "--no-heading",
+            "--with-filename",
+            "--line-number",
+            "--column",
+            "--smart-case",
+            "--hidden",
         },
-        extensions = {
-            fzf = {
-                fuzzy = true,
-                override_generic_sorter = false,
-                override_file_sorter = true,
-                case_mode = "smart_case",
-            },
-            file_browser = {},
-            media_files = {
-                find_cmd = "rg",
-            },
+        file_sorter = require("telescope.sorters").get_fuzzy_file,
+        file_ignore_patterns = {
+            "node_modules",
+            ".git",
+            "target",
+            "vendor",
         },
-    }
-{
+        generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+        path_display = { shorten = 5 },
+        winblend = 0,
+        border = {},
+        borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
+        color_devicons = true,
+        set_env = { ["COLORTERM"] = "truecolor" },
+        file_previewer = require("telescope.previewers").vim_buffer_cat.new,
+        grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
+        qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
+        buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
+    },
+    pickers = {
+        file_browser = {
+            hidden = true,
+        },
+        find_files = {
+            hidden = true,
+        },
+        live_grep = {
+            hidden = true,
+            only_sort_text = true,
+        },
+    },
+    extensions = {
+        fzf = {
+            fuzzy = true,
+            override_generic_sorter = false,
+            override_file_sorter = true,
+            case_mode = "smart_case",
+        },
+        file_browser = {},
+        media_files = {
+            find_cmd = "rg",
+        },
+    },
 })
 telescope.load_extension("macros")
 telescope.load_extension("fzf")
