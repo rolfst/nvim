@@ -50,7 +50,7 @@ fzf_lua.setup({
         },
     },
     files = {
-        prompt = "Files> ",
+        prompt = "Files   ",
         git_icons = false,
         cmd = table.concat({
             "find .",
@@ -63,19 +63,19 @@ fzf_lua.setup({
     },
     git = {
         files = {
-            prompt = "> ",
+            prompt = " git   ",
         },
         status = {
-            prompt = "GitStatus> ",
+            prompt = "GitStatus   ",
         },
         commits = {
-            prompt = "Commits> ",
+            prompt = "Commits   ",
         },
         bcommits = {
-            prompt = "BufferCommits> ",
+            prompt = "BufferCommits   ",
         },
         branches = {
-            prompt = "Branches> ",
+            prompt = "Branches   ",
         },
     },
     -- grep = {
@@ -86,20 +86,20 @@ fzf_lua.setup({
     --     -- cmd = "git grep --line-number --column -I --ignore-case",
     -- },
     args = {
-        prompt = "Args> ",
+        prompt = "Args   ",
     },
     buffers = {
-        prompt = "Buffers> ",
+        prompt = "Buffers   ",
         sort_lastused = true,
         actions = {
             ["ctrl-x"] = { actions.buf_del, actions.resume },
         },
     },
     blines = {
-        prompt = "BufferLines> ",
+        prompt = "BufferLines   ",
     },
     colorschemes = {
-        prompt = "Colorschemes> ",
+        prompt = "Colorschemes   ",
     },
     lsp = {
         prompt = "> ",
