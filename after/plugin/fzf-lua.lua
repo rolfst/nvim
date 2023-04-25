@@ -50,7 +50,7 @@ fzf_lua.setup({
         },
     },
     files = {
-        prompt = "Files   ",
+        prompt = "Files  > ",
         git_icons = false,
         cmd = table.concat({
             "find .",
@@ -63,46 +63,46 @@ fzf_lua.setup({
     },
     git = {
         files = {
-            prompt = " git   ",
+            prompt = " git  > ",
         },
         status = {
-            prompt = "GitStatus   ",
+            prompt = "GitStatus  > ",
         },
         commits = {
-            prompt = "Commits   ",
+            prompt = "Commits  > ",
         },
         bcommits = {
-            prompt = "BufferCommits   ",
+            prompt = "BufferCommits  > ",
         },
         branches = {
-            prompt = "Branches   ",
+            prompt = "Branches  > ",
         },
     },
     grep = {
-        prompt = "Search   ",
-        input_prompt = "Search   ",
+        prompt = "Search  > ",
+        input_prompt = "Search  > ",
         -- git_icons = false,
         -- cmd = "rg --vimgrep",
         -- cmd = "git grep --line-number --column -I --ignore-case",
     },
     args = {
-        prompt = "Args   ",
+        prompt = "Args  > ",
     },
     buffers = {
-        prompt = "Buffers   ",
+        prompt = "Buffers  > ",
         sort_lastused = true,
         actions = {
             ["ctrl-x"] = { actions.buf_del, actions.resume },
         },
     },
     blines = {
-        prompt = "BufferLines   ",
+        prompt = "BufferLines  > ",
     },
     colorschemes = {
-        prompt = "Colorschemes   ",
+        prompt = "Colorschemes  > ",
     },
     lsp = {
-        prompt = "  ",
+        prompt = "  > ",
     },
     helptags = { previewer = { _ctor = false } },
     manpages = { previewer = { _ctor = false } },
@@ -113,7 +113,24 @@ fzf_lua.setup({
             ["svg"] = { "chafa" },
         },
     },
+    previewer = {
+        chafa = {
+            cmd = "chafa",
+            args = "",
+            _new = function()
+                return require("fzf_lua.previewer").cmd_async
+            end,
+        },
+    },
 })
+local function media_files()
+    fzf_lua.files({
+        cwd = "./",
+        fd_opt = "-e png -e jpg, -e svgl",
+        previewer = "chafa",
+        prompt = "Media  > ",
+    })
+end
 
 local status_tele_ok, telescope = pcall(require, "telescope")
 if not status_tele_ok then
@@ -256,6 +273,9 @@ vim.keymap.set("n", "<space>tcl", function()
 end, { desc = "search color schemes" })
 vim.keymap.set("n", "<space>tj", function()
     fzf_lua.jumps()
+end, { desc = "search jumps" })
+vim.keymap.set("n", "<space>tmf", function()
+    media_files()
 end, { desc = "search jumps" })
 vim.keymap.set(
     "n",
