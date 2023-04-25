@@ -115,10 +115,11 @@ fzf_lua.setup({
     },
 })
 
--- local status_tele_ok, telescope = pcall(require, "telescope")
--- if not status_tele_ok then
---     return
--- end
+local status_tele_ok, telescope = pcall(require, "telescope")
+if not status_tele_ok then
+    return
+end
+telescope.setup()
 -- telescope.setup({
 --     defaults = {
 --         prompt_prefix = "   ",
@@ -202,6 +203,7 @@ fzf_lua.setup({
 --     },
 -- })
 
+telescope.load_extension("manix")
 -- telescope.load_extension("file_browser")
 -- telescope.load_extension("tmux")
 -- telescope.load_extension("media_files")

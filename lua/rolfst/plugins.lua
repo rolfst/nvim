@@ -117,7 +117,6 @@ require("lazy").setup({
         "folke/trouble.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
     },
-    { "norcalli/nvim-colorizer.lua" },
     {
         "numToStr/Comment.nvim",
         event = {
