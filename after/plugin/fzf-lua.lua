@@ -107,10 +107,12 @@ fzf_lua.setup({
     helptags = { previewer = { _ctor = false } },
     manpages = { previewer = { _ctor = false } },
     previewers = {
-        extensions = {
-            ["png"] = { "chafa" },
-            ["jpg"] = { "chafa" },
-            ["svg"] = { "chafa" },
+        builtin = {
+            extensions = {
+                ["png"] = { "chafa" },
+                ["jpg"] = { "chafa" },
+                ["svg"] = { "chafa" },
+            },
         },
     },
     previewer = {
@@ -126,7 +128,7 @@ fzf_lua.setup({
 local function media_files()
     fzf_lua.files({
         cwd = "./",
-        fd_opt = "-e png -e jpg, -e svgl",
+        fd_opt = ". -e png -e jpg, -e svg",
         prompt = "Media  > ",
     })
 end
