@@ -191,7 +191,7 @@ telescope.setup({
 telescope.load_extension("file_browser")
 telescope.load_extension("tmux")
 telescope.load_extension("media_files")
-local tele_b = telescope.builtin
+local tele_b = require("telescope.builtin")
 vim.keymap.set("n", "<space>tf", function()
     tele_b.find_files()
 end, { desc = "Find Files" })
