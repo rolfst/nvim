@@ -128,6 +128,9 @@ telescope.setup({
                 results_width = 0.5,
             },
             vertical = {
+                prompt_position = "top",
+                preview_width = 0.5,
+                results_width = 0.5,
                 mirror = false,
             },
             width = 0.95,
