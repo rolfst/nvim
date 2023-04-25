@@ -106,146 +106,154 @@ fzf_lua.setup({
     },
     helptags = { previewer = { _ctor = false } },
     manpages = { previewer = { _ctor = false } },
-})
-
-local status_tele_ok, telescope = pcall(require, "telescope")
-if not status_tele_ok then
-    return
-end
-telescope.setup({
-    defaults = {
-        prompt_prefix = "   ",
-        selection_caret = "  ",
-        entry_prefix = "  ",
-        initial_mode = "insert",
-        selection_strategy = "reset",
-        sorting_strategy = "ascending",
-        layout_strategy = "vertical",
-        layout_config = {
-            horizontal = {
-                prompt_position = "top",
-                preview_width = 0.5,
-                results_width = 0.5,
-            },
-            vertical = {
-                prompt_position = "top",
-                preview_width = 0.5,
-                results_width = 0.5,
-                mirror = false,
-            },
-            width = 0.95,
-            height = 0.95,
-            preview_cutoff = 120,
-        },
-        vimgrep_arguments = {
-            "rg",
-            "--color=never",
-            "--no-heading",
-            "--with-filename",
-            "--line-number",
-            "--column",
-            "--smart-case",
-            "--hidden",
-        },
-        file_sorter = require("telescope.sorters").get_fuzzy_file,
-        file_ignore_patterns = {
-            "node_modules",
-            ".git",
-            "target",
-            "vendor",
-        },
-        generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
-        path_display = { shorten = 5 },
-        winblend = 0,
-        border = {},
-        borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
-        color_devicons = true,
-        set_env = { ["COLORTERM"] = "truecolor" },
-        file_previewer = require("telescope.previewers").vim_buffer_cat.new,
-        grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
-        qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
-        buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
-    },
-    preview = {
-        check_mime_type = false,
-    },
-    pickers = {
-        file_browser = {
-            hidden = true,
-        },
-        find_files = {
-            hidden = true,
-        },
-        live_grep = {
-            hidden = true,
-            only_sort_text = true,
-        },
-    },
-    extensions = {
-        fzf = {
-            fuzzy = true,
-            override_generic_sorter = false,
-            override_file_sorter = true,
-            case_mode = "smart_case",
-        },
-        file_browser = {},
-        media_files = {
-            find_cmd = "rg",
+    previewers = {
+        extensions = {
+            ["png"] = { "chafa" },
+            ["jpg"] = { "chafa" },
+            ["svg"] = { "chafa" },
         },
     },
 })
-telescope.load_extension("file_browser")
-telescope.load_extension("tmux")
-telescope.load_extension("media_files")
 
-local tele_b = require("telescope.builtin")
+-- local status_tele_ok, telescope = pcall(require, "telescope")
+-- if not status_tele_ok then
+--     return
+-- end
+-- telescope.setup({
+--     defaults = {
+--         prompt_prefix = "   ",
+--         selection_caret = "  ",
+--         entry_prefix = "  ",
+--         initial_mode = "insert",
+--         selection_strategy = "reset",
+--         sorting_strategy = "ascending",
+--         layout_strategy = "vertical",
+--         layout_config = {
+--             horizontal = {
+--                 prompt_position = "top",
+--                 preview_width = 0.5,
+--                 results_width = 0.5,
+--             },
+--             vertical = {
+--                 prompt_position = "top",
+--                 preview_width = 0.5,
+--                 results_width = 0.5,
+--                 mirror = false,
+--             },
+--             width = 0.95,
+--             height = 0.95,
+--             preview_cutoff = 120,
+--         },
+--         vimgrep_arguments = {
+--             "rg",
+--             "--color=never",
+--             "--no-heading",
+--             "--with-filename",
+--             "--line-number",
+--             "--column",
+--             "--smart-case",
+--             "--hidden",
+--         },
+--         file_sorter = require("telescope.sorters").get_fuzzy_file,
+--         file_ignore_patterns = {
+--             "node_modules",
+--             ".git",
+--             "target",
+--             "vendor",
+--         },
+--         generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+--         path_display = { shorten = 5 },
+--         winblend = 0,
+--         border = {},
+--         borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
+--         color_devicons = true,
+--         set_env = { ["COLORTERM"] = "truecolor" },
+--         file_previewer = require("telescope.previewers").vim_buffer_cat.new,
+--         grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
+--         qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
+--         buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
+--     },
+--     preview = {
+--         check_mime_type = false,
+--     },
+--     pickers = {
+--         file_browser = {
+--             hidden = true,
+--         },
+--         find_files = {
+--             hidden = true,
+--         },
+--         live_grep = {
+--             hidden = true,
+--             only_sort_text = true,
+--         },
+--     },
+--     extensions = {
+--         fzf = {
+--             fuzzy = true,
+--             override_generic_sorter = false,
+--             override_file_sorter = true,
+--             case_mode = "smart_case",
+--         },
+--         file_browser = {},
+--         media_files = {
+--             find_cmd = "rg",
+--         },
+--     },
+-- })
+
+-- telescope.load_extension("file_browser")
+-- telescope.load_extension("tmux")
+-- telescope.load_extension("media_files")
+--
+-- local tele_b = require("telescope.builtin")
 vim.keymap.set("n", "<space>tf", function()
-    tele_b.find_files()
+    fzf_lua.find_files()
 end, { desc = "Find Files" })
 vim.keymap.set("n", "<space>to", function()
-    tele_b.oldfiles()
+    fzf_lua.oldfiles()
 end, { desc = "Find recent files" })
 vim.keymap.set("n", "<space>tt", function()
     fzf_lua.tmux_buffers()
 end, { desc = "List tmux buffers" })
 vim.keymap.set("n", "<space>tw", function()
-    tele_b.live_grep()
+    fzf_lua.live_grep()
 end, { desc = "Search word" })
 vim.keymap.set("n", "<space>tg", function()
-    tele_b.git_files()
+    fzf_lua.git_files()
 end, { desc = "Find git files" })
 vim.keymap.set("n", "<space>tgs", function()
-    tele_b.git_status()
+    fzf_lua.git_status()
 end, { desc = "Find git status" })
 vim.keymap.set("n", "<space>tgb", function()
-    tele_b.git_branches()
+    fzf_lua.git_branches()
 end, { desc = "Find git branches" })
 vim.keymap.set("n", "<space>tgv", function()
-    tele_b.git_stash()
+    fzf_lua.git_stash()
 end, { desc = "Find git stash" })
 vim.keymap.set("n", "<space>tk", function()
-    tele_b.keymaps()
+    fzf_lua.keymaps()
 end, { desc = "Find keymaps" })
 vim.keymap.set("n", "<space>tb", function()
-    tele_b.buffers()
+    fzf_lua.buffers()
 end, { desc = "Show buffers" })
 vim.keymap.set("n", "<space>tp", function()
-    tele_b.grep_string()
+    fzf_lua.grep_cword()
 end, { desc = "search word under cursor" })
 vim.keymap.set("n", "<space>tm", function()
-    tele_b.marks()
+    fzf_lua.marks()
 end, { desc = "search marks" })
 vim.keymap.set("n", "<space>tmn", function()
-    tele_b.menu()
+    fzf_lua.menu()
 end, { desc = "search menu" })
 vim.keymap.set("n", "<space>tc", function()
-    tele_b.commands()
+    fzf_lua.commands()
 end, { desc = "search commands" })
 vim.keymap.set("n", "<space>tcl", function()
-    tele_b.colorschemes()
+    fzf_lua.colorschemes()
 end, { desc = "search color schemes" })
 vim.keymap.set("n", "<space>tj", function()
-    tele_b.jumps()
+    fzf_lua.jumps()
 end, { desc = "search jumps" })
 vim.keymap.set(
     "n",
