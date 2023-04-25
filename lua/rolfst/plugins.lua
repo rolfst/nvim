@@ -29,8 +29,10 @@ require("lazy").setup({
         dependencies = {
             "nvim-telescope/telescope-symbols.nvim",
             "nvim-lua/plenary.nvim",
-            -- 		"nvim-telescope/telescope-fzf-native.nvim",
-            -- 		"nvim-telescope/telescope-file-browser.nvim",
+            "mrcjkb/telescope-manix",
+            "nvim-telescope/telescope-media-files.nvim",
+            "nvim-telescope/telescope-fzf-native.nvim",
+            "nvim-telescope/telescope-file-browser.nvim",
         },
     },
     {

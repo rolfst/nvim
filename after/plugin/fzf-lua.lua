@@ -22,31 +22,31 @@ fzf_lua.setup({
     },
     actions = {
         files = {
-                ["default"] = actions.file_edit_or_qf,
-                ["ctrl-h"] = actions.file_split,
-                ["ctrl-v"] = actions.file_vsplit,
-                ["alt-q"] = actions.file_sel_to_qf,
-                ["alt-l"] = actions.file_sel_to_ll,
+            ["default"] = actions.file_edit_or_qf,
+            ["ctrl-h"] = actions.file_split,
+            ["ctrl-v"] = actions.file_vsplit,
+            ["alt-q"] = actions.file_sel_to_qf,
+            ["alt-l"] = actions.file_sel_to_ll,
         },
         buffers = {
-                ["default"] = actions.buf_edit,
-                ["ctrl-h"] = actions.buf_split,
-                ["ctrl-v"] = actions.buf_vsplit,
+            ["default"] = actions.buf_edit,
+            ["ctrl-h"] = actions.buf_split,
+            ["ctrl-v"] = actions.buf_vsplit,
         },
     },
     keymap = {
         builtin = {
-                ["<F1>"] = "toggle-help",
-                ["<F2>"] = "toggle-fullscreen",
-                ["<F10>"] = "toggle-preview",
-                ["<F11>"] = "toggle-preview-ccw",
-                ["<ctrl-d>"] = "preview-page-down",
-                ["<ctrl-u>"] = "preview-page-up",
+            ["<F1>"] = "toggle-help",
+            ["<F2>"] = "toggle-fullscreen",
+            ["<F10>"] = "toggle-preview",
+            ["<F11>"] = "toggle-preview-ccw",
+            ["<ctrl-d>"] = "preview-page-down",
+            ["<ctrl-u>"] = "preview-page-up",
         },
         fzf = {
-                ["ctrl-a"] = "toggle-all",
-                ["ctrl-f"] = "half-page-down",
-                ["ctrl-b"] = "half-page-up",
+            ["ctrl-a"] = "toggle-all",
+            ["ctrl-f"] = "half-page-down",
+            ["ctrl-b"] = "half-page-up",
         },
     },
     files = {
@@ -78,24 +78,21 @@ fzf_lua.setup({
             prompt = "Branches> ",
         },
     },
-    grep = {
-        prompt = "Grep> ",
-        input_prompt = "Grep> ",
-        git_icons = false,
-        cmd = "rg --vimgrep",
-        -- cmd = "git grep --line-number --column -I --ignore-case",
-    },
+    -- grep = {
+    --     prompt = "Grep> ",
+    --     input_prompt = "Grep> ",
+    --     git_icons = false,
+    --     cmd = "rg --vimgrep",
+    --     -- cmd = "git grep --line-number --column -I --ignore-case",
+    -- },
     args = {
         prompt = "Args> ",
-    },
-    oldfiles = {
-        prompt = "OldFiles> ",
     },
     buffers = {
         prompt = "Buffers> ",
         sort_lastused = true,
         actions = {
-                ["ctrl-x"] = { actions.buf_del, actions.resume },
+            ["ctrl-x"] = { actions.buf_del, actions.resume },
         },
     },
     blines = {
@@ -111,53 +108,76 @@ fzf_lua.setup({
     manpages = { previewer = { _ctor = false } },
 })
 
+local status_tele_ok, telescope = pcall(require, "telescope")
+if not status_tele_ok then
+    return
+end
+telescope.setup({
+    extensions = {
+        media_files = {
+            find_cmd = "rg",
+        },
+    },
+})
+telescope.load_extension("media_files")
+local tele_b = telescope.builtin
 vim.keymap.set("n", "<space>tf", function()
-    fzf_lua.files()
+    tele_b.find_files()
 end, { desc = "Find Files" })
 vim.keymap.set("n", "<space>to", function()
-    fzf_lua.oldfiles()
+    tele_b.oldfiles()
 end, { desc = "Find recent files" })
 vim.keymap.set("n", "<space>tt", function()
     fzf_lua.tmux_buffers()
 end, { desc = "List tmux buffers" })
 vim.keymap.set("n", "<space>tw", function()
-    fzf_lua.live_grep()
+    tele_b.live_grep()
 end, { desc = "Search word" })
 vim.keymap.set("n", "<space>tg", function()
-    fzf_lua.git_files()
+    tele_b.git_files()
 end, { desc = "Find git files" })
 vim.keymap.set("n", "<space>tgs", function()
     fzf_lua.git_status()
 end, { desc = "Find git status" })
 vim.keymap.set("n", "<space>tgb", function()
-    fzf_lua.git_branches()
+    tele_b.git_branches()
 end, { desc = "Find git branches" })
 vim.keymap.set("n", "<space>tgv", function()
     fzf_lua.git_stash()
 end, { desc = "Find git stash" })
 vim.keymap.set("n", "<space>tk", function()
-    fzf_lua.keymaps()
+    tele_b.keymaps()
 end, { desc = "Find keymaps" })
 vim.keymap.set("n", "<space>tb", function()
-    fzf_lua.buffers()
+    tele_b.buffers()
 end, { desc = "Show buffers" })
 vim.keymap.set("n", "<space>tp", function()
     fzf_lua.grep_cword()
 end, { desc = "search word under cursor" })
 vim.keymap.set("n", "<space>tm", function()
-    fzf_lua.marks()
+    tele_b.marks()
 end, { desc = "search marks" })
 vim.keymap.set("n", "<space>tmn", function()
-    fzf_lua.menu()
+    tele_b.menu()
 end, { desc = "search menu" })
 vim.keymap.set("n", "<space>tc", function()
-    fzf_lua.commands()
+    tele_b.commands()
 end, { desc = "search commands" })
 vim.keymap.set("n", "<space>tcl", function()
-    fzf_lua.colorschemes()
+    tele_b.colorschemes()
 end, { desc = "search color schemes" })
 vim.keymap.set("n", "<space>tj", function()
-    fzf_lua.jumps()
+    tele_b.jumps()
 end, { desc = "search jumps" })
-vim.keymap.set("n", "<leader>ts", "<cmd>Telescope symbols<cr>", { desc = "search symbols" })
-vim.keymap.set("i", "<C-t>s", "<cmd>Telescope symbols<cr>", { desc = "search symbols" })
+vim.keymap.set(
+    "n",
+    "<leader>ts",
+    "<cmd>Telescope symbols<cr>",
+    { desc = "search symbols" }
+)
+vim.keymap.set(
+    "i",
+    "<C-t>s",
+    "<cmd>Telescope symbols<cr>",
+    { desc = "search symbols" }
+)
