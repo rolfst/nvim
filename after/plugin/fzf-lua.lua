@@ -120,7 +120,7 @@ telescope.setup({
         initial_mode = "insert",
         selection_strategy = "reset",
         sorting_strategy = "ascending",
-        layout_strategy = "horizontal",
+        layout_strategy = "vertical",
         layout_config = {
             horizontal = {
                 prompt_position = "top",
@@ -163,6 +163,9 @@ telescope.setup({
         qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
         buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
     },
+    preview = {
+        check_mime_type = false,
+    },
     pickers = {
         file_browser = {
             hidden = true,
@@ -191,6 +194,7 @@ telescope.setup({
 telescope.load_extension("file_browser")
 telescope.load_extension("tmux")
 telescope.load_extension("media_files")
+
 local tele_b = require("telescope.builtin")
 vim.keymap.set("n", "<space>tf", function()
     tele_b.find_files()
@@ -208,13 +212,13 @@ vim.keymap.set("n", "<space>tg", function()
     tele_b.git_files()
 end, { desc = "Find git files" })
 vim.keymap.set("n", "<space>tgs", function()
-    fzf_lua.git_status()
+    tele_b.git_status()
 end, { desc = "Find git status" })
 vim.keymap.set("n", "<space>tgb", function()
     tele_b.git_branches()
 end, { desc = "Find git branches" })
 vim.keymap.set("n", "<space>tgv", function()
-    fzf_lua.git_stash()
+    tele_b.git_stash()
 end, { desc = "Find git stash" })
 vim.keymap.set("n", "<space>tk", function()
     tele_b.keymaps()
@@ -223,7 +227,7 @@ vim.keymap.set("n", "<space>tb", function()
     tele_b.buffers()
 end, { desc = "Show buffers" })
 vim.keymap.set("n", "<space>tp", function()
-    fzf_lua.grep_cword()
+    tele_b.grep_string()
 end, { desc = "search word under cursor" })
 vim.keymap.set("n", "<space>tm", function()
     tele_b.marks()
