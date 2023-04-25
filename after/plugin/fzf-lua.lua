@@ -78,13 +78,13 @@ fzf_lua.setup({
             prompt = "Branches   ",
         },
     },
-    -- grep = {
-    --     prompt = "Grep> ",
-    --     input_prompt = "Grep> ",
-    --     git_icons = false,
-    --     cmd = "rg --vimgrep",
-    --     -- cmd = "git grep --line-number --column -I --ignore-case",
-    -- },
+    grep = {
+        prompt = "Search   ",
+        input_prompt = "Search   ",
+        -- git_icons = false,
+        -- cmd = "rg --vimgrep",
+        -- cmd = "git grep --line-number --column -I --ignore-case",
+    },
     args = {
         prompt = "Args   ",
     },
@@ -102,7 +102,7 @@ fzf_lua.setup({
         prompt = "Colorschemes   ",
     },
     lsp = {
-        prompt = "> ",
+        prompt = "  ",
     },
     helptags = { previewer = { _ctor = false } },
     manpages = { previewer = { _ctor = false } },
