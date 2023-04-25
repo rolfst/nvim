@@ -882,7 +882,7 @@ ht.start_or_attach({
 })
 -- Detect nvim-dap launch configurations
 -- (requires nvim-dap and haskell-debug-adapter)
-ht.dap.discover_configurations(bufnr)
+-- ht.dap.discover_configurations(bufnr)
 -- }}}
 -- {{{ Rust
 local rust_tools = require("rust-tools")
