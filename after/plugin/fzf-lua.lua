@@ -3,6 +3,8 @@ if not status_ok then
     return false
 end
 
+local image_previewer = vim.fn.executable("chafa") == 1 and { "chafa" }
+    or { "viu", "-b" }
 local actions = require("fzf-lua.actions")
 fzf_lua.setup({
     winopts = {
@@ -14,7 +16,6 @@ fzf_lua.setup({
             border = "FloatBorder",
         },
         preview = {
-            default = "head",
             vertical = "down:60%",
             layout = "vertical",
             scrollbar = "float",
@@ -38,10 +39,15 @@ fzf_lua.setup({
         builtin = {
             ["<F1>"] = "toggle-help",
             ["<F2>"] = "toggle-fullscreen",
-            ["<F10>"] = "toggle-preview",
-            ["<F11>"] = "toggle-preview-ccw",
+            -- Only valid with the 'builtin' previewer
+            ["<F3>"] = "toggle-preview-wrap",
+            ["<F4>"] = "toggle-preview",
+            -- Rotate preview clockwise/counter-clockwise
+            ["<F5>"] = "toggle-preview-ccw",
+            ["<F6>"] = "toggle-preview-cw",
             ["<ctrl-d>"] = "preview-page-down",
             ["<ctrl-u>"] = "preview-page-up",
+            ["<ctrl-l>"] = "preview-page-reset",
         },
         fzf = {
             ["ctrl-a"] = "toggle-all",
@@ -108,20 +114,14 @@ fzf_lua.setup({
     manpages = { previewer = { _ctor = false } },
     previewers = {
         builtin = {
+            ueberzug_scaler = "cover",
             extensions = {
-                ["png"] = { "chafa" },
-                ["jpg"] = { "chafa" },
-                ["svg"] = { "chafa" },
+                ["png"] = image_previewer,
+                ["jpg"] = image_previewer,
+                ["jpeg"] = image_previewer,
+                ["gif"] = image_previewer,
+                ["svg"] = image_previewer,
             },
-        },
-    },
-    previewer = {
-        chafa = {
-            cmd = "chafa",
-            args = "",
-            _new = function()
-                return require("fzf_lua.previewer").cmd_async
-            end,
         },
     },
 })
