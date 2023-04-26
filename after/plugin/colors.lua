@@ -41,7 +41,6 @@
 function ColorScheme(color)
     color = color or "rose-pine"
     vim.cmd.colorscheme(color)
-    -- vim.cmd.TransparentEnable()
 
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
@@ -49,6 +48,9 @@ end
 
 ColorScheme()
 --------------
--- colorize r
--- local _, colorizer = pcall(require, "colorizer")
--- colorizer.setup()
+-- colorizer
+local status_colorizer, colorizer = pcall(require, "colorizer")
+if status_colorizer then
+    print("colorizer")
+    colorizer.setup()
+end
