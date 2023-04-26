@@ -266,7 +266,8 @@ require("lazy").setup({
         dependencies = { { "ray-x/guihua.lua", build = "cd lua/fzy && make" } },
     },
     -- UI plugins
-    { "xiyaowong/transparent.nvim", lazy = false },
+    --
+    { "norcalli/nvim-colorizer.lua" },
     { "nvim-tree/nvim-web-devicons" },
     { "SmiteshP/nvim-navic" },
     {
