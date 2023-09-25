@@ -48,7 +48,7 @@ dapui.setup({
         max_width = nil, -- Floats will be treated as percentage of your screen.
         border = single, -- Border style. Can be 'single', 'double' or 'rounded'
         mappings = {
-            ["close"] = { "q", "<Esc>" },
+                ["close"] = { "q", "<Esc>" },
         },
     },
     windows = {
@@ -158,9 +158,19 @@ if not dap_vscode_js_status_ok then
     return
 end
 dap_vscode_js.setup({
+<<<<<<< HEAD
+    node_path = "node",                                                                          -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+    debugger_path = global.mason_path .. "/bin/vscode-js-debug",                                 -- Path to vscode-js-debug installation.
+    debugger_cmd = { "js-debug-adapter" },                                                       -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+||||||| parent of 376e74d (fix(debug): stepinto for node and some extra node debug options)
     node_path = "node",                                                                       -- Path of node executable. Defaults to $NODE_PATH, and then "node"
     debugger_path = global.mason_path .. "/bin/vscode-js-debug",                              -- Path to vscode-js-debug installation.
     debugger_cmd = { "js-debug-adapter" },                                                    -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+=======
+    node_path = "node",                                                                       -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+    debugger_path = global.mason_path .. "/bin/vscode-js-debug",                              -- Path to vscode-js-debug installation.
+    -- debugger_cmd = { "js-debug-adapter" },                                                    -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+>>>>>>> 376e74d (fix(debug): stepinto for node and some extra node debug options)
     adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }, -- which adapters to register in nvim-dap
 })
 local exts = {

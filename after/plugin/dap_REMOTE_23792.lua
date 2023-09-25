@@ -32,7 +32,7 @@ dapui.setup({
                 { id = "watches",     size = 0.25 },
             },
             size = 0.33,
-            position = "left",
+            position = "right",
         },
         {
             elements = {
@@ -44,11 +44,11 @@ dapui.setup({
         },
     },
     floating = {
-        max_height = nil,
-        max_width = nil, -- Floats will be treated as percentage of your screen.
-        border = single, -- Border style. Can be 'single', 'double' or 'rounded'
+        max_height = 0.9,
+        max_width = 0.5,       -- Floats will be treated as percentage of your screen.
+        border = vim.g.border_chars, -- Border style. Can be 'single', 'double' or 'rounded'
         mappings = {
-            ["close"] = { "q", "<Esc>" },
+            close = { "q", "<Esc>" },
         },
     },
     windows = {
@@ -67,11 +67,6 @@ dapui.setup({
             run_last = "",
             terminate = "",
         },
-    },
-    render = {
-        max_type_length = nil,
-        max_value_lines = 100,
-        indent = 1,
     },
 })
 dap.listeners.after.event_initialized["dapui_config"] = function()
@@ -160,7 +155,7 @@ end
 dap_vscode_js.setup({
     node_path = "node",                                                                       -- Path of node executable. Defaults to $NODE_PATH, and then "node"
     debugger_path = global.mason_path .. "/bin/vscode-js-debug",                              -- Path to vscode-js-debug installation.
-    debugger_cmd = { "js-debug-adapter" },                                                    -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+    -- debugger_cmd = { "js-debug-adapter" },                                                    -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
     adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }, -- which adapters to register in nvim-dap
 })
 local exts = {
