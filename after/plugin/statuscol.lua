@@ -5,7 +5,7 @@ end
 statuscol_nvim.setup({
     separator = " ",
     setopt = true,
-    order = "SNsFs",
+    segment = "SNsFs",
 })
 
 -- vim.o.statuscolumn = [[%@v:lua.ScFa@%C%T%@v:lua.ScSa@%s%T@v:lua.ScLa@%=%l%T]]
