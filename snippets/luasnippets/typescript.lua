@@ -13,8 +13,8 @@ local rep = require("luasnip.extras").rep
 
 local snippets, autosnippets = {}, {} --}}}
 
-local group = vim.api.nvim_create_augroup("Javascript Snippets", { clear = true })
-local file_pattern = { "*.js", "*.jsm", "*.vue", "*.ts" }
+local group = vim.api.nvim_create_augroup("Typescript Snippets", { clear = true })
+local file_pattern = { "*.ts" }
 
 local function cs(trigger, nodes, opts) --{{{ create snippets helper
     local snippet = s(trigger, nodes)
@@ -69,6 +69,52 @@ local function cs(trigger, nodes, opts) --{{{ create snippets helper
 end                                  --}}}
 
 -- Place snippets here --
+
+cs(
+    "export interface",
+    fmt(
+        [[
+export interface {} {{
+    {}
+}}]],
+        {
+            i(1, "name"),
+            i(2, "field"),
+        }
+    ),
+    "ein"
+)
+cs(
+    "export constant",
+    fmt([[export const {} = {}]], {
+        i(1, "name"),
+        i(2, "target"),
+    }),
+    "eco"
+)
+cs(
+    "const arrow function assignment",
+    fmt(
+        [[
+const {} = ({}) => {{
+    {}
+}}]],
+        {
+            i(1, "name"),
+            i(2, "arguments"),
+            i(3, "body"),
+        }
+    ),
+    "cf"
+)
+cs(
+    "arrow function",
+    fmt([[({}) => {}]], {
+        i(1, "arguments"),
+        i(2, "body"),
+    }),
+    "af"
+)
 cs(
     "generator function",
     fmt(
@@ -83,6 +129,51 @@ function* ({}) {{
         }
     ),
     "gf"
+)
+
+cs(
+    "constant effect yield",
+    fmt(
+        [[
+const {} = yield* _({})
+    ]],
+        {
+            i(1, "name"),
+            i(2, "generator"),
+        }
+    ),
+    "cey"
+)
+
+cs(
+    "constant declaration",
+    fmt(
+        [[
+const {} = {}
+    ]],
+        {
+            i(1, "name"),
+            i(2, "impl"),
+        }
+    ),
+    "cdl"
+)
+
+cs(
+    "class method",
+    fmt(
+        [[
+{}({}) {{
+    {}
+}}
+    ]],
+        {
+            i(1, "name"),
+            i(2, "arguments"),
+            i(3, "impl"),
+        }
+    ),
+    "cme"
 )
 
 -- End snippets --

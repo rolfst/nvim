@@ -13,8 +13,8 @@ local rep = require("luasnip.extras").rep
 
 local snippets, autosnippets = {}, {} --}}}
 
-local group = vim.api.nvim_create_augroup("Javascript Snippets", { clear = true })
-local file_pattern = { "*.js", "*.jsm", "*.vue", "*.ts" }
+local group = vim.api.nvim_create_augroup("Lua Snippets", { clear = true })
+local file_pattern = "*.lua"
 
 local function cs(trigger, nodes, opts) --{{{ create snippets helper
     local snippet = s(trigger, nodes)
@@ -69,21 +69,41 @@ local function cs(trigger, nodes, opts) --{{{ create snippets helper
 end                                  --}}}
 
 -- Place snippets here --
-cs(
-    "generator function",
+
+cs( -- [function] Lua function snippet{{{
+    "let",
     fmt(
         [[
-function* ({}) {{
-    {}
-}}
-    ]],
+let
+  {}
+in {}
+]],
         {
-            i(1, "arguments"),
-            i(2, "body"),
+            i(1, ""),
+            i(2, ""),
         }
     ),
-    "gf"
-)
+    "lt"
+)   --}}}
+cs( -- [function] Lua function snippet{{{
+    "flake",
+    fmt(
+        [[
+{{
+    inputs = {{{}}};
+
+    {}
+    outputs = inputs: {{{}}};
+}}
+]],
+        {
+            i(1, ""),
+            i(2, ""),
+            i(3, ""),
+        }
+    ),
+    "fl"
+) --}}}
 
 -- End snippets --
 
