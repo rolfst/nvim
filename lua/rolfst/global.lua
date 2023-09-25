@@ -19,7 +19,7 @@ function global:load_variables()
     self.os = os
     self.nvim_path = home .. "/.config/nvim"
     self.cache_path = home .. "/.cache/nvim"
-    self.packer_path = home .. "/.local/share/nvim/site"
+    self.plugin_path = home .. "/.local/share/nvim/site"
     self.snapshot_path = home .. "/.config/nvim/.snapshots"
     self.modules_path = home .. "/.config/nvim/lua/rolfst/modules"
     self.snippets_path = home .. "/.config/nvim/snippets"

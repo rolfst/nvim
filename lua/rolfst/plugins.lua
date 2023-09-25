@@ -1,3 +1,4 @@
+local global = require("rolfst.global")
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -45,7 +46,7 @@ require("lazy").setup({
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        dependencies = { "mrjones2014/nvim-ts-rainbow" },
+        -- dependencies = { "mrjones2014/nvim-ts-rainbow" },
     },
     { "nvim-treesitter/playground" },
 
@@ -184,6 +185,14 @@ require("lazy").setup({
     { "mfussenegger/nvim-dap" },
 
     { "mxsdev/nvim-dap-vscode-js", lazy = true },
+    {
+        "microsoft/vscode-js-debug",
+        build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out && ln -s "
+            .. global.plugin_path
+            .. "/vscode-js-debug "
+            .. global.mason_path
+            .. "/",
+    },
 
     { "jbyuki/one-small-step-for-vimkind", lazy = true },
     {
@@ -260,11 +269,8 @@ require("lazy").setup({
         },
     },
     { "onsails/diaglist.nvim" },
-    { "folke/todo-comments.nvim", dependencies = "nvim-lua/plenary.nvim" },
-    {
-        "ray-x/sad.nvim",
-        dependencies = { { "ray-x/guihua.lua", build = "cd lua/fzy && make" } },
-    },
+    { "folke/todo-comments.nvim",   dependencies = "nvim-lua/plenary.nvim" },
+    { "ray-x/sad.nvim",             dependencies = { { "ray-x/guihua.lua", build = "cd lua/fzy && make" } } },
     -- UI plugins
     --
     { "norcalli/nvim-colorizer.lua" },
