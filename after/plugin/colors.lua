@@ -51,6 +51,5 @@ ColorScheme()
 -- colorizer
 local status_colorizer, colorizer = pcall(require, "colorizer")
 if status_colorizer then
-    print("colorizer")
     colorizer.setup()
 end
