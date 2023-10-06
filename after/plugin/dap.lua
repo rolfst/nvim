@@ -26,17 +26,17 @@ dapui.setup({
     layouts = {
         {
             elements = {
-                { id = "scopes",      size = 0.33 },
+                { id = "scopes", size = 0.33 },
                 { id = "breakpoints", size = 0.17 },
-                { id = "stacks",      size = 0.25 },
-                { id = "watches",     size = 0.25 },
+                { id = "stacks", size = 0.25 },
+                { id = "watches", size = 0.25 },
             },
             size = 0.33,
             position = "left",
         },
         {
             elements = {
-                { id = "repl",    size = 0.45 },
+                { id = "repl", size = 0.45 },
                 { id = "console", size = 0.55 },
             },
             size = 0.27,
@@ -101,20 +101,56 @@ vim.fn.sign_define("DapLogPoint", {
     linehl = "",
     numhl = "",
 })
-vim.api.nvim_create_user_command("LuaDapLaunch", 'lua require"osv".run_this()', {})
-vim.api.nvim_create_user_command("DapToggleBreakpoint", 'lua require("dap").toggle_breakpoint()', {})
-vim.api.nvim_create_user_command("DapContinue", 'lua require"dap".continue()', {})
-vim.api.nvim_create_user_command("DapStepInto", 'lua require"dap".step_into()', {})
-vim.api.nvim_create_user_command("DapStepOver", 'lua require"dap".step_over()', {})
-vim.api.nvim_create_user_command("DapStepOut", 'lua require"dap".step_out()', {})
+vim.api.nvim_create_user_command(
+    "LuaDapLaunch",
+    'lua require"osv".run_this()',
+    {}
+)
+vim.api.nvim_create_user_command(
+    "DapToggleBreakpoint",
+    'lua require("dap").toggle_breakpoint()',
+    {}
+)
+vim.api.nvim_create_user_command(
+    "DapContinue",
+    'lua require"dap".continue()',
+    {}
+)
+vim.api.nvim_create_user_command(
+    "DapStepInto",
+    'lua require"dap".step_into()',
+    {}
+)
+vim.api.nvim_create_user_command(
+    "DapStepOver",
+    'lua require"dap".step_over()',
+    {}
+)
+vim.api.nvim_create_user_command(
+    "DapStepOut",
+    'lua require"dap".step_out()',
+    {}
+)
 vim.api.nvim_create_user_command("DapUp", 'lua require"dap".up()', {})
 vim.api.nvim_create_user_command("DapDown", 'lua require"dap".down()', {})
 vim.api.nvim_create_user_command("DapPause", 'lua require"dap".pause()', {})
 vim.api.nvim_create_user_command("DapClose", 'lua require"dap".close()', {})
-vim.api.nvim_create_user_command("DapDisconnect", 'lua require"dap".disconnect()', {})
+vim.api.nvim_create_user_command(
+    "DapDisconnect",
+    'lua require"dap".disconnect()',
+    {}
+)
 vim.api.nvim_create_user_command("DapRestart", 'lua require"dap".restart()', {})
-vim.api.nvim_create_user_command("DapToggleRepl", 'lua require"dap".repl.toggle()', {})
-vim.api.nvim_create_user_command("DapGetSession", 'lua require"dap".session()', {})
+vim.api.nvim_create_user_command(
+    "DapToggleRepl",
+    'lua require"dap".repl.toggle()',
+    {}
+)
+vim.api.nvim_create_user_command(
+    "DapGetSession",
+    'lua require"dap".session()',
+    {}
+)
 vim.api.nvim_create_user_command(
     "DapUIClose",
     'lua require"dap".close(); require"dap".disconnect(); require"dapui".close()',
@@ -158,10 +194,16 @@ if not dap_vscode_js_status_ok then
     return
 end
 dap_vscode_js.setup({
-    node_path = "node",                                                                       -- Path of node executable. Defaults to $NODE_PATH, and then "node"
-    debugger_path = global.mason_path .. "/bin/vscode-js-debug",                              -- Path to vscode-js-debug installation.
-    debugger_cmd = { "js-debug-adapter" },                                                    -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
-    adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }, -- which adapters to register in nvim-dap
+    node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+    debugger_path = global.mason_path .. "/vscode-js-debug", -- Path to vscode-js-debug installation.
+    -- debugger_cmd = { "js-debug-adapter" },                                                    -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+    adapters = {
+        "pwa-node",
+        "pwa-chrome",
+        "pwa-msedge",
+        "node-terminal",
+        "pwa-extensionHost",
+    }, -- which adapters to register in nvim-dap
 })
 local exts = {
     "javascript",
@@ -432,8 +474,16 @@ dap.configurations.python = {
             if venv_path then
                 return venv_path .. "/bin/python"
             end
-            if vim.fn.executable(global.mason_path .. "/packages/debugpy/venv/" .. "bin/python") == 1 then
-                return global.mason_path .. "/packages/debugpy/venv/" .. "bin/python"
+            if
+                vim.fn.executable(
+                    global.mason_path
+                        .. "/packages/debugpy/venv/"
+                        .. "bin/python"
+                ) == 1
+            then
+                return global.mason_path
+                    .. "/packages/debugpy/venv/"
+                    .. "bin/python"
             else
                 return "python"
             end
@@ -444,15 +494,27 @@ dap.configurations.python = {
         request = "launch",
         name = "Launch",
         program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            return vim.fn.input(
+                "Path to executable: ",
+                vim.fn.getcwd() .. "/",
+                "file"
+            )
         end,
         pythonPath = function()
             local venv_path = os.getenv("VIRTUAL_ENV")
             if venv_path then
                 return venv_path .. "/bin/python"
             end
-            if vim.fn.executable(global.mason_path .. "/packages/debugpy/venv/" .. "bin/python") == 1 then
-                return global.mason_path .. "/packages/debugpy/venv/" .. "bin/python"
+            if
+                vim.fn.executable(
+                    global.mason_path
+                        .. "/packages/debugpy/venv/"
+                        .. "bin/python"
+                ) == 1
+            then
+                return global.mason_path
+                    .. "/packages/debugpy/venv/"
+                    .. "bin/python"
             else
                 return "python"
             end
@@ -483,7 +545,11 @@ dap.configurations.rust = {
         type = "codelldb",
         request = "launch",
         program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            return vim.fn.input(
+                "Path to executable: ",
+                vim.fn.getcwd() .. "/",
+                "file"
+            )
         end,
         cwd = "${workspaceFolder}",
         stopOnEntry = false,
@@ -553,7 +619,11 @@ dap.configurations.go = {
         name = "Launch",
         request = "launch",
         program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            return vim.fn.input(
+                "Path to executable: ",
+                vim.fn.getcwd() .. "/",
+                "file"
+            )
         end,
     },
     {
@@ -562,7 +632,11 @@ dap.configurations.go = {
         request = "launch",
         mode = "test",
         program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            return vim.fn.input(
+                "Path to executable: ",
+                vim.fn.getcwd() .. "/",
+                "file"
+            )
         end,
     },
 }
@@ -579,8 +653,13 @@ dap.configurations.cs = {
         name = "Launch",
         program = function()
             return vim.fn.input(
-                global.mason_path .. "/packages/netcoredbg/build/ManagedPart.dll",
-                vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                global.mason_path
+                    .. "/packages/netcoredbg/build/ManagedPart.dll",
+                vim.fn.input(
+                    "Path to executable: ",
+                    vim.fn.getcwd() .. "/",
+                    "file"
+                )
             )
         end,
     },
@@ -589,7 +668,8 @@ dap.configurations.cs = {
 dap.adapters.cppdbg = {
     id = "cppdbg",
     type = "executable",
-    command = global.mason_path .. "/packages/cpptools/extension/debugAdapters/bin/OpenDebugAD7",
+    command = global.mason_path
+        .. "/packages/cpptools/extension/debugAdapters/bin/OpenDebugAD7",
 }
 dap.configurations.cpp = {
     {
@@ -597,7 +677,11 @@ dap.configurations.cpp = {
         type = "cppdbg",
         request = "launch",
         program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            return vim.fn.input(
+                "Path to executable: ",
+                vim.fn.getcwd() .. "/",
+                "file"
+            )
         end,
         cwd = "${workspaceFolder}",
         stopOnEntry = true,
@@ -611,7 +695,11 @@ dap.configurations.cpp = {
         miDebuggerPath = "/usr/bin/gdb",
         cwd = "${workspaceFolder}",
         program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            return vim.fn.input(
+                "Path to executable: ",
+                vim.fn.getcwd() .. "/",
+                "file"
+            )
         end,
     },
 }
