@@ -576,6 +576,30 @@ M.without_winbar_config = function(file_types)
     }
 end
 
+M.config_with_command = function(file_types, settings, command)
+    return {
+        flags = {
+            debounce_text_changes = default_debouce_time,
+        },
+        autostart = true,
+        command = command,
+        filetypes = file_types,
+        on_attach = function(client, bufnr)
+            -- languages_setup.keymaps(client, bufnr)
+            M.on_attach(client, bufnr)
+            M.omni(client, bufnr)
+            M.tag(client, bufnr)
+            M.document_highlight(client, bufnr)
+            navic.attach(client, bufnr)
+        end,
+        capabilities = M.get_capabilities(),
+        root_dir = function(fname)
+            return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
+        end,
+        settings = (settings == nil and {} or settings),
+    }
+end
+
 local servers = {
     angularls = {
         flags = {
@@ -726,7 +750,11 @@ local servers = {
         },
         workspace = { checkThirdParty = false },
     }),
-    marksman = M.default_config({ "markdown", "telekasten" }),
+    marksman = M.config_with_command(
+        { "markdown", "telekasten" },
+        nil,
+        "marksman"
+    ),
     nil_ls = M.default_config("nix"),
     -- omnisharp = M.default_config({"cs", "vb"}),
     pyright = M.default_config("python"),
