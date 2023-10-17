@@ -7,5 +7,5 @@ vim.keymap.set(
     "n",
     "-",
     "<CMD>Oil --float<CR>",
-    { noremap = true, description = "file browser", silent = true }
+    { noremap = true, desc = "file browser", silent = true }
 )
