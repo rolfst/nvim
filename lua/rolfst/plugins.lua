@@ -269,8 +269,11 @@ require("lazy").setup({
         },
     },
     { "onsails/diaglist.nvim" },
-    { "folke/todo-comments.nvim",   dependencies = "nvim-lua/plenary.nvim" },
-    { "ray-x/sad.nvim",             dependencies = { { "ray-x/guihua.lua", build = "cd lua/fzy && make" } } },
+    { "folke/todo-comments.nvim", dependencies = "nvim-lua/plenary.nvim" },
+    {
+        "ray-x/sad.nvim",
+        dependencies = { { "ray-x/guihua.lua", build = "cd lua/fzy && make" } },
+    },
     -- UI plugins
     --
     { "norcalli/nvim-colorizer.lua" },
@@ -306,5 +309,11 @@ require("lazy").setup({
             "nvim-telescope/telescope-symbols.nvim",
             -- "nvim-telescope/telescope-media-files.nvim"
         },
+    },
+    {
+        "stevearc/oil.nvim",
+        opts = {},
+        -- Optional dependencies
+        dependencies = { "nvim-tree/nvim-web-devicons" },
     },
 })
