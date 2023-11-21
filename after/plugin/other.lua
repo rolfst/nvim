@@ -7,13 +7,18 @@ other.setup({
     mappings = {
         "angular",
         {
-            pattern = "/src/main/java/(.*)/.*.java$",
-            target = "/src/test/java/%1/%1Test.java",
+            pattern = "/src/main/java/(.*)/(.*).java$",
+            target = "/src/test/java/%1/%2Test.java",
             context = "test",
         },
         {
-            pattern = "/src/(.*)/.*.py$",
-            target = "/test/%1/%1.test.py",
+            pattern = "/src/main/java/(.*)/(.*).java$",
+            target = "/src/test/java/%1/%2Tests.java",
+            context = "test",
+        },
+        {
+            pattern = "/src/(.*)/(.*).py$",
+            target = "/test/%1/%2.test.py",
             context = "test",
         },
     },
