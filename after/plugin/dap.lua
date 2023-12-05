@@ -231,7 +231,7 @@ for i, ext in ipairs(exts) do
             request = "launch",
             name = "Launch Current File (pwa-node with ts-node)",
             cwd = vim.fn.getcwd(),
-            runtimeArgs = { "--loader", "ts-node/esm" },
+            runtimeArgs = { "-r", "ts-node/register" },
             runtimeExecutable = "node",
             args = { "${file}" },
             sourceMaps = true,
