@@ -460,7 +460,7 @@ null_ls.setup({
         diagnostics.stylelint,
         diagnostics.yamllint,
         diagnostics.zsh,
-        completions.spell,
+        -- completions.spell,
         formatting.alejandra,
         formatting.black,
         formatting.codespell.with({ filetypes = { "markdown" } }),
