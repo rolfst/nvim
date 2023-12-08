@@ -13,6 +13,9 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup({
+    dev = {
+        path = "~/workspaces/nvim-plugins",
+    },
     {
         "junegunn/fzf",
         build = function()
