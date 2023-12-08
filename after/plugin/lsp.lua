@@ -1033,7 +1033,7 @@ local ensured = funcs.filter(declared, function(v, _, _)
     if v == "markdown" then
         return false
     end
-    if v == "lua" then
+    if v == "lua_ls" then
         return false
     end
 end)
