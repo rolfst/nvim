@@ -926,27 +926,27 @@ typescript.setup({
 })
 -- }}}
 -- {{{ haskell
-local ht = require("haskell-tools")
-ht.start_or_attach({
-    hls = {
-        on_attach = function(client, bufnr)
-            local opts = { buffer = bufnr, remap = false }
-            M.on_attach(client, bufnr)
-            nmap("<space>ghs", ht.hoogle.hoogle_signature, "Hoogle signature")
-            vim.keymap.set("n", "<space>gea", ht.lsp.buf_eval_all, "eval buff")
-            -- Toggle a GHCi repl for the current package
-            vim.keymap.set("n", "<leader>grr", ht.repl.toggle, "Start repl")
-            -- Toggle a GHCi repl for the current buffer
-            vim.keymap.set("n", "<leader>grf", function()
-                ht.repl.toggle(vim.api.nvim_buf_get_name(0))
-            end, "Start repl from current buffer")
-            vim.keymap.set("n", "<leader>grq", ht.repl.quit, "Quit repl")
-        end,
-    },
-})
+-- local ht = require("haskell-tools")
+-- ht.start_or_attach({
+--     hls = {
+--         on_attach = function(client, bufnr)
+--             local opts = { buffer = bufnr, remap = false }
+--             M.on_attach(client, bufnr)
+--             nmap("<space>ghs", ht.hoogle.hoogle_signature, "Hoogle signature")
+--             vim.keymap.set("n", "<space>gea", ht.lsp.buf_eval_all, "eval buff")
+--             -- Toggle a GHCi repl for the current package
+--             vim.keymap.set("n", "<leader>grr", ht.repl.toggle, "Start repl")
+--             -- Toggle a GHCi repl for the current buffer
+--             vim.keymap.set("n", "<leader>grf", function()
+--                 ht.repl.toggle(vim.api.nvim_buf_get_name(0))
+--             end, "Start repl from current buffer")
+--             vim.keymap.set("n", "<leader>grq", ht.repl.quit, "Quit repl")
+--         end,
+--     },
+-- })
 -- Detect nvim-dap launch configurations
 -- (requires nvim-dap and haskell-debug-adapter)
-ht.dap.discover_configurations(bufnr)
+-- ht.dap.discover_configurations(bufnr)
 -- }}}
 -- {{{ Rust
 local rust_tools = require("rust-tools")
