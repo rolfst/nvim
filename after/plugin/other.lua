@@ -21,6 +21,10 @@ other.setup({
             target = "/test/%1/%2.test.py",
             context = "test",
         },
+        {
+            pattern = "/src/(.*)/(.*).[jt]s",
+            target = "/test/(.*)/%1/%2.(spec|test).[jt]s",
+        },
     },
 })
 
