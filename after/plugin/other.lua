@@ -5,25 +5,59 @@ end
 
 other.setup({
     mappings = {
-        "angular",
         {
-            pattern = "/src/main/java/(.*)/(.*).java$",
-            target = "/src/test/java/%1/%2Test.java",
+            pattern = "/src/main/java/(.*).java$",
+            target = "/src/test/java/%1Test.java",
             context = "test",
         },
         {
-            pattern = "/src/main/java/(.*)/(.*).java$",
-            target = "/src/test/java/%1/%2Tests.java",
+            pattern = "/src/test/java/(.*)Test.java$",
+            target = "/src/main/java/%1.java",
+            context = "implementation",
+        },
+        {
+            pattern = "/src/main/java/(.*).java$",
+            target = "/src/test/java/%1Tests.java",
+            context = "tests",
+        },
+        {
+            pattern = "/src/(.*).py$",
+            target = "/test/%1.test.py",
             context = "test",
         },
         {
-            pattern = "/src/(.*)/(.*).py$",
-            target = "/test/%1/%2.test.py",
-            context = "test",
+            pattern = "/src/(.*).ts$",
+            target = {
+                {
+                    target = "/src/%1.component.scss",
+                    context = "scss",
+                },
+                {
+                    target = "/src/%1.component.html",
+                    context = "view",
+                },
+                {
+                    target = "/test/%1.spec.ts",
+                    context = "spec",
+                },
+                {
+                    target = "/test/%1.component.spec.ts",
+                    context = "component-spec",
+                },
+                {
+                    target = "/test/%1.test.ts",
+                    context = "test",
+                },
+            },
         },
         {
-            pattern = "/src/(.*)/(.*).[jt]s",
-            target = "/test/(.*)/%1/%2.(spec|test).[jt]s",
+            pattern = "/test/(.*).test.ts$",
+            target = {
+                {
+                    target = "/src/%1.ts",
+                    context = "implementation",
+                },
+            },
         },
     },
 })
