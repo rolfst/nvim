@@ -80,10 +80,10 @@ local check_backspace = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0
         and vim.api
-                .nvim_buf_get_lines(0, line - 1, line, true)[1]
-                :sub(col, col)
-                :match("%s")
-            == nil
+        .nvim_buf_get_lines(0, line - 1, line, true)[1]
+        :sub(col, col)
+        :match("%s")
+        == nil
 end
 
 local lsp_symbols = icons.cmp
@@ -778,12 +778,12 @@ local servers = {
 local function start_server_java()
     local jdtls_launcher = vim.fn.glob(
         global.mason_path
-            .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
+        .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
     )
     local jdtls_bundles = {
         vim.fn.glob(
             global.mason_path
-                .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
+            .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
             1
         ),
     }
@@ -792,7 +792,7 @@ local function start_server_java()
         vim.split(
             vim.fn.glob(
                 global.mason_path
-                    .. "/packages/java-test/extension/server/*.jar",
+                .. "/packages/java-test/extension/server/*.jar",
                 1
             ),
             "\n"
@@ -872,9 +872,9 @@ end, vim.api.nvim_list_bufs())
 local typescript = require("typescript")
 typescript.setup({
     disable_commands = false, -- prevent the plugin from creating Vim commands
-    debug = false, -- enable debug logging for commands
+    debug = false,            -- enable debug logging for commands
     go_to_source_definition = {
-        fallback = true, -- fall back to standard LSP definition on failure
+        fallback = true,      -- fall back to standard LSP definition on failure
     },
     server = {
         flags = {
@@ -1006,7 +1006,7 @@ rust_tools.setup({
         adapter = require("rust-tools.dap").get_codelldb_adapter(
             global.mason_path .. "/packages/codelldb/extension/adapter/codelldb",
             global.mason_path
-                .. "/packages/codelldb/extension/adapter/libcodelldb.so"
+            .. "/packages/codelldb/extension/adapter/libcodelldb.so"
         ),
     },
 })
@@ -1033,15 +1033,16 @@ local ensured = funcs.filter(declared, function(v, _, _)
     if v == "markdown" then
         return false
     end
-    if v == "lua_ls" then
-        return false
-    end
+    -- if v == "lua_ls" then
+    --     return false
+    -- end
 end)
+local lspconfig = require("lspconfig")
 mason_lspconfig.setup({ ensure_installed = ensured })
 mason_lspconfig.setup_handlers({
     function(server_name)
         if funcs.has_value(servers, server_name) then
-            require("lspconfig")[server_name].setup({
+            lspconfig[server_name].setup({
                 capabilities = servers[server_name].capabilities,
                 on_attach = servers[server_name].on_attach,
                 settings = servers[server_name].settings,
@@ -1050,5 +1051,12 @@ mason_lspconfig.setup_handlers({
             })
         end
     end,
+})
+lspconfig["lua_ls"].setup({
+    capabilities = servers["lua_ls"].capabilities,
+    on_attach = servers["lua_ls"].on_attach,
+    settings = servers["lua_ls"].settings,
+    flags = servers["lua_ls"].flags,
+    root_dir = servers["lua_ls"].root_dir,
 })
 -- }}}
