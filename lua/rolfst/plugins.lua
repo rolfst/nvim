@@ -135,7 +135,7 @@ require("lazy").setup({
         },
         cmd = "CtrlSpace",
     },
-    { "Dkendal/nvim-treeclimber", dependencies = { "rktjmp/lush.nvim" } },
+    { "Dkendal/nvim-treeclimber",   dependencies = { "rktjmp/lush.nvim" } },
     {
         "windwp/nvim-autopairs",
         dependencies = {
@@ -188,7 +188,7 @@ require("lazy").setup({
     -- DAP plugins
     { "mfussenegger/nvim-dap" },
 
-    { "mxsdev/nvim-dap-vscode-js", lazy = true },
+    { "mxsdev/nvim-dap-vscode-js",  lazy = true },
     {
         "microsoft/vscode-js-debug",
         build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out && ln -s "
@@ -223,14 +223,22 @@ require("lazy").setup({
     -- Test plugins
 
     {
-        "nvim-neotest/neotest",
+        -- "nvim-neotest/neotest",
+        dev = true,
+        "/home/rolfst/workspaces/nvim-plugins/neotest",
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
             "rouge8/neotest-rust",
             "nvim-neotest/neotest-python",
+            "nvim-neotest/neotest-plenary",
             "MrcJkb/neotest-haskell",
             "haydenmeade/neotest-jest",
+
+            {
+                dev = true,
+                "/home/rolfst/workspaces/nvim-plugins/neotest-node-test",
+            },
             -- "jfpedroza/neotest-elixir",
             -- "olimorris/neotest-phpunit",
             -- "nvim-neotest/neotest-go",
@@ -259,6 +267,7 @@ require("lazy").setup({
         },
         event = "BufRead Cargo.toml",
     },
+    { "mfussenegger/nvim-jdtls" },
 
     {
         "jose-elias-alvarez/typescript.nvim",
@@ -273,7 +282,10 @@ require("lazy").setup({
         },
     },
     { "onsails/diaglist.nvim" },
-    { "folke/todo-comments.nvim", dependencies = "nvim-lua/plenary.nvim" },
+    {
+        "folke/todo-comments.nvim",
+        dependencies = "nvim-lua/plenary.nvim",
+    },
     {
         "ray-x/sad.nvim",
         dependencies = { { "ray-x/guihua.lua", build = "cd lua/fzy && make" } },
