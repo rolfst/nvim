@@ -26,17 +26,17 @@ dapui.setup({
     layouts = {
         {
             elements = {
-                { id = "scopes", size = 0.33 },
+                { id = "scopes",      size = 0.33 },
                 { id = "breakpoints", size = 0.17 },
-                { id = "stacks", size = 0.25 },
-                { id = "watches", size = 0.25 },
+                { id = "stacks",      size = 0.25 },
+                { id = "watches",     size = 0.25 },
             },
             size = 0.33,
             position = "left",
         },
         {
             elements = {
-                { id = "repl", size = 0.45 },
+                { id = "repl",    size = 0.45 },
                 { id = "console", size = 0.55 },
             },
             size = 0.27,
@@ -194,7 +194,7 @@ if not dap_vscode_js_status_ok then
     return
 end
 dap_vscode_js.setup({
-    node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+    node_path = "node",                                      -- Path of node executable. Defaults to $NODE_PATH, and then "node"
     debugger_path = global.mason_path .. "/vscode-js-debug", -- Path to vscode-js-debug installation.
     -- debugger_cmd = { "js-debug-adapter" },                                                    -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
     adapters = {
@@ -477,8 +477,8 @@ dap.configurations.python = {
             if
                 vim.fn.executable(
                     global.mason_path
-                        .. "/packages/debugpy/venv/"
-                        .. "bin/python"
+                    .. "/packages/debugpy/venv/"
+                    .. "bin/python"
                 ) == 1
             then
                 return global.mason_path
@@ -508,8 +508,8 @@ dap.configurations.python = {
             if
                 vim.fn.executable(
                     global.mason_path
-                        .. "/packages/debugpy/venv/"
-                        .. "bin/python"
+                    .. "/packages/debugpy/venv/"
+                    .. "bin/python"
                 ) == 1
             then
                 return global.mason_path
@@ -669,7 +669,7 @@ dap.configurations.cs = {
         program = function()
             return vim.fn.input(
                 global.mason_path
-                    .. "/packages/netcoredbg/build/ManagedPart.dll",
+                .. "/packages/netcoredbg/build/ManagedPart.dll",
                 vim.fn.input(
                     "Path to executable: ",
                     vim.fn.getcwd() .. "/",

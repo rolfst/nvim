@@ -227,6 +227,7 @@ require("lazy").setup({
         dev = true,
         "/home/rolfst/workspaces/nvim-plugins/neotest",
         dependencies = {
+            "antoinemadec/FixCursorHold.nvim",
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
             "rouge8/neotest-rust",
