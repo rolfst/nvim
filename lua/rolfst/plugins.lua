@@ -114,6 +114,7 @@ require("lazy").setup({
             "BufRead",
         },
     },
+    { "github/copilot.vim" },
 
     -- Util plugins
     { "gpanders/editorconfig.nvim" },
