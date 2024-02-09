@@ -20,6 +20,19 @@ if not snip_status_ok then
     return
 end
 
+local copilot_status_ok, copilot = pcall(require, "copilot")
+if copilot_status_ok then
+    local copilot_cmp_status_ok, copilot_cmp = pcall(require, "copilot_cmp")
+    if not copilot_cmp_status_ok then
+        print("no copilot autocompletion enabled")
+    end
+    copilot.setup({
+        suggestions = { enabled = false },
+        panel = { enabled = false },
+    })
+    copilot_cmp.setup()
+end
+
 luasnip.config.set_config({
     history = true,
     updateevents = "TextChanged,TextChangedI",
