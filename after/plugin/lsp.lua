@@ -181,6 +181,7 @@ cmp.setup({
         -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
     },
     sources = {
+        { name = "copilot" },
         { name = "nvim_lsp" },
         { name = "luasnip" },
         { name = "buffer" },
