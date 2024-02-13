@@ -22,16 +22,26 @@ end
 
 local copilot_status_ok, copilot = pcall(require, "copilot")
 if copilot_status_ok then
-    local copilot_cmp_status_ok, copilot_cmp = pcall(require, "copilot_cmp")
-    if not copilot_cmp_status_ok then
-        print("no copilot autocompletion enabled")
-    end
     copilot.setup({
-        suggestions = { enabled = false },
-        panel = { enabled = false },
+        suggestion = {
+            auto_trigger = true,
+            enabled = true,
+            keymap = { accept = "<M-Space>", next = "<C-j>", prev = "<C-k>" },
+        },
+        -- panel = { enabled = false },
     })
-    copilot_cmp.setup()
 end
+
+vim.api.nvim_create_autocmd({ "InsertEnter" }, {
+    callback = function()
+        if copilot_status_ok then
+            copilot.setup({
+                suggestion = { auto_trigger = true, enabled = false },
+                -- panel = { enabled = false },
+            })
+        end
+    end,
+})
 
 luasnip.config.set_config({
     history = true,
@@ -103,6 +113,17 @@ local lsp_symbols = icons.cmp
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 function are() end
 
+local has_words_before = function()
+    if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+        return false
+    end
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0
+        and vim.api
+        .nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]
+        :match("^%s*$")
+        == nil
+end
 cmp.setup({
     mapping = cmp.mapping.preset.insert({
         ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
@@ -134,6 +155,9 @@ cmp.setup({
             select = true,
         }),
         ["<Tab>"] = cmp.mapping(function(fallback)
+            -- if cmp.visible() and has_words_before() then
+            --     cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            -- elseif cmp.visible() then
             if cmp.visible() then
                 -- cmp.confirm({ select = true })
                 cmp.select_next_item()
@@ -166,6 +190,7 @@ cmp.setup({
                 buffer = "[Buffer]",
                 path = "[Path]",
                 crates = "[Crates]",
+                -- copilot = "[Copilot]",
                 latex_symbols = "[LaTex]",
             })[entry.source.name]
             return item
@@ -181,7 +206,7 @@ cmp.setup({
         -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
     },
     sources = {
-        { name = "copilot" },
+        -- { name = "copilot" },
         { name = "nvim_lsp" },
         { name = "luasnip" },
         { name = "buffer" },
@@ -189,9 +214,27 @@ cmp.setup({
         { name = "crates" },
         -- { name = "latex_symbols", },
     },
-    comparators = {
-        cmp_config_compare.exact,
-        cmp_config_compare.length,
+    -- comparators = {
+    --     cmp_config_compare.exact,
+    --     cmp_config_compare.length,
+    -- },
+    sorting = {
+        priority_weight = 2,
+        comparators = {
+            -- require("copilot_cmp.comparators").prioritize,
+
+            -- Below is the default comparitor list and order for nvim-cmp
+            cmp_config_compare.offset,
+            -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+            cmp_config_compare.exact,
+            cmp_config_compare.score,
+            cmp_config_compare.recently_used,
+            cmp_config_compare.locality,
+            cmp_config_compare.kind,
+            cmp_config_compare.sort_text,
+            cmp_config_compare.length,
+            cmp_config_compare.order,
+        },
     },
 })
 -- }}}

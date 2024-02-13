@@ -115,7 +115,6 @@ require("lazy").setup({
         },
     },
     { "zbirenbaum/copilot.lua" },
-    { "zbirenbaum/copilot-cmp" },
 
     -- Util plugins
     { "gpanders/editorconfig.nvim" },
