@@ -20,27 +20,25 @@ if not snip_status_ok then
     return
 end
 
+vim.api.nvim_create_augroup("Copilot", { clear = true })
 local copilot_status_ok, copilot = pcall(require, "copilot")
-if copilot_status_ok then
-    copilot.setup({
-        suggestion = {
-            auto_trigger = true,
-            enabled = true,
-            keymap = { accept = "<M-Space>", next = "<C-j>", prev = "<C-k>" },
-        },
-        -- panel = { enabled = false },
-    })
-end
-
 vim.api.nvim_create_autocmd({ "InsertEnter" }, {
     callback = function()
         if copilot_status_ok then
             copilot.setup({
-                suggestion = { auto_trigger = true, enabled = false },
-                -- panel = { enabled = false },
+                suggestion = {
+                    auto_trigger = true,
+                    enabled = true,
+                    keymap = {
+                        accept = "<M-Space>",
+                        next = "<C-j>",
+                        prev = "<C-k>",
+                    },
+                },
             })
         end
     end,
+    group = "Copilot",
 })
 
 luasnip.config.set_config({
