@@ -114,6 +114,7 @@ fzf_lua.setup({
     manpages = { previewer = { _ctor = false } },
     previewers = {
         builtin = {
+            syntax_limit_b = 0,
             ueberzug_scaler = "cover",
             extensions = {
                 ["png"] = image_previewer,
