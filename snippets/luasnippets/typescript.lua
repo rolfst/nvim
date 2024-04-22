@@ -13,7 +13,8 @@ local rep = require("luasnip.extras").rep
 
 local snippets, autosnippets = {}, {} --}}}
 
-local group = vim.api.nvim_create_augroup("Typescript Snippets", { clear = true })
+local group =
+    vim.api.nvim_create_augroup("Typescript Snippets", { clear = true })
 local file_pattern = { "*.ts" }
 
 local function cs(trigger, nodes, opts) --{{{ create snippets helper
@@ -58,7 +59,11 @@ local function cs(trigger, nodes, opts) --{{{ create snippets helper
                     callback = function()
                         vim.keymap.set(keymap[1], keymap[2], function()
                             ls.snip_expand(snippet)
-                        end, { noremap = true, silent = true, buffer = true })
+                        end, {
+                            noremap = true,
+                            silent = true,
+                            buffer = true,
+                        })
                     end,
                 })
             end
@@ -66,7 +71,7 @@ local function cs(trigger, nodes, opts) --{{{ create snippets helper
     end
 
     table.insert(target_table, snippet) -- insert snippet into appropriate table
-end                                  --}}}
+end                                     --}}}
 
 -- Place snippets here --
 
@@ -83,6 +88,20 @@ export interface {} {{
         }
     ),
     "ein"
+)
+
+cs(
+    "import symbols",
+    fmt(
+        [[
+import {{ {} }} from "{}";
+]],
+        {
+            i(1, "symbol"),
+            i(2, "package"),
+        }
+    ),
+    "imp"
 )
 cs(
     "export constant",
