@@ -430,11 +430,11 @@ M.on_attach = function(client, bufnr)
         "[w]orkspace [r]emove Folder"
     )
     nmap("<leader>wl", function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        vim.lsp.buf.list_workspace_folders()
     end, "[w]orkspace [l]ist Folders")
 
     nmap("gr", function()
-        require("fzf-lua.builtin").lsp_references()
+        require("fzf-lua").lsp_references()
     end, "[G]oto [R]eferences")
 end
 
