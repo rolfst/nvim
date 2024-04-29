@@ -434,7 +434,7 @@ M.on_attach = function(client, bufnr)
     end, "[w]orkspace [l]ist Folders")
 
     nmap("gr", function()
-        require("FzfLua.builtin").lsp_references()
+        require("fzf-lua.builtin").lsp_references()
     end, "[G]oto [R]eferences")
 end
 
