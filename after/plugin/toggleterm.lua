@@ -142,7 +142,7 @@ local terminal_float = toggleterm_terminal.Terminal:new({
     end,
 })
 local lazygit = toggleterm_terminal.Terminal:new({
-    cmd = "gitui",
+    cmd = "lazygit",
     hidden = true,
     count = 4,
     direction = "float",
