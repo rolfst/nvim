@@ -207,13 +207,12 @@ require("lazy").setup({
         },
         dependencies = {
             "mfussenegger/nvim-dap",
+            "nvim-neotest/nvim-nio",
             "mxsdev/nvim-dap-vscode-js",
             "jbyuki/one-small-step-for-vimkind",
         },
-        -- config = function()
-        -- 	require("rolfst.modules.dap").setup()
-        -- end,
     },
+    { "nvim-neotest/nvim-nio" },
     {
         "iamcco/markdown-preview.nvim",
         build = function()
