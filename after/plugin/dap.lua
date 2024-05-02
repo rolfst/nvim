@@ -2,6 +2,7 @@ local global = require("rolfst.global")
 
 local dapui_status_ok, dapui = pcall(require, "dapui")
 if not dapui_status_ok then
+    print("dapui not found")
     return
 end
 local dap_status_ok, dap = pcall(require, "dap")
