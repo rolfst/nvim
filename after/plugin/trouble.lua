@@ -2,7 +2,7 @@ require("trouble").setup({
     position = "bottom", -- position of the list can be: bottom, top, left, right
     height = 10, -- height of the trouble list when position is top or bottom
     width = 50, -- width of the list when position is left or right
-    icons = true, -- use devicons for filenames
+    -- icons = true, -- use devicons for filenames
     mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
     fold_open = "", -- icon used for open folds
     fold_closed = "", -- icon used for closed folds
@@ -53,36 +53,30 @@ local opts = { buffer = bufnr, remap = false }
 local describe = funcs.describe(opts)
 
 vim.keymap.set("n", "<leader>d", function()
-    vim.cmd("TroubleToggle")
+    vim.cmd("Trouble")
 end, describe("Trouble toggle"))
 vim.keymap.set(
     "n",
-    "<leader>dw",
-    "<cmd>TroubleToggle workspace_diagnostics<cr>",
-    describe("workplace diagnostic")
-)
-vim.keymap.set(
-    "n",
     "<leader>dd",
-    "<cmd>TroubleToggle document_diagnostics<cr>",
+    "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
     describe("document diagnostic")
 )
 vim.keymap.set(
     "n",
     "<leader>dq",
-    "<cmd>TroubleToggle quickfix<cr>",
+    "<cmd>Trouble quickfix toggle<cr>",
     describe("Trouble quickfix")
 )
 vim.keymap.set(
     "n",
     "<leader>dl",
-    "<cmd>TroubleToggle loclist<cr>",
+    "<cmd>Trouble loclist toggle<cr>",
     describe("Trouble loclist")
 )
 vim.keymap.set(
     "n",
     "<leader>gr",
-    "<cmd>TroubleToggle lsp_references<cr>",
+    "<cmd>Trouble lsp_references toggl <cr>",
     describe("References")
 )
 vim.keymap.set(
