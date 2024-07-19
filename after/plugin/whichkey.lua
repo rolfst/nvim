@@ -3,18 +3,11 @@ if not status_ok then
     return
 end
 
-whichkey.setup()
-whichkey.register({
-    t = {
-        name = "Find",
-    },
-    g = {
-        name = "Git",
-    },
-    s = {
-        name = "Snippets",
-    },
-    n = {
-        name = "test",
-    },
+whichkey.add({
+    { "<space>c", group = "Calendar" },
+    { "<space>g", group = "Git" },
+    { "<space>l", group = "Related (test)files" },
+    { "<space>n", group = "test" },
+    { "<space>s", group = "Snippets" },
+    { "<space>t", group = "Find" },
 }, { prefix = "<space>" })
