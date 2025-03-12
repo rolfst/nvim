@@ -99,7 +99,7 @@ require("lazy").setup({
         },
     },
     {
-        "jose-elias-alvarez/null-ls.nvim",
+        "nvimtools/none-ls.nvim",
         dependencies = {
             "nvim-lua/plenary.nvim",
         },
@@ -117,7 +117,7 @@ require("lazy").setup({
     { "zbirenbaum/copilot.lua" },
     {
         "CopilotC-Nvim/CopilotChat.nvim",
-        branch = "canary",
+        branch = "main",
         dependencies = {
             { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
             { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
@@ -250,10 +250,10 @@ require("lazy").setup({
             "MrcJkb/neotest-haskell",
             "haydenmeade/neotest-jest",
 
-            {
-                dev = true,
-                "/home/rolfst/workspaces/nvim-plugins/neotest-node-test",
-            },
+            -- {
+            --     dev = true,
+            --     "/home/rolfst/workspaces/nvim-plugins/neotest-node-test",
+            -- },
             -- "jfpedroza/neotest-elixir",
             -- "olimorris/neotest-phpunit",
             -- "nvim-neotest/neotest-go",
