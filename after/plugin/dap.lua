@@ -279,6 +279,18 @@ for i, ext in ipairs(exts) do
         },
         {
             type = "pwa-node",
+            request = "attach",
+            name = "Attach to Docker",
+            cwd = vim.fn.getcwd(),
+            program = "${workspaceFolder}",
+            remoteRoot = "/",
+            websocketAddress = function()
+                return string.match(
+                    vim.api.nvim_exec('!docker logs [container-name] |& grep -oE "ws.*" | tail -1', true), "ws://.*")
+            end,
+        },
+        {
+            type = "pwa-node",
             request = "launch",
             name = "Launch Test Current File (pwa-node with deno)",
             cwd = vim.fn.getcwd(),
