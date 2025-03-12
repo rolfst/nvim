@@ -501,7 +501,6 @@ if not null_ls_status_ok then
 end
 local actions = null_ls.builtins.code_actions
 local diagnostics = null_ls.builtins.diagnostics
-local completions = null_ls.builtins.completion
 local formatting = null_ls.builtins.formatting
 null_ls.setup({
     debug = false,
