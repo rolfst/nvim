@@ -15,16 +15,17 @@ provides. Plugins are installed using [Lazy](https://github.com/folke/lazy.nvim)
     ibhagwan/fzf-lua
 ### LSP Support
     neovim/nvim-lspconfig 
-    williamboman/mason.nvim 
-    williamboman/mason-lspconfig.nvim 
-    VonHeikemen/lsp-zero.nvim
-        Autocompletion
+        williamboman/mason.nvim 
+        williamboman/mason-lspconfig.nvim 
+        folke/neodev.nvim
+    Autocompletion
         - hrsh7th/nvim-cmp 
         - hrsh7th/cmp-buffer 
         - hrsh7th/cmp-path 
         - saadparwaiz1/cmp_luasnip 
         - hrsh7th/cmp-nvim-lsp 
         - hrsh7th/cmp-nvim-lua 
+        - zbirenbaum/copilot.lua
         Snippets
         - rafamadriz/friendly-snippets 
         - jose-elias-alvarez/null-ls.nvim	
@@ -33,7 +34,7 @@ provides. Plugins are installed using [Lazy](https://github.com/folke/lazy.nvim)
 ### Util plugins
     rose-pine/neovim
     nvim-treesitter/nvim-treesitter
-    nvim-treesitter/playground
+    zbirenbaum/copilot.lua
     TimUntersberger/neogit
     lewis6991/gitsigns.nvim
     akinsho/toggleterm.nvim
@@ -58,6 +59,7 @@ provides. Plugins are installed using [Lazy](https://github.com/folke/lazy.nvim)
     mxsdev/nvim-dap-vscode-js
     jbyuki/one-small-step-for-vimkind
     rcarriga/nvim-dap-ui
+    nvim-neotest/nvim-nio
 ### Test plugins
     nvim-neotest/neotest
     nvim-lua/plenary.nvim
@@ -75,4 +77,4 @@ provides. Plugins are installed using [Lazy](https://github.com/folke/lazy.nvim)
     rebelot/heirline.nvim
     luukvbaal/statuscol.nvim
     lvimuser/lsp-inlayhints.nvim
-    ggandor/lightspeed.nvim
+    nvim-treesitter/playground
