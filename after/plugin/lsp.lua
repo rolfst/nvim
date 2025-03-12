@@ -515,7 +515,7 @@ null_ls.setup({
         diagnostics.eslint,
         -- diagnostics.eslint_d,
         diagnostics.flake8,
-        diagnostics.luacheck,
+        diagnostics.selene,
         diagnostics.markdownlint,
         diagnostics.stylelint,
         diagnostics.yamllint,
