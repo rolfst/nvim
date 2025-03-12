@@ -506,15 +506,15 @@ local formatting = null_ls.builtins.formatting
 null_ls.setup({
     debug = false,
     sources = {
-        actions.eslint,
+        require("none-ls.diagnostics.flake8"),
+        require("none-ls.code_actions.eslint"),
         -- actions.eslint_d,
         actions.gitsigns,
         actions.refactoring,
         diagnostics.cfn_lint,
         -- diagnostics.deadnix,
-        diagnostics.eslint,
+        require("none-ls.diagnostics.eslint"),
         -- diagnostics.eslint_d,
-        diagnostics.flake8,
         diagnostics.selene,
         diagnostics.markdownlint,
         diagnostics.stylelint,
