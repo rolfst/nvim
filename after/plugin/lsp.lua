@@ -929,8 +929,9 @@ vim.tbl_filter(function(buf)
     end
 end, vim.api.nvim_list_bufs())
 -- }}}
+local lspconfig = require("lspconfig")
 -- {{{ Typescript
-local typescript = require("typescript")
+local typescript = lspconfig["ts_ls"]
 typescript.setup({
     disable_commands = false, -- prevent the plugin from creating Vim commands
     debug = false,            -- enable debug logging for commands
@@ -1098,7 +1099,6 @@ local ensured = funcs.filter(declared, function(v, _, _)
     --     return false
     -- end
 end)
-local lspconfig = require("lspconfig")
 mason_lspconfig.setup({ ensure_installed = ensured })
 mason_lspconfig.setup_handlers({
     function(server_name)
