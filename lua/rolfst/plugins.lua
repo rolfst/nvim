@@ -102,7 +102,7 @@ require("lazy").setup({
         "nvimtools/none-ls.nvim",
         dependencies = {
             "nvim-lua/plenary.nvim",
-            "nvimtools/none-ls-extras.nvim"
+            "nvimtools/none-ls-extras.nvim",
         },
     },
 
@@ -150,7 +150,9 @@ require("lazy").setup({
         },
         cmd = "CtrlSpace",
     },
-    { "Dkendal/nvim-treeclimber",   dependencies = { "rktjmp/lush.nvim" } },
+    { "echasnovski/mini.nvim",    version = false },
+    { "echasnovski/mini.move",    version = false },
+    { "Dkendal/nvim-treeclimber", dependencies = { "rktjmp/lush.nvim" } },
     {
         "windwp/nvim-autopairs",
         dependencies = {
