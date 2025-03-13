@@ -932,57 +932,55 @@ local lspconfig = require("lspconfig")
 -- {{{ Typescript
 local typescript = lspconfig["ts_ls"]
 typescript.setup({
+    filetypes = {
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+    },
+    on_attach = function(client, bufnr)
+        M.on_attach(client, bufnr)
+        M.omni(client, bufnr)
+        M.tag(client, bufnr)
+        M.document_highlight(client, bufnr)
+        navic.attach(client, bufnr)
+    end,
+    capabilities = M.get_capabilities(),
+    root_dir = function(fname)
+        return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
+    end,
     disable_commands = false, -- prevent the plugin from creating Vim commands
     debug = false,            -- enable debug logging for commands
     go_to_source_definition = {
         fallback = true,      -- fall back to standard LSP definition on failure
     },
-    server = {
-        flags = {
-            debounce_text_changes = default_debouce_time,
-        },
-        autostart = true,
-        filetypes = {
-            "javascript",
-            "javascriptreact",
-            "typescript",
-            "typescriptreact",
-        },
-        on_attach = function(client, bufnr)
-            M.on_attach(client, bufnr)
-            M.omni(client, bufnr)
-            M.tag(client, bufnr)
-            M.document_highlight(client, bufnr)
-            navic.attach(client, bufnr)
-        end,
-        capabilities = M.get_capabilities(),
-        root_dir = function(fname)
-            return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-        end,
-        settings = {
-            javascript = {
-                inlayHints = {
-                    includeInlayEnumMemberValueHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayfunctionParameterTypeHints = true,
-                    includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all',
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                    includeInlayPropertyDeclarationtypeHints = true,
-                    includeInlayVariableTypeHints = true,
-                },
-            },
-            typescript = {
-                inlayHints = {
-                    includeInlayEnumMemberValueHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayfunctionParameterTypeHints = true,
-                    includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all',
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                    includeInlayPropertyDeclarationtypeHints = true,
-                    includeInlayVariableTypeHints = true,
-                },
+    autostart = true,
+    settings = {
+        javascript = {
+            inlayHints = {
+                includeInlayEnumMemberValueHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayfunctionParameterTypeHints = true,
+                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all',
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayPropertyDeclarationtypeHints = true,
+                includeInlayVariableTypeHints = true,
             },
         },
+        typescript = {
+            inlayHints = {
+                includeInlayEnumMemberValueHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayfunctionParameterTypeHints = true,
+                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all',
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayPropertyDeclarationtypeHints = true,
+                includeInlayVariableTypeHints = true,
+            },
+        },
+    },
+    flags = {
+        debounce_text_changes = default_debouce_time,
     },
 })
 -- }}}
