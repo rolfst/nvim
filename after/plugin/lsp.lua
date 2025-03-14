@@ -502,6 +502,44 @@ end
 local actions = null_ls.builtins.code_actions
 local diagnostics = null_ls.builtins.diagnostics
 local formatting = null_ls.builtins.formatting
+local h = require("null-ls.helpers")
+local methods = require("null-ls.methods")
+local cmd_resolver = require("null-ls.helpers.command_resolver")
+local u = require("null-ls.utils")
+null_ls.register({
+    name = "biome",
+    method = methods.internalsLINT,
+    filetypes = {
+        "markdown",
+        "typescript",
+        "javascript",
+        "javascriptreact",
+        "typescriptreact",
+        "vue",
+        "css",
+        "scss",
+        "less",
+        "html",
+        "yaml",
+        "markdown",
+        "graphql",
+    },
+    generator = {
+        command = "biome",
+        args = {
+            "lint",
+            "--stdin-file-path",
+            "$FILENAME",
+        },
+        dynamic_command = cmd_resolver.from_node_modules(),
+        cwd = h.cache.by_bufnr(function(params)
+            return u.root_pattern("rome.json", "biome.json", "biome.jsonc")(
+                params.bufname
+            )
+        end),
+        to_stdin = true,
+    },
+})
 null_ls.setup({
     debug = false,
     sources = {
@@ -523,6 +561,7 @@ null_ls.setup({
         formatting.alejandra,
         formatting.black,
         formatting.codespell.with({ filetypes = { "markdown" } }),
+        formatting.biome,
         formatting.isort,
         -- formatting.dprint,
         formatting.prettier.with({
