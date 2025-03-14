@@ -152,6 +152,7 @@ require("lazy").setup({
     },
     { "echasnovski/mini.nvim",    version = false },
     { "echasnovski/mini.move",    version = false },
+    { "echasnovski/mini.ai",      version = false },
     { "Dkendal/nvim-treeclimber", dependencies = { "rktjmp/lush.nvim" } },
     {
         "windwp/nvim-autopairs",
