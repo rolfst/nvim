@@ -333,6 +333,7 @@ require("lazy").setup({
     },
     { "nvim-treesitter/nvim-treesitter-context" },
     { "folke/which-key.nvim" },
+    { "folke/snacks.nvim" },
 
     -- tools
     { "sotte/presenting.vim" },
