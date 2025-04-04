@@ -4,14 +4,8 @@ local icons = require("rolfst.icons")
 local navic = require("nvim-navic")
 
 -- {{{ Snippets setup
-local cmp_status_ok, cmp = pcall(require, "cmp")
-if not cmp_status_ok then
-    return
-end
-
-local cmp_config_compare_status_ok, cmp_config_compare =
-    pcall(require, "cmp.config.compare")
-if not cmp_config_compare_status_ok then
+local blink_status_ok, blink = pcall(require, "blink.cmp")
+if not blink_status_ok then
     return
 end
 
@@ -61,7 +55,7 @@ require("luasnip.loaders.from_lua").lazy_load({
 
 vim.api.nvim_create_user_command(
     "LuaSnipEdit",
-    "lua require'luasnip.loaders.from_lua'.edit_snippet_files()",
+    "lua require'luasnip.loaders'.edit_snippet_files()",
     {}
 )
 vim.keymap.set(
@@ -107,133 +101,11 @@ local check_backspace = function()
         == nil
 end
 
-local lsp_symbols = icons.cmp
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
-function are() end
-
-local has_words_before = function()
-    if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
-        return false
-    end
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0
-        and vim.api
-        .nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]
-        :match("^%s*$")
-        == nil
-end
-cmp.setup({
-    mapping = cmp.mapping.preset.insert({
-        ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-        ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
-        ["<C-y>"] = cmp.mapping.confirm({ select = true }),
-        ["<C-space>"] = cmp.mapping(function(fallback)
-            if luasnip.expand_or_locally_jumpable() then
-                luasnip.expand_or_jump()
-            elseif require("neogen").jumpable() then
-                require("neogen").jump_next()
-            else
-                fallback()
-            end
-        end),
-        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-u>"] = cmp.mapping.scroll_docs(4),
-        ["<C-c>"] = cmp.mapping.close(),
-        ["<C-l>"] = cmp.mapping({
-            i = function(fallback)
-                if luasnip.choice_active() then
-                    luasnip.change_choice(1)
-                else
-                    fallback()
-                end -- code
-            end,
-        }),
-        ["<CR>"] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-        }),
-        ["<Tab>"] = cmp.mapping(function(fallback)
-            -- if cmp.visible() and has_words_before() then
-            --     cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-            -- elseif cmp.visible() then
-            if cmp.visible() then
-                -- cmp.confirm({ select = true })
-                cmp.select_next_item()
-                -- elseif luasnip.expandable() then
-                -- 	luasnip.expand()
-            elseif check_backspace() then
-                fallback()
-            else
-                fallback()
-            end
-        end, { "i", "s" }),
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
-            elseif require("neogen").jumpable() then
-                require("neogen").jump_prev()
-            else
-                fallback()
-            end
-        end, { "i", "s" }),
-    }),
-    formatting = {
-        format = function(entry, item)
-            item.kind = lsp_symbols[item.kind]
-            item.menu = ({
-                nvim_lsp = "[LSP]",
-                luasnip = "[Snippet]",
-                buffer = "[Buffer]",
-                path = "[Path]",
-                crates = "[Crates]",
-                -- copilot = "[Copilot]",
-                latex_symbols = "[LaTex]",
-            })[entry.source.name]
-            return item
-        end,
-    },
-    snippet = {
-        -- REQUIRED, we must specify a snippet engine
-        expand = function(args)
-            luasnip.lsp_expand(args.body)
-        end,
-        -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-    },
-    sources = {
-        -- { name = "copilot" },
-        { name = "nvim_lsp" },
-        { name = "luasnip" },
-        { name = "buffer" },
-        { name = "path" },
-        { name = "crates" },
-        -- { name = "latex_symbols", },
-    },
-    -- comparators = {
-    --     cmp_config_compare.exact,
-    --     cmp_config_compare.length,
-    -- },
-    sorting = {
-        priority_weight = 2,
-        comparators = {
-            -- require("copilot_cmp.comparators").prioritize,
-
-            -- Below is the default comparitor list and order for nvim-cmp
-            cmp_config_compare.offset,
-            -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
-            cmp_config_compare.exact,
-            cmp_config_compare.score,
-            cmp_config_compare.recently_used,
-            cmp_config_compare.locality,
-            cmp_config_compare.kind,
-            cmp_config_compare.sort_text,
-            cmp_config_compare.length,
-            cmp_config_compare.order,
-        },
-    },
+blink.setup({
+    appearance = { nerd_font_variant = "mono" },
+    fuzzy = { implementation = "prefer_rust" },
+    snippets = { preset = "luasnip" },
+    signature = { enabled = true },
 })
 -- }}}
 
@@ -366,6 +238,9 @@ vim.fn.sign_define("DiagnosticSignInfo", {
 
 local M = {}
 M.on_attach = function(client, bufnr)
+    if vim.lsp.inlay_hint then
+        vim.lsp.inlay_hint.enable(true)
+    end
     local opts = { buffer = bufnr, remap = false }
     local describe = funcs.describe(opts)
     local nmap = function(keys, func, desc)
@@ -404,6 +279,9 @@ M.on_attach = function(client, bufnr)
             async = true,
         })
     end, describe("range format"))
+    nmap("<leader>i", function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+    end, "Toggle inlay hints")
 
     nmap("cL", function()
         vim.lsp.codelens.refresh()
@@ -475,23 +353,6 @@ M.document_formatting = function(client, bufnr)
             group = "NvimIDE",
         })
     end
-end
-
-M.get_capabilities = function()
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities.textDocument.completion.completionItem.snippetSupport = true
-    capabilities.textDocument.completion.completionItem.resolveSupport = {
-        properties = {
-            "documentation",
-            "detail",
-            "additionalTextEdits",
-        },
-    }
-    local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-    if status_ok then
-        capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
-    end
-    return capabilities
 end
 
 -- {{{ Null_ls setup
@@ -626,7 +487,7 @@ M.default_config = function(file_types, settings)
             M.document_formatting(client, bufnr)
             navic.attach(client, bufnr)
         end,
-        capabilities = M.get_capabilities(),
+        capabilities = blink.get_lsp_capabilities(),
         root_dir = function(fname)
             return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
         end,
@@ -649,7 +510,7 @@ M.without_formatting = function(file_types, settings)
             M.document_highlight(client, bufnr)
             navic.attach(client, bufnr)
         end,
-        capabilities = M.get_capabilities(),
+        capabilities = blink.get_lsp_capabilities(),
         root_dir = function(fname)
             return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
         end,
@@ -689,7 +550,7 @@ M.config_with_command = function(file_types, settings, command)
             M.document_highlight(client, bufnr)
             navic.attach(client, bufnr)
         end,
-        capabilities = M.get_capabilities(),
+        capabilities = blink.get_lsp_capabilities(),
         root_dir = function(fname)
             return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
         end,
@@ -710,12 +571,15 @@ local servers = {
             "typescript.tsx",
         },
         on_attach = function(client, bufnr)
+            if vim.lsp.inlay_hint then
+                vim.lsp.inlay_hint.enable(true)
+            end
             M.omni(client, bufnr)
             M.tag(client, bufnr)
             M.document_highlight(client, bufnr)
             navic.attach(client, bufnr)
         end,
-        capabilities = M.get_capabilities(),
+        capabilities = blink.get_lsp_capabilities(),
         root_dir = nvim_lsp_util.root_pattern("angular.json"),
     },
     bashls = M.default_config({ "sh", "bash", "zsh", "csh", "ksh" }),
@@ -808,6 +672,7 @@ local servers = {
     --             },
     --         },
     --     },
+    -- capabilities = blink.get_lsp_capabilities(),
     --     capabilities = M.get_capabilities(),
     --     root_dir = function(fname)
     --         return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
@@ -968,6 +833,7 @@ vim.tbl_filter(function(buf)
 end, vim.api.nvim_list_bufs())
 -- }}}
 local lspconfig = require("lspconfig")
+
 -- {{{ Typescript
 local typescript = lspconfig["ts_ls"]
 typescript.setup({
@@ -984,7 +850,7 @@ typescript.setup({
         M.document_highlight(client, bufnr)
         navic.attach(client, bufnr)
     end,
-    capabilities = M.get_capabilities(),
+    capabilities = blink.get_lsp_capabilities(),
     root_dir = function(fname)
         return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
     end,
@@ -1095,7 +961,7 @@ rust_tools.setup({
             M.document_formatting(client, bufnr)
             navic.attach(client, bufnr)
         end,
-        capabilities = M.get_capabilities(),
+        capabilities = blink.get_lsp_capabilities(),
         -- root_dir = function(fname)
         -- 	return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
         -- end,
@@ -1139,8 +1005,9 @@ mason_lspconfig.setup({ ensure_installed = ensured })
 mason_lspconfig.setup_handlers({
     function(server_name)
         if funcs.has_value(servers, server_name) then
+            local capabilities = blink.get_lsp_capabilities()
             lspconfig[server_name].setup({
-                capabilities = servers[server_name].capabilities,
+                capabilities = capabilities,
                 on_attach = servers[server_name].on_attach,
                 settings = servers[server_name].settings,
                 flags = servers[server_name].flags,
@@ -1149,8 +1016,10 @@ mason_lspconfig.setup_handlers({
         end
     end,
 })
+local capabilities = blink.get_lsp_capabilities()
 lspconfig["lua_ls"].setup({
-    capabilities = servers["lua_ls"].capabilities,
+    -- capabilities = servers["lua_ls"].capabilities,
+    capabilities = capabilities,
     on_attach = servers["lua_ls"].on_attach,
     settings = servers["lua_ls"].settings,
     flags = servers["lua_ls"].flags,

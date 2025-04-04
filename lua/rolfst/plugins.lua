@@ -81,20 +81,36 @@ require("lazy").setup({
             { "williamboman/mason-lspconfig.nvim" },
             { "j-hui/fidget.nvim" },
             { "folke/neodev.nvim" },
+            { "saghen/blink.cmp" },
         },
     },
     -- Autocompletion
+    -- {
+    --     "hrsh7th/nvim-cmp",
+    --     dependencies = {
+    --         { "hrsh7th/cmp-buffer" },
+    --         { "hrsh7th/cmp-path" },
+    --         { "saadparwaiz1/cmp_luasnip" },
+    --         { "hrsh7th/cmp-nvim-lsp" },
+    --         { "hrsh7th/cmp-nvim-lua" },
+    --
+    --         -- Snippets
+    --         { "L3MON4D3/LuaSnip" },
+    --         { "rafamadriz/friendly-snippets" },
+    --     },
+    -- },
     {
-        "hrsh7th/nvim-cmp",
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        build = "make install_jsregexp",
+    },
+    { "rafamadriz/friendly-snippets" },
+    {
+        "saghen/blink.cmp",
+        version = "1.*",
+        build = "cargo build --release",
         dependencies = {
-            { "hrsh7th/cmp-buffer" },
-            { "hrsh7th/cmp-path" },
-            { "saadparwaiz1/cmp_luasnip" },
-            { "hrsh7th/cmp-nvim-lsp" },
-            { "hrsh7th/cmp-nvim-lua" },
-
-            -- Snippets
-            { "L3MON4D3/LuaSnip" },
+            { "L3MON4D3/LuaSnip",            version = "v2.*" },
             { "rafamadriz/friendly-snippets" },
         },
     },
@@ -318,9 +334,9 @@ require("lazy").setup({
         "rebelot/heirline.nvim",
     },
     { "luukvbaal/statuscol.nvim" },
-    {
-        "lvimuser/lsp-inlayhints.nvim",
-    },
+    -- {
+    --     "lvimuser/lsp-inlayhints.nvim",
+    -- },
     {
         "ggandor/lightspeed.nvim",
         dependencies = {
