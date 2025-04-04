@@ -154,7 +154,7 @@ cs(
     "constant effect yield",
     fmt(
         [[
-const {} = yield* _({})
+const {} = yield* {}
     ]],
         {
             i(1, "name"),
