@@ -5,15 +5,18 @@ local heirline_status_ok, heirline = pcall(require, "heirline")
 if not heirline_status_ok then
     return
 end
-local heirline_conditions_status_ok, heirline_conditions = pcall(require, "heirline.conditions")
+local heirline_conditions_status_ok, heirline_conditions =
+    pcall(require, "heirline.conditions")
 if not heirline_conditions_status_ok then
     return
 end
-local heirline_utils_status_ok, heirline_utils = pcall(require, "heirline.utils")
+local heirline_utils_status_ok, heirline_utils =
+    pcall(require, "heirline.utils")
 if not heirline_utils_status_ok then
     return
 end
-local theme_colors = _G.NVIM_SETTINGS.colorschemes.colors[_G.NVIM_SETTINGS.colorschemes.theme]
+local theme_colors =
+    _G.NVIM_SETTINGS.colorschemes.colors[_G.NVIM_SETTINGS.colorschemes.theme]
 local align = { provider = "%=" }
 local space = { provider = " " }
 local mode
@@ -86,7 +89,11 @@ local vi_mode = {
     end,
     hl = function(self)
         mode = self.mode:sub(1, 1)
-        return { bg = self.mode_colors[mode], fg = theme_colors.bg_01, bold = true }
+        return {
+            bg = self.mode_colors[mode],
+            fg = theme_colors.bg_01,
+            bold = true,
+        }
     end,
     update = {
         "ModeChanged",
@@ -123,7 +130,11 @@ local file_icon = {
     init = function(self)
         local filename = self.filename
         local extension = vim.fn.fnamemodify(filename, ":e")
-        self.icon = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+        self.icon = require("nvim-web-devicons").get_icon_color(
+            filename,
+            extension,
+            { default = true }
+        )
     end,
     provider = function(self)
         local is_filename = vim.fn.fnamemodify(self.filename, ":.")
@@ -200,7 +211,9 @@ local git = {
     condition = heirline_conditions.is_git_repo,
     init = function(self)
         self.status_dict = vim.b.gitsigns_status_dict
-        self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
+        self.has_changes = self.status_dict.added ~= 0
+            or self.status_dict.removed ~= 0
+            or self.status_dict.changed ~= 0
     end,
     hl = { fg = theme_colors.love },
     {
@@ -254,10 +267,14 @@ local diagnostics = {
     },
     update = { "DiagnosticChanged", "BufEnter" },
     init = function(self)
-        self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-        self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-        self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
-        self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+        self.errors =
+            #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+        self.warnings =
+            #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+        self.hints =
+            #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+        self.info =
+            #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
     end,
     {
         provider = function(self)
@@ -267,7 +284,8 @@ local diagnostics = {
     },
     {
         provider = function(self)
-            return self.warnings > 0 and (self.warn_icon .. self.warnings .. " ")
+            return self.warnings > 0
+                and (self.warn_icon .. self.warnings .. " ")
         end,
         hl = { fg = theme_colors.love },
     },
@@ -299,7 +317,10 @@ local lsp_active = {
         for _, server in pairs(vim.lsp.buf_get_clients(0)) do
             if server.name == "null-ls" then
                 local sources = require("null-ls.sources")
-                local ft = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(0), "filetype")
+                local ft = vim.api.nvim_buf_get_option(
+                    vim.api.nvim_win_get_buf(0),
+                    "filetype"
+                )
                 for _, source in ipairs(sources.get_available(ft)) do
                     table.insert(null_ls, source.name)
                 end
@@ -311,7 +332,11 @@ local lsp_active = {
         if next(null_ls) == nil then
             return "  LSP [" .. table.concat(names, ", ") .. "]"
         else
-            return "  LSP [" .. table.concat(names, ", ") .. "] | NULL-LS [" .. table.concat(null_ls, ", ") .. "]"
+            return "  LSP ["
+                .. table.concat(names, ", ")
+                .. "] | NULL-LS ["
+                .. table.concat(null_ls, ", ")
+                .. "]"
         end
     end,
     hl = { fg = theme_colors.iris, bold = true },
@@ -403,9 +428,17 @@ local file_icon_name = {
         local extension = vim.fn.expand("%:e")
         if not isempty(filename) then
             local f_icon, f_icon_color =
-                require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+                require("nvim-web-devicons").get_icon_color(
+                    filename,
+                    extension,
+                    { default = true }
+                )
             local hl_group_2 = "FileIconColor" .. extension
-            vim.api.nvim_set_hl(0, hl_group_2, { fg = f_icon_color, bg = theme_colors.bg })
+            vim.api.nvim_set_hl(
+                0,
+                hl_group_2,
+                { fg = f_icon_color, bg = theme_colors.bg }
+            )
             if isempty(f_icon) then
                 f_icon = ""
             end
@@ -443,7 +476,11 @@ local navic = {
         local data = require("nvim-navic").get_data() or {}
         local children = {}
         for i, d in ipairs(data) do
-            local pos = self.enc(d.scope.start.line, d.scope.start.character, self.winnr)
+            local pos = self.enc(
+                d.scope.start.line,
+                d.scope.start.character,
+                self.winnr
+            )
             local child = {
                 {
                     provider = d.icon,
@@ -455,7 +492,10 @@ local navic = {
                         minwid = pos,
                         callback = function(_, minwid)
                             local line, col, winnr = self.dec(minwid)
-                            vim.api.nvim_win_set_cursor(vim.fn.win_getid(winnr), { line, col })
+                            vim.api.nvim_win_set_cursor(
+                                vim.fn.win_getid(winnr),
+                                { line, col }
+                            )
                         end,
                         name = "heirline_navic",
                     },
@@ -569,7 +609,9 @@ local win_bars = {
     },
     {
         condition = function()
-            return heirline_conditions.buffer_matches({ buftype = { "terminal" } })
+            return heirline_conditions.buffer_matches({
+                buftype = { "terminal" },
+            })
         end,
         {
             file_type,
@@ -633,7 +675,9 @@ vim.api.nvim_create_autocmd("User", {
 vim.api.nvim_create_augroup("Heirline", { clear = true })
 vim.api.nvim_create_autocmd("ColorScheme", {
     callback = function()
-        heirline_utils.on_colorscheme(_G.NVIM_SETTINGS.colorschemes.colors[_G.NVIM_SETTINGS.colorschemes.theme])
+        heirline_utils.on_colorscheme(
+            _G.NVIM_SETTINGS.colorschemes.colors[_G.NVIM_SETTINGS.colorschemes.theme]
+        )
     end,
     group = "Heirline",
 })
