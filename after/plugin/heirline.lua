@@ -314,7 +314,7 @@ local lsp_active = {
     provider = function()
         local names = {}
         local null_ls = {}
-        for _, server in pairs(vim.lsp.buf_get_clients(0)) do
+        for _, server in pairs(vim.lsp.get_clients(0)) do
             if server.name == "null-ls" then
                 local sources = require("null-ls.sources")
                 local ft = vim.api.nvim_buf_get_option(
