@@ -253,6 +253,15 @@ for i, ext in ipairs(exts) do
         },
         {
             type = "pwa-node",
+            request = "attach",
+            name = "attach to docker",
+            cwd = '${workspaceFolder}',
+            address = 'localhost',
+            port = 9229,
+            restart = true,
+        },
+        {
+            type = "pwa-node",
             request = "launch",
             name = "Launch Test Current File (pwa-node with jest)",
             cwd = vim.fn.getcwd(),
