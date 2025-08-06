@@ -95,10 +95,10 @@ local check_backspace = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0
         and vim.api
-        .nvim_buf_get_lines(0, line - 1, line, true)[1]
-        :sub(col, col)
-        :match("%s")
-        == nil
+                .nvim_buf_get_lines(0, line - 1, line, true)[1]
+                :sub(col, col)
+                :match("%s")
+            == nil
 end
 
 blink.setup({
@@ -742,12 +742,12 @@ local servers = {
 local function start_server_java()
     local jdtls_launcher = vim.fn.glob(
         global.mason_path
-        .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
+            .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
     )
     local jdtls_bundles = {
         vim.fn.glob(
             global.mason_path
-            .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
+                .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
             1
         ),
     }
@@ -756,7 +756,7 @@ local function start_server_java()
         vim.split(
             vim.fn.glob(
                 global.mason_path
-                .. "/packages/java-test/extension/server/*.jar",
+                    .. "/packages/java-test/extension/server/*.jar",
                 1
             ),
             "\n"
@@ -856,9 +856,9 @@ typescript.setup({
         return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
     end,
     disable_commands = false, -- prevent the plugin from creating Vim commands
-    debug = false,            -- enable debug logging for commands
+    debug = false, -- enable debug logging for commands
     go_to_source_definition = {
-        fallback = true,      -- fall back to standard LSP definition on failure
+        fallback = true, -- fall back to standard LSP definition on failure
     },
     autostart = true,
     settings = {
@@ -971,7 +971,7 @@ rust_tools.setup({
         adapter = require("rust-tools.dap").get_codelldb_adapter(
             global.mason_path .. "/packages/codelldb/extension/adapter/codelldb",
             global.mason_path
-            .. "/packages/codelldb/extension/adapter/libcodelldb.so"
+                .. "/packages/codelldb/extension/adapter/libcodelldb.so"
         ),
     },
 })
@@ -995,28 +995,47 @@ mason.setup({
 local mason_lspconfig = require("mason-lspconfig")
 local declared = vim.tbl_keys(servers)
 local ensured = funcs.filter(declared, function(v, _, _)
-    if v == "markdown" then
-        return false
-    end
+    -- if v == "markdown" then
+    --     return false
+    -- end
     -- if v == "lua_ls" then
     --     return false
     -- end
 end)
 mason_lspconfig.setup({ ensure_installed = ensured })
-mason_lspconfig.setup_handlers({
-    function(server_name)
-        if funcs.has_value(servers, server_name) then
-            local capabilities = blink.get_lsp_capabilities()
-            lspconfig[server_name].setup({
-                capabilities = capabilities,
-                on_attach = servers[server_name].on_attach,
-                settings = servers[server_name].settings,
-                flags = servers[server_name].flags,
-                root_dir = servers[server_name].root_dir,
-            })
-        end
-    end,
-})
+
+for server_name, server in pairs(servers) do
+    if not funcs.has_value(servers, server_name) then
+        vim.notify(
+            "LSP server " .. server_name .. " is not declared in servers table",
+            vim.log.levels.WARN
+        )
+    end
+    if funcs.has_value(servers, server_name) then
+        local capabilities = blink.get_lsp_capabilities()
+        lspconfig[server_name].setup({
+            capabilities = capabilities,
+            on_attach = servers[server_name].on_attach,
+            settings = servers[server_name].settings,
+            flags = servers[server_name].flags,
+            root_dir = servers[server_name].root_dir,
+        })
+    end
+end
+-- mason_lspconfig.setup_handlers({
+--     function(server_name)
+--         if funcs.has_value(servers, server_name) then
+--             local capabilities = blink.get_lsp_capabilities()
+--             lspconfig[server_name].setup({
+--                 capabilities = capabilities,
+--                 on_attach = servers[server_name].on_attach,
+--                 settings = servers[server_name].settings,
+--                 flags = servers[server_name].flags,
+--                 root_dir = servers[server_name].root_dir,
+--             })
+--         end
+--     end,
+-- })
 local capabilities = blink.get_lsp_capabilities()
 lspconfig["lua_ls"].setup({
     -- capabilities = servers["lua_ls"].capabilities,
