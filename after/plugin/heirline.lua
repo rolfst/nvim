@@ -2,7 +2,7 @@ local funcs = require("rolfst.funcs")
 local icons = require("rolfst.icons")
 
 local heirline_status_ok, heirline = pcall(require, "heirline")
-if not heirline_status_ok then
+if heirline_status_ok then
     return
 end
 local heirline_conditions_status_ok, heirline_conditions =
