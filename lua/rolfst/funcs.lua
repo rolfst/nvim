@@ -245,5 +245,44 @@ M.filter = function(t, filterIter)
 
     return out
 end
+M.root_pattern = function(...)
+    local patterns = M.tbl_flatten({ ... })
+    return function(startpath)
+        startpath = M.strip_archive_subpath(startpath)
+        for _, pattern in ipairs(patterns) do
+            local match = M.search_ancestors(startpath, function(path)
+                for _, p in
+                    ipairs(
+                        vim.fn.glob(
+                            table.concat(
+                                { escape_wildcards(path), pattern },
+                                "/"
+                            ),
+                            true,
+                            true
+                        )
+                    )
+                do
+                    if vim.uv.fs_stat(p) then
+                        return path
+                    end
+                end
+            end)
+
+            if match ~= nil then
+                local real = vim.uv.fs_realpath(match)
+                return real or match -- fallback to original if realpath fails
+            end
+        end
+    end
+end
+
+M.strip_archive_subpath = function(path)
+    -- Matches regex from zip.vim / tar.vim
+    path =
+        vim.fn.substitute(path, "zipfile://\\(.\\{-}\\)::[^\\\\].*$", "\\1", "")
+    path = vim.fn.substitute(path, "tarfile:\\(.\\{-}\\)::.*$", "\\1", "")
+    return path
+end
 
 return M

@@ -2,7 +2,11 @@ local global = require("rolfst.global")
 local funcs = require("rolfst.funcs")
 local icons = require("rolfst.icons")
 local navic = require("nvim-navic")
-
+function find_git_ancestor(fname)
+    return vim.fs.dirname(
+        vim.fs.find(".git", { path = fname, upward = true })[1]
+    )
+end
 -- {{{ Snippets setup
 local blink_status_ok, blink = pcall(require, "blink.cmp")
 if not blink_status_ok then
@@ -14,26 +18,54 @@ if not snip_status_ok then
     return
 end
 
-vim.api.nvim_create_augroup("Copilot", { clear = true })
-local copilot_status_ok, copilot = pcall(require, "copilot")
-vim.api.nvim_create_autocmd({ "InsertEnter" }, {
-    callback = function()
-        if copilot_status_ok then
-            copilot.setup({
-                suggestion = {
-                    auto_trigger = true,
-                    enabled = true,
-                    keymap = {
-                        accept = "<M-Space>",
-                        next = "<C-j>",
-                        prev = "<C-k>",
-                    },
-                },
-            })
-        end
-    end,
-    group = "Copilot",
-})
+-- vim.api.nvim_create_augroup("Copilot", { clear = true })
+-- local copilot_status_ok, copilot = pcall(require, "copilot")
+-- vim.api.nvim_create_autocmd({ "InsertEnter" }, {
+--     callback = function()
+--         if copilot_status_ok then
+--             local vectorcode_status_ok, vc = pcall(require, "vectorcode")
+--             local vectorcode_ctx
+--             if vectorcode_status_ok then
+--                 vectorcode_ctx =
+--                     require("vectorcode.integrations.copilotchat").make_context_provider({
+--                         prompt_header = "Here are relevant files from the repository:", -- Customize header text
+--                         prompt_footer = "\nConsider this context when answering:",      -- Customize footer text
+--                         skip_empty = true,                                              -- Skip adding context when no files are retrieved
+--                     })
+--             end
+--
+--             copilot.setup({
+--                 contexts = {
+--                     -- Add the VectorCode context provider
+--                     vectorcode = vectorcode_ctx,
+--                 },
+--
+--                 -- Enable VectorCode context in your prompts
+--                 prompts = {
+--                     Explain = {
+--                         prompt = "Explain the following code in detail:\n$input",
+--                         context = { "selection", "vectorcode" }, -- Add vectorcode to the context
+--                     },
+--                 },
+--                 sticky = {
+--                     -- "Using the model $claude-3.7-sonnet-thought",
+--                     "#vectorcode", -- Automatically includes repository context in every conversation
+--                 },
+--                 -- this is the part without vectorcode
+--                 suggestion = {
+--                     auto_trigger = true,
+--                     enabled = true,
+--                     keymap = {
+--                         accept = "<M-Space>",
+--                         next = "<C-j>",
+--                         prev = "<C-k>",
+--                     },
+--                 },
+--             })
+--         end
+--     end,
+--     group = "Copilot",
+-- })
 
 luasnip.config.set_config({
     history = true,
@@ -471,7 +503,11 @@ null_ls.setup({
 
 -- {{{ Lsp setup
 local default_debouce_time = 150
-local nvim_lsp_util = require("lspconfig/util")
+vim.lsp.config("*", {
+    filetypes = { "codecompanion" },
+    root_markers = { ".git" },
+})
+
 M.default_config = function(file_types, settings)
     return {
         flags = {
@@ -489,9 +525,6 @@ M.default_config = function(file_types, settings)
             navic.attach(client, bufnr)
         end,
         capabilities = blink.get_lsp_capabilities(),
-        root_dir = function(fname)
-            return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-        end,
         settings = (settings == nil and {} or settings),
     }
 end
@@ -512,9 +545,6 @@ M.without_formatting = function(file_types, settings)
             navic.attach(client, bufnr)
         end,
         capabilities = blink.get_lsp_capabilities(),
-        root_dir = function(fname)
-            return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-        end,
         settings = (settings == nil and {} or settings),
     }
 end
@@ -526,9 +556,6 @@ M.without_winbar_config = function(file_types)
         },
         autostart = true,
         filetypes = file_types,
-        root_dir = function(fname)
-            return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-        end,
         init_options = {
             ["bem.enabled"] = true,
         },
@@ -552,9 +579,6 @@ M.config_with_command = function(file_types, settings, command)
             navic.attach(client, bufnr)
         end,
         capabilities = blink.get_lsp_capabilities(),
-        root_dir = function(fname)
-            return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-        end,
         settings = (settings == nil and {} or settings),
     }
 end
@@ -581,7 +605,7 @@ local servers = {
             navic.attach(client, bufnr)
         end,
         capabilities = blink.get_lsp_capabilities(),
-        root_dir = nvim_lsp_util.root_pattern("angular.json"),
+        root_markers = { "angular.json" },
     },
     bashls = M.default_config({ "sh", "bash", "zsh", "csh", "ksh" }),
     -- clangd = {
@@ -601,9 +625,6 @@ local servers = {
     --         navic.attach(client, bufnr)
     --     end,
     --     capabilities = M.get_cpp_capabilities(),
-    --     root_dir = function(fname)
-    --         return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-    --     end,
     -- },
     -- clojure_lsp = M.default_config({ "clojure", "edn" }),
     -- cmake = M.default_config("cmake"),
@@ -625,9 +646,6 @@ local servers = {
     --         navic.attach(client, bufnr)
     --     end,
     --     capabilities = M.get_capabilities(),
-    --     root_dir = function(fname)
-    --         return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-    --     end,
     -- },
     -- elmls = M.default_config("elm"),
     emmet_ls = M.without_winbar_config({
@@ -675,9 +693,6 @@ local servers = {
     --     },
     -- capabilities = blink.get_lsp_capabilities(),
     --     capabilities = M.get_capabilities(),
-    --     root_dir = function(fname)
-    --         return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-    --     end,
     -- },
     -- graphql = M.default_config("graphql"),
     -- hls = M.default_config({ "haskell", "lhaskell" }),
@@ -833,11 +848,10 @@ vim.tbl_filter(function(buf)
     end
 end, vim.api.nvim_list_bufs())
 -- }}}
-local lspconfig = require("lspconfig")
+local lspconfig = vim.lsp.config
 
 -- {{{ Typescript
-local typescript = lspconfig["ts_ls"]
-typescript.setup({
+local typescript = lspconfig("ts_ls", {
     filetypes = {
         "javascript",
         "javascriptreact",
@@ -852,9 +866,6 @@ typescript.setup({
         navic.attach(client, bufnr)
     end,
     capabilities = blink.get_lsp_capabilities(),
-    root_dir = function(fname)
-        return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-    end,
     disable_commands = false, -- prevent the plugin from creating Vim commands
     debug = false, -- enable debug logging for commands
     go_to_source_definition = {
@@ -888,6 +899,7 @@ typescript.setup({
     flags = {
         debounce_text_changes = default_debouce_time,
     },
+    root_markers = { "package.json" },
 })
 -- }}}
 -- {{{ haskell
@@ -914,8 +926,7 @@ typescript.setup({
 -- ht.dap.discover_configurations(bufnr)
 -- }}}
 -- {{{ Rust
-local rust_tools = require("rust-tools")
-rust_tools.setup({
+lspconfig("rust_analyzer", {
     tools = {
         inlay_hints = {
             auto = true,
@@ -963,9 +974,6 @@ rust_tools.setup({
             navic.attach(client, bufnr)
         end,
         capabilities = blink.get_lsp_capabilities(),
-        -- root_dir = function(fname)
-        -- 	return nvim_lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-        -- end,
     },
     dap = {
         adapter = require("rust-tools.dap").get_codelldb_adapter(
@@ -1013,12 +1021,12 @@ for server_name, server in pairs(servers) do
     end
     if funcs.has_value(servers, server_name) then
         local capabilities = blink.get_lsp_capabilities()
-        lspconfig[server_name].setup({
+        lspconfig(server_name, {
             capabilities = capabilities,
             on_attach = servers[server_name].on_attach,
             settings = servers[server_name].settings,
             flags = servers[server_name].flags,
-            root_dir = servers[server_name].root_dir,
+            root_markers = servers[server_name].root_markers,
         })
     end
 end
@@ -1026,7 +1034,7 @@ end
 --     function(server_name)
 --         if funcs.has_value(servers, server_name) then
 --             local capabilities = blink.get_lsp_capabilities()
---             lspconfig[server_name].setup({
+--             lspconfig(server_name,u{
 --                 capabilities = capabilities,
 --                 on_attach = servers[server_name].on_attach,
 --                 settings = servers[server_name].settings,
@@ -1037,12 +1045,12 @@ end
 --     end,
 -- })
 local capabilities = blink.get_lsp_capabilities()
-lspconfig["lua_ls"].setup({
+lspconfig("lua_ls", {
     -- capabilities = servers["lua_ls"].capabilities,
     capabilities = capabilities,
     on_attach = servers["lua_ls"].on_attach,
     settings = servers["lua_ls"].settings,
     flags = servers["lua_ls"].flags,
-    root_dir = servers["lua_ls"].root_dir,
+    root_markers = servers["lua_ls"].root_markers,
 })
 -- }}}

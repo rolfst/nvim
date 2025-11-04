@@ -72,18 +72,20 @@ require("lazy").setup({
     { "akinsho/toggleterm.nvim" },
     { "ThePrimeagen/harpoon" },
     { "rgroli/other.nvim" },
-    { "mbbill/undotree" },
+    -- { "mbbill/undotree" },
+    { "XXiaoA/atone.nvim", cmd = "Atone" },
     {
         "neovim/nvim-lspconfig",
-        dependencies = {
-            -- LSP Support
-            { "williamboman/mason.nvim" },
-            { "williamboman/mason-lspconfig.nvim" },
-            { "j-hui/fidget.nvim" },
-            { "folke/neodev.nvim" },
-            { "saghen/blink.cmp" },
-        },
     },
+    --     dependencies = {
+    --         -- LSP Support
+    --         { "williamboman/mason.nvim" },
+    --         { "williamboman/mason-lspconfig.nvim" },
+    --         { "j-hui/fidget.nvim" },
+    --         { "folke/neodev.nvim" },
+    --         { "saghen/blink.cmp" },
+    --     },
+    -- },
     -- Autocompletion
     -- {
     --     "hrsh7th/nvim-cmp",
@@ -110,8 +112,11 @@ require("lazy").setup({
         version = "1.*",
         build = "cargo build --release",
         dependencies = {
-            { "L3MON4D3/LuaSnip",            version = "v2.*" },
+            { "L3MON4D3/LuaSnip", version = "v2.*" },
             { "rafamadriz/friendly-snippets" },
+        },
+        sources = {
+            default = { "luasnip", "lsp", "path", "buffer" },
         },
     },
     {
@@ -131,20 +136,53 @@ require("lazy").setup({
             "BufRead",
         },
     },
-    { "zbirenbaum/copilot.lua" },
     {
-        "CopilotC-Nvim/CopilotChat.nvim",
-        branch = "main",
+        "ravitemer/mcphub.nvim",
         dependencies = {
-            { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-            { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
+            "nvim-lua/plenary.nvim",
         },
-        opts = {
-            debug = true, -- Enable debugging
-            -- See Configuration section for rest
-        },
-        -- See Commands section for default commands if you want to lazy load on them
+        build = "npm install -g mcp-hub@latest", -- Installs `mcp-hub` node binary globally
+        config = function()
+            require("mcphub").setup()
+        end,
     },
+    { "HakonHarnes/img-clip.nvim" },
+    {
+        "Davidyz/VectorCode",
+        version = "0.7.7",
+        build = "uv tool upgrade vectorcode", -- This helps keeping the CLI up-to-date
+        -- build = "pipx upgrade vectorcode", -- If you used pipx to install the CLI
+        cmd = { "VectorCode", "VectorCodeSearch", "VectorCodeIndex" },
+        dependencies = { "nvim-lua/plenary.nvim" },
+    },
+    { "flyingshutter/gemini-autocomplete.nvim", opts = {} },
+    {
+        "olimorris/codecompanion.nvim",
+        lazy = true,
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "ravitemer/mcphub.nvim",
+            {
+                "echasnovski/mini.diff",
+            },
+            "HakonHarnes/img-clip.nvim",
+        },
+    },
+    -- { "zbirenbaum/copilot.lua" },
+    -- {
+    --     "CopilotC-Nvim/CopilotChat.nvim",
+    --     branch = "main",
+    --     dependencies = {
+    --         { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
+    --         { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
+    --     },
+    --     opts = {
+    --         debug = true, -- Enable debugging
+    --         -- See Configuration section for rest
+    --     },
+    -- },
+    --     -- See Commands section for default commands if you want to lazy load on them
 
     -- Util plugins
     { "gpanders/editorconfig.nvim" },
@@ -166,9 +204,14 @@ require("lazy").setup({
         },
         cmd = "CtrlSpace",
     },
-    { "echasnovski/mini.nvim",    version = false },
-    { "echasnovski/mini.move",    version = false },
-    { "echasnovski/mini.ai",      version = false },
+    { "echasnovski/mini.nvim", version = false },
+    { "echasnovski/mini.move", version = false },
+    { "echasnovski/mini.ai", version = false },
+    { "echasnovski/mini.diff", version = false },
+    {
+        "HakonHarnes/img-clip.nvim",
+    },
+
     { "Dkendal/nvim-treeclimber", dependencies = { "rktjmp/lush.nvim" } },
     {
         "windwp/nvim-autopairs",
@@ -222,7 +265,7 @@ require("lazy").setup({
     -- DAP plugins
     { "mfussenegger/nvim-dap" },
 
-    { "mxsdev/nvim-dap-vscode-js",  lazy = true },
+    { "mxsdev/nvim-dap-vscode-js", lazy = true },
     {
         "microsoft/vscode-js-debug",
         build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out && ln -s "
@@ -246,13 +289,28 @@ require("lazy").setup({
         },
     },
     { "nvim-neotest/nvim-nio" },
+    -- {
+    --     "iamcco/markdown-preview.nvim",
+    --     build = function()
+    --         vim.fn["mkdp#util#install"]()
+    --     end,
+    --     lazy = false,
+    -- },
     {
-        "iamcco/markdown-preview.nvim",
-        build = function()
-            vim.fn["mkdp#util#install"]()
-        end,
-        lazy = false,
+        "MeanderingProgrammer/render-markdown.nvim",
+        ft = { "markdown", "codecompanion" },
     },
+    {
+        "OXY2DEV/markview.nvim",
+        event = "VeryLazy",
+        opts = {
+            preview = {
+                filetypes = { "markdown", "codecompanion" },
+                ignore_buftypes = {},
+            },
+        },
+    },
+
     -- Test plugins
 
     {
@@ -264,7 +322,6 @@ require("lazy").setup({
             "antoinemadec/FixCursorHold.nvim",
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
-            "rouge8/neotest-rust",
             "nvim-neotest/neotest-python",
             "nvim-neotest/neotest-plenary",
             "MrcJkb/neotest-haskell",
@@ -282,11 +339,9 @@ require("lazy").setup({
 
     -- Language plugins
     {
-        "simrat39/rust-tools.nvim",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "mfussenegger/nvim-dap",
-        },
+        "mrcjkb/rustaceanvim",
+        version = "^6", -- Recommended
+        lazy = false, -- This plugin is already lazy
     },
     {
         "mrcjkb/haskell-tools.nvim",
@@ -347,7 +402,13 @@ require("lazy").setup({
         "kevinhwang91/nvim-ufo",
         dependencies = { "kevinhwang91/promise-async" },
     },
-    { "nvim-treesitter/nvim-treesitter-context" },
+    {
+        "nvim-treesitter/nvim-treesitter-context",
+        dependencies = {
+            "OXY2DEV/markview.nvim",
+        },
+        lazy = false,
+    },
     { "folke/which-key.nvim" },
     { "folke/snacks.nvim" },
 

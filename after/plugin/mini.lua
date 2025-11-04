@@ -1,10 +1,15 @@
 local mini_move_ok, mini_move = pcall(require, "mini.move")
-if not mini_move_ok then
-    return
+if mini_move_ok then
+    mini_move.setup()
 end
-mini_move.setup()
 local mini_ai_ok, mini_ai = pcall(require, "mini.ai")
-if not mini_ai_ok then
-    return
+if mini_ai_ok then
+    mini_ai.setup()
 end
-mini_ai.setup()
+local mini_diff_ok, mini_diff = pcall(require, "mini.diff")
+if mini_diff_ok then
+    mini_diff.setup({
+        -- Disabled by default
+        source = mini_diff.gen_source.none(),
+    })
+end

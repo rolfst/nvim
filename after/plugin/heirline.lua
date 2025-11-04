@@ -5,6 +5,128 @@ local heirline_status_ok, heirline = pcall(require, "heirline")
 if heirline_status_ok then
     return
 end
+
+local CodeCompanion = {
+    static = {
+        processing = false,
+    },
+    update = {
+        "User",
+        pattern = "CodeCompanionRequest*",
+        callback = function(self, args)
+            if args.match == "CodeCompanionRequestStarted" then
+                self.processing = true
+            elseif args.match == "CodeCompanionRequestFinished" then
+                self.processing = false
+            end
+            vim.cmd("redrawstatus")
+        end,
+    },
+    {
+        condition = function(self)
+            return self.processing
+        end,
+        provider = " ",
+        hl = { fg = "yellow" },
+    },
+}
+
+local IsCodeCompanion = function()
+    return package.loaded.codecompanion and vim.bo.filetype == "codecompanion"
+end
+
+local CodeCompanionCurrentContext = {
+    static = {
+        enabled = true,
+    },
+    condition = function(self)
+        return IsCodeCompanion()
+            and _G.codecompanion_current_context ~= nil
+            and self.enabled
+    end,
+    provider = function()
+        local bufname = vim.fn.fnamemodify(
+            vim.api.nvim_buf_get_name(_G.codecompanion_current_context),
+            ":t"
+        )
+        return "[  " .. bufname .. " ] "
+    end,
+    hl = { fg = "gray", bg = "bg" },
+    update = {
+        "User",
+        pattern = { "CodeCompanionRequest*", "CodeCompanionContextChanged" },
+        callback = vim.schedule_wrap(function(self, args)
+            if args.match == "CodeCompanionRequestStarted" then
+                self.enabled = false
+            elseif args.match == "CodeCompanionRequestFinished" then
+                self.enabled = true
+            end
+            vim.cmd("redrawstatus")
+        end),
+    },
+}
+
+local CodeCompanionStats = {
+    condition = function(self)
+        return IsCodeCompanion()
+    end,
+    static = {
+        chat_values = {},
+    },
+    init = function(self)
+        local bufnr = vim.api.nvim_get_current_buf()
+        self.chat_values = _G.codecompanion_chat_metadata[bufnr]
+    end,
+    -- Tokens block
+    {
+        condition = function(self)
+            return self.chat_values.tokens > 0
+        end,
+        RightSlantStart,
+        {
+            provider = function(self)
+                return "   " .. self.chat_values.tokens .. " "
+            end,
+            hl = { fg = "gray", bg = "statusline_bg" },
+            update = {
+                "User",
+                pattern = {
+                    "CodeCompanionChatOpened",
+                    "CodeCompanionRequestFinished",
+                },
+                callback = vim.schedule_wrap(function()
+                    vim.cmd("redrawstatus")
+                end),
+            },
+        },
+        RightSlantEnd,
+    },
+    -- Cycles block
+    {
+        condition = function(self)
+            return self.chat_values.cycles > 0
+        end,
+        RightSlantStart,
+        {
+            provider = function(self)
+                return "  " .. self.chat_values.cycles .. " "
+            end,
+            hl = { fg = "gray", bg = "statusline_bg" },
+            update = {
+                "User",
+                pattern = {
+                    "CodeCompanionChatOpened",
+                    "CodeCompanionRequestFinished",
+                },
+                callback = vim.schedule_wrap(function()
+                    vim.cmd("redrawstatus")
+                end),
+            },
+        },
+        RightSlantEnd,
+    },
+}
+
 local heirline_conditions_status_ok, heirline_conditions =
     pcall(require, "heirline.conditions")
 if not heirline_conditions_status_ok then
