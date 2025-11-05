@@ -264,16 +264,15 @@ require("lazy").setup({
     { "ziontee113/neo-minimap" },
     -- DAP plugins
     { "mfussenegger/nvim-dap" },
-
-    { "mxsdev/nvim-dap-vscode-js", lazy = true },
-    {
-        "microsoft/vscode-js-debug",
-        build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out && ln -s "
-            .. global.plugin_path
-            .. "/vscode-js-debug "
-            .. global.mason_path
-            .. "/",
-    },
+    -- { "mxsdev/nvim-dap-vscode-js", lazy = true },
+    -- {
+    --     "microsoft/vscode-js-debug",
+    --     build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out && ln -s "
+    --         .. global.plugin_path
+    --         .. "/vscode-js-debug "
+    --         .. global.mason_path
+    --         .. "/",
+    -- },
 
     { "jbyuki/one-small-step-for-vimkind", lazy = true },
     {
@@ -284,7 +283,7 @@ require("lazy").setup({
         dependencies = {
             "mfussenegger/nvim-dap",
             "nvim-neotest/nvim-nio",
-            "mxsdev/nvim-dap-vscode-js",
+            -- "mxsdev/nvim-dap-vscode-js",
             "jbyuki/one-small-step-for-vimkind",
         },
     },
