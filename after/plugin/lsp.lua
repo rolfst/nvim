@@ -926,6 +926,21 @@ local typescript = lspconfig("ts_ls", {
 -- ht.dap.discover_configurations(bufnr)
 -- }}}
 -- {{{ Rust
+local cfg = require("rustaceanvim.config")
+-- Update this path
+local extension_path = vim.env.HOME
+    .. "/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/"
+local codelldb_path = extension_path .. "adapter/codelldb"
+local liblldb_path = extension_path .. "lldb/lib/liblldb"
+local this_os = vim.uv.os_uname().sysname
+-- The path is different on Windows
+if this_os:find("Windows") then
+    codelldb_path = extension_path .. "adapter\\codelldb.exe"
+    liblldb_path = extension_path .. "lldb\\bin\\liblldb.dll"
+else
+    -- The liblldb extension is .so for Linux and .dylib for MacOS
+    liblldb_path = liblldb_path .. (this_os == "Linux" and ".so" or ".dylib")
+end
 lspconfig("rust_analyzer", {
     tools = {
         inlay_hints = {
@@ -976,11 +991,7 @@ lspconfig("rust_analyzer", {
         capabilities = blink.get_lsp_capabilities(),
     },
     dap = {
-        adapter = require("rust-tools.dap").get_codelldb_adapter(
-            global.mason_path .. "/packages/codelldb/extension/adapter/codelldb",
-            global.mason_path
-                .. "/packages/codelldb/extension/adapter/libcodelldb.so"
-        ),
+        adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
     },
 })
 -- }}}
@@ -1000,7 +1011,10 @@ mason.setup({
     },
 })
 
-local mason_lspconfig = require("mason-lspconfig")
+local mason_ok, mason_lspconfig = require("mason-lspconfig")
+if not mason_ok then
+    print("mason not installed anymore")
+end
 local declared = vim.tbl_keys(servers)
 local ensured = funcs.filter(declared, function(v, _, _)
     -- if v == "markdown" then
