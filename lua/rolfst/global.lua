@@ -28,6 +28,7 @@ function global:load_variables()
     self.languages = {}
     self.home = home
     self.mason_path = home .. "/.local/share/nvim/mason"
+    self.bin_path = "/run/current-system/sw/bin"
 end
 
 global:load_variables()
