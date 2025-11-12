@@ -286,19 +286,19 @@ M.on_attach = function(client, bufnr)
     nmap("gD", function()
         vim.lsp.buf.declaration()
     end, "[g]oto [D]eclaration")
-    nmap("gt", function()
-        vim.lsp.buf.type_definition()
-    end, "[g]oto [t]ype definition")
-    nmap("gI", vim.cmd.LspImplementation, "[G]oto [I]mplementation")
-    nmap("dc", function()
-        vim.diagnostic.open_float()
-    end, "[d]iagnoti[c]s")
+    -- nmap("gt", function()
+    --     vim.lsp.buf.type_definition()
+    -- end, "[g]oto [t]ype definition")
+    -- nmap("gI", vim.cmd.LspImplementation, "[G]oto [I]mplementation")
+    -- nmap("dc", function()
+    --     vim.diagnostic.open_float()
+    -- end, "[d]iagnoti[c]s")
     nmap("ca", function()
         vim.lsp.buf.code_action()
     end, "[c]ode [a]ction")
-
-    nmap("grn", vim.cmd.LspRename, "[r]e[n]ame")
-
+    --
+    -- nmap("grn", vim.cmd.LspRename, "[r]e[n]ame")
+    --
     nmap("<space>f", vim.cmd.LspFormat, "Format")
     vim.keymap.set("v", "<space>f", function()
         local start_row, _ = unpack(vim.api.nvim_buf_get_mark(0, "<"))
@@ -314,17 +314,17 @@ M.on_attach = function(client, bufnr)
     nmap("<leader>i", function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
     end, "Toggle inlay hints")
-
+    --
     nmap("cL", function()
         vim.lsp.codelens.refresh()
     end, "[c]ode [l]ens refresh")
     nmap("cl", function()
         vim.lsp.codelens.run()
     end, "[c]ode [l]ens run")
-
-    nmap("K", function()
-        vim.lsp.buf.hover()
-    end, "Hover documentation")
+    --
+    -- nmap("K", function()
+    --     vim.lsp.buf.hover()
+    -- end, "Hover documentation")
     vim.keymap.set("i", "<c-k>", function()
         vim.lsp.buf.signature_help()
     end, describe("signature help"))
@@ -871,7 +871,7 @@ local typescript = lspconfig("ts_ls", {
     go_to_source_definition = {
         fallback = true, -- fall back to standard LSP definition on failure
     },
-    autostart = true,
+    root_markers = { ".git", "package.json" },
     settings = {
         javascript = {
             inlayHints = {
@@ -899,7 +899,6 @@ local typescript = lspconfig("ts_ls", {
     flags = {
         debounce_text_changes = default_debouce_time,
     },
-    root_markers = { "package.json" },
 })
 -- }}}
 -- {{{ haskell
@@ -1043,7 +1042,9 @@ for server_name, server in pairs(servers) do
             root_markers = servers[server_name].root_markers,
         })
     end
+    vim.lsp.enable(server)
 end
+vim.lsp.enable("ts_ls")
 -- mason_lspconfig.setup_handlers({
 --     function(server_name)
 --         if funcs.has_value(servers, server_name) then
