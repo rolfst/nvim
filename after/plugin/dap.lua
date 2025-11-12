@@ -225,6 +225,7 @@ for i, ext in ipairs(exts) do
             args = { "${file}" },
             sourceMaps = true,
             protocol = "inspector",
+            port = 8123,
         },
         {
             type = "pwa-node",
@@ -347,151 +348,151 @@ for i, ext in ipairs(exts) do
         },
     }
 end
-dap.configurations.javascript = {
-    {
-        type = "pwa-node",
-        request = "launch",
-        name = "Launch file",
-        program = "${file}",
-        cwd = "${workspaceFolder}",
-    },
-    {
-        type = "pwa-node",
-        request = "launch",
-        name = "Choose file",
-        program = function()
-            return vim.fn.input(
-                "Path to executable: ",
-                vim.fn.getcwd() .. "/",
-                "file"
-            )
-        end,
-        cwd = "${workspaceFolder}",
-    },
-    {
-        type = "pwa-node",
-        request = "launch",
-        name = "Debug Jest Tests",
-        -- trace = true, -- include debugger info
-        runtimeExecutable = "node",
-        runtimeArgs = {
-            "./node_modules/jest/bin/jest.js",
-            "--runInBand",
-        },
-        rootPath = "${workspaceFolder}",
-        cwd = "${workspaceFolder}",
-        console = "integratedTerminal",
-        internalConsoleOptions = "neverOpen",
-    },
-    {
-        type = "pwa-node",
-        request = "launch",
-        name = "Debug Mocha Tests",
-        -- trace = true, -- include debugger info
-        runtimeExecutable = "node",
-        runtimeArgs = {
-            "./node_modules/mocha/bin/mocha.js",
-        },
-        rootPath = "${workspaceFolder}",
-        cwd = "${workspaceFolder}",
-        console = "integratedTerminal",
-        internalConsoleOptions = "neverOpen",
-    },
-    {
-        type = "pwa-node",
-        request = "attach",
-        name = "Attach",
-        processId = require("dap.utils").pick_process,
-        cwd = "${workspaceFolder}",
-    },
-    {
-        type = "pwa-node",
-        request = "launch",
-        name = "Debug Jest Tests",
-        trace = true,
-        runtimeExecutable = "node",
-        runtimeArgs = {
-            "./node_modules/jest/bin/jest.js",
-            "--runInBand",
-        },
-        rootPath = "${workspaceFolder}",
-        cwd = "${workspaceFolder}",
-        console = "integratedTerminal",
-        internalConsoleOptions = "neverOpen",
-    },
-    {
-        type = "pwa-node",
-        request = "launch",
-        name = "Debug Mocha Tests",
-        trace = true,
-        runtimeExecutable = "node",
-        runtimeArgs = {
-            "./node_modules/mocha/bin/mocha.js",
-        },
-        rootPath = "${workspaceFolder}",
-        cwd = "${workspaceFolder}",
-        console = "integratedTerminal",
-        internalConsoleOptions = "neverOpen",
-    },
-}
-dap.configurations.typescript = {
-    {
-        type = "pwa-node",
-        request = "launch",
-        name = "Launch file",
-        program = "${file}",
-        cwd = "${workspaceFolder}",
-    },
-    {
-        type = "pwa-node",
-        request = "launch",
-        name = "Choose file",
-        program = function()
-            return vim.fn.input(
-                "Path to executable: ",
-                vim.fn.getcwd() .. "/",
-                "file"
-            )
-        end,
-        cwd = "${workspaceFolder}",
-    },
-    {
-        type = "pwa-node",
-        request = "attach",
-        name = "Attach",
-        processId = require("dap.utils").pick_process,
-        cwd = "${workspaceFolder}",
-    },
-    {
-        type = "pwa-node",
-        request = "launch",
-        name = "Debug Jest Tests",
-        trace = true, -- include debugger info
-        runtimeExecutable = "node",
-        runtimeArgs = {
-            "./node_modules/jest/bin/jest.js",
-            "--runInBand",
-        },
-        rootPath = "${workspaceFolder}",
-        cwd = "${workspaceFolder}",
-        console = "integratedTerminal",
-        internalConsoleOptions = "neverOpen",
-    },
-    {
-        type = "pwa-node",
-        request = "launch",
-        name = "Debug Mocha Tests",
-        trace = true, -- include debugger info
-        runtimeExecutable = "node",
-        runtimeArgs = {
-            "./node_modules/mocha/bin/mocha.js",
-        },
-        rootPath = "${workspaceFolder}",
-        cwd = "${workspaceFolder}",
-        console = "integratedTerminal",
-        internalConsoleOptions = "neverOpen",
-    },
-}
+-- dap.configurations.javascript = {
+--     {
+--         type = "pwa-node",
+--         request = "launch",
+--         name = "Launch file",
+--         program = "${file}",
+--         cwd = "${workspaceFolder}",
+--     },
+--     {
+--         type = "pwa-node",
+--         request = "launch",
+--         name = "Choose file",
+--         program = function()
+--             return vim.fn.input(
+--                 "Path to executable: ",
+--                 vim.fn.getcwd() .. "/",
+--                 "file"
+--             )
+--         end,
+--         cwd = "${workspaceFolder}",
+--     },
+--     {
+--         type = "pwa-node",
+--         request = "launch",
+--         name = "Debug Jest Tests",
+--         -- trace = true, -- include debugger info
+--         runtimeExecutable = "node",
+--         runtimeArgs = {
+--             "./node_modules/jest/bin/jest.js",
+--             "--runInBand",
+--         },
+--         rootPath = "${workspaceFolder}",
+--         cwd = "${workspaceFolder}",
+--         console = "integratedTerminal",
+--         internalConsoleOptions = "neverOpen",
+--     },
+--     {
+--         type = "pwa-node",
+--         request = "launch",
+--         name = "Debug Mocha Tests",
+--         -- trace = true, -- include debugger info
+--         runtimeExecutable = "node",
+--         runtimeArgs = {
+--             "./node_modules/mocha/bin/mocha.js",
+--         },
+--         rootPath = "${workspaceFolder}",
+--         cwd = "${workspaceFolder}",
+--         console = "integratedTerminal",
+--         internalConsoleOptions = "neverOpen",
+--     },
+--     {
+--         type = "pwa-node",
+--         request = "attach",
+--         name = "Attach",
+--         processId = require("dap.utils").pick_process,
+--         cwd = "${workspaceFolder}",
+--     },
+--     {
+--         type = "pwa-node",
+--         request = "launch",
+--         name = "Debug Jest Tests",
+--         trace = true,
+--         runtimeExecutable = "node",
+--         runtimeArgs = {
+--             "./node_modules/jest/bin/jest.js",
+--             "--runInBand",
+--         },
+--         rootPath = "${workspaceFolder}",
+--         cwd = "${workspaceFolder}",
+--         console = "integratedTerminal",
+--         internalConsoleOptions = "neverOpen",
+--     },
+--     {
+--         type = "pwa-node",
+--         request = "launch",
+--         name = "Debug Mocha Tests",
+--         trace = true,
+--         runtimeExecutable = "node",
+--         runtimeArgs = {
+--             "./node_modules/mocha/bin/mocha.js",
+--         },
+--         rootPath = "${workspaceFolder}",
+--         cwd = "${workspaceFolder}",
+--         console = "integratedTerminal",
+--         internalConsoleOptions = "neverOpen",
+--     },
+-- }
+-- dap.configurations.typescript = {
+--     {
+--         type = "pwa-node",
+--         request = "launch",
+--         name = "Launch file",
+--         program = "${file}",
+--         cwd = "${workspaceFolder}",
+--     },
+--     {
+--         type = "pwa-node",
+--         request = "launch",
+--         name = "Choose file",
+--         program = function()
+--             return vim.fn.input(
+--                 "Path to executable: ",
+--                 vim.fn.getcwd() .. "/",
+--                 "file"
+--             )
+--         end,
+--         cwd = "${workspaceFolder}",
+--     },
+--     {
+--         type = "pwa-node",
+--         request = "attach",
+--         name = "Attach",
+--         processId = require("dap.utils").pick_process,
+--         cwd = "${workspaceFolder}",
+--     },
+--     {
+--         type = "pwa-node",
+--         request = "launch",
+--         name = "Debug Jest Tests",
+--         trace = true, -- include debugger info
+--         runtimeExecutable = "node",
+--         runtimeArgs = {
+--             "./node_modules/jest/bin/jest.js",
+--             "--runInBand",
+--         },
+--         rootPath = "${workspaceFolder}",
+--         cwd = "${workspaceFolder}",
+--         console = "integratedTerminal",
+--         internalConsoleOptions = "neverOpen",
+--     },
+--     {
+--         type = "pwa-node",
+--         request = "launch",
+--         name = "Debug Mocha Tests",
+--         trace = true, -- include debugger info
+--         runtimeExecutable = "node",
+--         runtimeArgs = {
+--             "./node_modules/mocha/bin/mocha.js",
+--         },
+--         rootPath = "${workspaceFolder}",
+--         cwd = "${workspaceFolder}",
+--         console = "integratedTerminal",
+--         internalConsoleOptions = "neverOpen",
+--     },
+-- }
 dap.adapters.python = {
     type = "executable",
     command = global.mason_path .. "/packages/debugpy/venv/bin/python",
