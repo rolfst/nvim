@@ -7,11 +7,14 @@ function find_git_ancestor(fname)
         vim.fs.find(".git", { path = fname, upward = true })[1]
     )
 end
+
 -- {{{ Snippets setup
 local blink_status_ok, blink = pcall(require, "blink.cmp")
 if not blink_status_ok then
     return
 end
+
+local capabilities = blink.get_lsp_capabilities()
 
 local snip_status_ok, luasnip = pcall(require, "luasnip")
 if not snip_status_ok then
@@ -513,7 +516,6 @@ M.default_config = function(file_types, settings)
         flags = {
             debounce_text_changes = default_debouce_time,
         },
-        autostart = true,
         filetypes = file_types,
         on_attach = function(client, bufnr)
             -- languages_setup.keymaps(client, bufnr)
@@ -524,7 +526,7 @@ M.default_config = function(file_types, settings)
             M.document_formatting(client, bufnr)
             navic.attach(client, bufnr)
         end,
-        capabilities = blink.get_lsp_capabilities(),
+        capabilities = capabilities,
         settings = (settings == nil and {} or settings),
     }
 end
@@ -544,7 +546,7 @@ M.without_formatting = function(file_types, settings)
             M.document_highlight(client, bufnr)
             navic.attach(client, bufnr)
         end,
-        capabilities = blink.get_lsp_capabilities(),
+        capabilities = capabilities,
         settings = (settings == nil and {} or settings),
     }
 end
@@ -578,35 +580,34 @@ M.config_with_command = function(file_types, settings, command)
             M.document_highlight(client, bufnr)
             navic.attach(client, bufnr)
         end,
-        capabilities = blink.get_lsp_capabilities(),
+        capabilities = capabilities,
         settings = (settings == nil and {} or settings),
     }
 end
 
 local servers = {
-    angularls = {
-        flags = {
-            debounce_text_changes = default_debouce_time,
-        },
-        autostart = true,
-        filetypes = {
-            "typescript",
-            "html",
-            "typescriptreact",
-            "typescript.tsx",
-        },
-        on_attach = function(client, bufnr)
-            if vim.lsp.inlay_hint then
-                vim.lsp.inlay_hint.enable(true)
-            end
-            M.omni(client, bufnr)
-            M.tag(client, bufnr)
-            M.document_highlight(client, bufnr)
-            navic.attach(client, bufnr)
-        end,
-        capabilities = blink.get_lsp_capabilities(),
-        root_markers = { "angular.json" },
-    },
+    -- angularls = {
+    --     flags = {
+    --         debounce_text_changes = default_debouce_time,
+    --     },
+    --     filetypes = {
+    --         "typescript",
+    --         "html",
+    --         "typescriptreact",
+    --         "typescript.tsx",
+    --     },
+    --     on_attach = function(client, bufnr)
+    --         if vim.lsp.inlay_hint then
+    --             vim.lsp.inlay_hint.enable(true)
+    --         end
+    --         M.omni(client, bufnr)
+    --         M.tag(client, bufnr)
+    --         M.document_highlight(client, bufnr)
+    --         navic.attach(client, bufnr)
+    --     end,
+    --     capabilities = capabilities,
+    --     root_markers = { "angular.json" },
+    -- },
     bashls = M.default_config({ "sh", "bash", "zsh", "csh", "ksh" }),
     -- clangd = {
     --     flags = {
@@ -691,7 +692,7 @@ local servers = {
     --             },
     --         },
     --     },
-    -- capabilities = blink.get_lsp_capabilities(),
+    -- capabilities = capabilities,
     --     capabilities = M.get_capabilities(),
     -- },
     -- graphql = M.default_config("graphql"),
@@ -748,7 +749,55 @@ local servers = {
     }),
     -- volar = M.default_config("vue"),
     taplo = M.default_config("toml"),
-    -- tsserver = { configured below servers },
+    ts_ls = {
+        filetypes = {
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+        },
+        on_attach = function(client, bufnr)
+            M.on_attach(client, bufnr)
+            M.omni(client, bufnr)
+            M.tag(client, bufnr)
+            M.document_highlight(client, bufnr)
+            navic.attach(client, bufnr)
+        end,
+        capabilities = capabilities,
+        disable_commands = false, -- prevent the plugin from creating Vim commands
+        debug = false, -- enable debug logging for commands
+        go_to_source_definition = {
+            fallback = true, -- fall back to standard LSP definition on failure
+        },
+        root_markers = { ".git", "package.json" },
+        settings = {
+            javascript = {
+                inlayHints = {
+                    includeInlayEnumMemberValueHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayfunctionParameterTypeHints = true,
+                    includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all',
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                    includeInlayPropertyDeclarationtypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                },
+            },
+            typescript = {
+                inlayHints = {
+                    includeInlayEnumMemberValueHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayfunctionParameterTypeHints = true,
+                    includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all',
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                    includeInlayPropertyDeclarationtypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                },
+            },
+        },
+        flags = {
+            debounce_text_changes = default_debouce_time,
+        },
+    },
     yamlls = M.without_formatting("yaml"),
 }
 -- }}}
@@ -851,55 +900,6 @@ end, vim.api.nvim_list_bufs())
 local lspconfig = vim.lsp.config
 
 -- {{{ Typescript
-local typescript = lspconfig("ts_ls", {
-    filetypes = {
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact",
-    },
-    on_attach = function(client, bufnr)
-        M.on_attach(client, bufnr)
-        M.omni(client, bufnr)
-        M.tag(client, bufnr)
-        M.document_highlight(client, bufnr)
-        navic.attach(client, bufnr)
-    end,
-    capabilities = blink.get_lsp_capabilities(),
-    disable_commands = false, -- prevent the plugin from creating Vim commands
-    debug = false, -- enable debug logging for commands
-    go_to_source_definition = {
-        fallback = true, -- fall back to standard LSP definition on failure
-    },
-    root_markers = { ".git", "package.json" },
-    settings = {
-        javascript = {
-            inlayHints = {
-                includeInlayEnumMemberValueHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayfunctionParameterTypeHints = true,
-                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all',
-                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                includeInlayPropertyDeclarationtypeHints = true,
-                includeInlayVariableTypeHints = true,
-            },
-        },
-        typescript = {
-            inlayHints = {
-                includeInlayEnumMemberValueHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayfunctionParameterTypeHints = true,
-                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all',
-                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                includeInlayPropertyDeclarationtypeHints = true,
-                includeInlayVariableTypeHints = true,
-            },
-        },
-    },
-    flags = {
-        debounce_text_changes = default_debouce_time,
-    },
-})
 -- }}}
 -- {{{ haskell
 -- local ht = require("haskell-tools")
@@ -927,18 +927,18 @@ local typescript = lspconfig("ts_ls", {
 -- {{{ Rust
 local cfg = require("rustaceanvim.config")
 -- Update this path
-local extension_path = vim.env.HOME
+local extension_path = global.home
     .. "/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/"
 local codelldb_path = extension_path .. "adapter/codelldb"
 local liblldb_path = extension_path .. "lldb/lib/liblldb"
-local this_os = vim.uv.os_uname().sysname
+local this_os = global.os
 -- The path is different on Windows
-if this_os:find("Windows") then
+if this_os:find("unsuported") then
     codelldb_path = extension_path .. "adapter\\codelldb.exe"
     liblldb_path = extension_path .. "lldb\\bin\\liblldb.dll"
 else
     -- The liblldb extension is .so for Linux and .dylib for MacOS
-    liblldb_path = liblldb_path .. (this_os == "Linux" and ".so" or ".dylib")
+    liblldb_path = liblldb_path .. (this_os == "linux" and ".so" or ".dylib")
 end
 lspconfig("rust_analyzer", {
     tools = {
@@ -958,6 +958,7 @@ lspconfig("rust_analyzer", {
             },
         },
     },
+    root_markers = { ".git", "cargo" },
     server = {
         checkOnSave = "clippy",
         cargo = {
@@ -976,7 +977,6 @@ lspconfig("rust_analyzer", {
         flags = {
             debounce_text_changes = default_debouce_time,
         },
-        autostart = true,
         filetypes = { "rust" },
         on_attach = function(client, bufnr)
             M.on_attach(client, bufnr)
@@ -987,7 +987,7 @@ lspconfig("rust_analyzer", {
             M.document_formatting(client, bufnr)
             navic.attach(client, bufnr)
         end,
-        capabilities = blink.get_lsp_capabilities(),
+        capabilities = capabilities,
     },
     dap = {
         adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
@@ -995,35 +995,7 @@ lspconfig("rust_analyzer", {
 })
 -- }}}
 
--- {{{ Mason setup
-local mason_status_ok, mason = pcall(require, "mason")
-if not mason_status_ok then
-    return
-end
-mason.setup({
-    ui = {
-        icons = {
-            package_installed = " ",
-            package_pending = " ",
-            package_uninstalled = " ",
-        },
-    },
-})
-
-local mason_ok, mason_lspconfig = require("mason-lspconfig")
-if not mason_ok then
-    print("mason not installed anymore")
-end
-local declared = vim.tbl_keys(servers)
-local ensured = funcs.filter(declared, function(v, _, _)
-    -- if v == "markdown" then
-    --     return false
-    -- end
-    -- if v == "lua_ls" then
-    --     return false
-    -- end
-end)
-mason_lspconfig.setup({ ensure_installed = ensured })
+-- {{{ Lsp activation
 
 for server_name, server in pairs(servers) do
     if not funcs.has_value(servers, server_name) then
@@ -1033,7 +1005,6 @@ for server_name, server in pairs(servers) do
         )
     end
     if funcs.has_value(servers, server_name) then
-        local capabilities = blink.get_lsp_capabilities()
         lspconfig(server_name, {
             capabilities = capabilities,
             on_attach = servers[server_name].on_attach,
@@ -1042,24 +1013,9 @@ for server_name, server in pairs(servers) do
             root_markers = servers[server_name].root_markers,
         })
     end
-    vim.lsp.enable(server)
+    vim.lsp.enable(server_name)
 end
-vim.lsp.enable("ts_ls")
--- mason_lspconfig.setup_handlers({
---     function(server_name)
---         if funcs.has_value(servers, server_name) then
---             local capabilities = blink.get_lsp_capabilities()
---             lspconfig(server_name,u{
---                 capabilities = capabilities,
---                 on_attach = servers[server_name].on_attach,
---                 settings = servers[server_name].settings,
---                 flags = servers[server_name].flags,
---                 root_dir = servers[server_name].root_dir,
---             })
---         end
---     end,
--- })
-local capabilities = blink.get_lsp_capabilities()
+
 lspconfig("lua_ls", {
     -- capabilities = servers["lua_ls"].capabilities,
     capabilities = capabilities,
