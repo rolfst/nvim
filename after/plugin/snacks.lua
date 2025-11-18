@@ -3,6 +3,11 @@ if not snacks_ok then
     return
 end
 snacks.setup({
+    opts = {
+        picker = { enabled = true },
+        zen = { enabled = true },
+    },
+
     dim = {
         ---@type snacks.scope.Config
         scope = {
@@ -17,7 +22,7 @@ snacks.setup({
             enabled = vim.fn.has("nvim-0.10") == 1,
             easing = "outQuad",
             duration = {
-                step = 20,   -- ms per step
+                step = 20, -- ms per step
                 total = 300, -- maximum duration
             },
         },
@@ -87,16 +92,16 @@ snacks.setup({
         },
         ---@class snacks.picker.matcher.Config
         matcher = {
-            fuzzy = true,          -- use fuzzy matching
-            smartcase = true,      -- use smartcase
-            ignorecase = true,     -- use ignorecase
-            sort_empty = false,    -- sort results when the search string is empty
+            fuzzy = true, -- use fuzzy matching
+            smartcase = true, -- use smartcase
+            ignorecase = true, -- use ignorecase
+            sort_empty = false, -- sort results when the search string is empty
             filename_bonus = true, -- give bonus for matching file names (last part of the path)
-            file_pos = true,       -- support patterns like `file:line:col` and `file:line`
+            file_pos = true, -- support patterns like `file:line:col` and `file:line`
             -- the bonusses below, possibly require string concatenation and path normalization,
             -- so this can have a performance impact for large lists and increase memory usage
-            cwd_bonus = false,     -- give bonus for matching files in the cwd
-            frecency = false,      -- frecency bonus
+            cwd_bonus = false, -- give bonus for matching files in the cwd
+            frecency = false, -- frecency bonus
             history_bonus = false, -- give more weight to chronological order
         },
         sort = {
@@ -111,46 +116,46 @@ snacks.setup({
             },
             file = {
                 filename_first = false, -- display filename before the file path
-                truncate = 40,          -- truncate the file path to (roughly) this length
-                filename_only = false,  -- only show the filename
-                icon_width = 2,         -- width of the icon (in characters)
-                git_status_hl = true,   -- use the git status highlight group for the filename
+                truncate = 40, -- truncate the file path to (roughly) this length
+                filename_only = false, -- only show the filename
+                icon_width = 2, -- width of the icon (in characters)
+                git_status_hl = true, -- use the git status highlight group for the filename
             },
             selected = {
                 show_always = false, -- only show the selected column when there are multiple selections
-                unselected = true,   -- use the unselected icon for unselected items
+                unselected = true, -- use the unselected icon for unselected items
             },
             severity = {
-                icons = true,  -- show severity icons
+                icons = true, -- show severity icons
                 level = false, -- show severity level
                 ---@type "left"|"right"
-                pos = "left",  -- position of the diagnostics
+                pos = "left", -- position of the diagnostics
             },
         },
         ---@class snacks.picker.previewers.Config
         previewers = {
             diff = {
-                builtin = true,    -- use Neovim for previewing diffs (true) or use an external tool (false)
+                builtin = true, -- use Neovim for previewing diffs (true) or use an external tool (false)
                 cmd = { "delta" }, -- example to show a diff with delta
             },
             git = {
                 builtin = true, -- use Neovim for previewing git output (true) or use git (false)
-                args = {},      -- additional arguments passed to the git command. Useful to set pager options usin `-c ...`
+                args = {}, -- additional arguments passed to the git command. Useful to set pager options usin `-c ...`
             },
             file = {
                 max_size = 1024 * 1024, -- 1MB
-                max_line_length = 500,  -- max line length
+                max_line_length = 500, -- max line length
                 ft = nil, ---@type string? filetype for highlighting. Use `nil` for auto detect
             },
             man_pager = nil, ---@type string? MANPAGER env to use for `man` preview
         },
         ---@class snacks.picker.jump.Config
         jump = {
-            jumplist = true,   -- save the current position in the jumplist
-            tagstack = false,  -- save the current position in the tagstack
+            jumplist = true, -- save the current position in the jumplist
+            tagstack = false, -- save the current position in the tagstack
             reuse_win = false, -- reuse an existing window if the buffer is already open
-            close = true,      -- close the picker when jumping/editing to a location (defaults to true)
-            match = false,     -- jump to the first match position. (useful for `lines`)
+            close = true, -- close the picker when jumping/editing to a location (defaults to true)
+            match = false, -- jump to the first match position. (useful for `lines`)
         },
         toggles = {
             follow = "f",
@@ -447,12 +452,16 @@ end, { desc = "Find git files" })
 vim.keymap.set("n", "<space>tgl", function()
     snacks.picker.git_log()
 end, { desc = "Find git log" })
+vim.keymap.set("n", "<space>tgL", function()
+    snacks.picker.git_log_line()
+end, { desc = "Find git log" })
 vim.keymap.set("n", "<space>tgs", function()
     snacks.picker.git_status()
 end, { desc = "Find git status" })
 vim.keymap.set("n", "<space>tgS", function()
     snacks.picker.git_stash()
 end, { desc = "Find git stash" })
+
 vim.keymap.set("n", "<space>tk", function()
     snacks.picker.keymaps()
 end, { desc = "Find keymaps" })
@@ -498,3 +507,25 @@ end, { desc = "Lsp workspace symbols" })
 vim.keymap.set("n", "<space>tr", function()
     snacks.picker.resume()
 end, { desc = "Resume" })
+vim.keymap.set("n", "gai", function()
+    snacks.picker.lsp_incoming_calls()
+end, { desc = "C[a]lls Incoming" })
+vim.keymap.set("n", "gao", function()
+    snacks.picker.lsp_outgoing_calls()
+end, { desc = "C[a]lls Outgoing" })
+
+vim.keymap.set("n", "<leader>zm", function()
+    snacks.zen()
+end, { desc = "Zen mode" })
+vim.keymap.set("n", "<leader>zM", function()
+    snacks.zen.zoom()
+end, { desc = "Zoom toggle" })
+vim.keymap.set("n", "<leader>zM", function()
+    snacks.zen.zoom()
+end, { desc = "Zoom toggle" })
+vim.keymap.set("n", "<leader>.", function()
+    snacks.scratch()
+end, { desc = "Toggle scratch buffer" })
+vim.keymap.set("n", "<leader>S", function()
+    snacks.scratch.select()
+end, { desc = "Select scratch buffer" })
