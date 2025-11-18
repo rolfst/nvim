@@ -1,48 +1,65 @@
 local group = vim.api.nvim_create_augroup("NvimIDE", {
-	clear = true,
+    clear = true,
 })
 
 vim.api.nvim_create_autocmd("BufWinEnter", {
-	callback = function()
-		-- require("rolfst.modules.lsp").setup()
-	end,
-	group = group,
+    callback = function()
+        -- require("rolfst.modules.lsp").setup()
+    end,
+    group = group,
 })
 vim.api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave" }, {
-	callback = function()
-		local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo.buftype)
-		local filetype = vim.tbl_contains({
-			"calendar",
-			"Outline",
-			"git",
-			"dapui_scopes",
-			"dapui_breakpoints",
-			"dapui_stacks",
-			"dapui_watches",
-			"NeogitStatus",
-			"octo",
-			"toggleterm",
-		}, vim.bo.filetype)
-		if buftype or filetype then
-			vim.opt_local.number = false
-			vim.opt_local.relativenumber = false
-			vim.opt_local.cursorcolumn = false
-			vim.opt_local.colorcolumn = "0"
-		end
-	end,
-	group = group,
+    callback = function()
+        local buftype = vim.tbl_contains(
+            { "prompt", "nofile", "help", "quickfix" },
+            vim.bo.buftype
+        )
+        local filetype = vim.tbl_contains({
+            "calendar",
+            "Outline",
+            "git",
+            "dapui_scopes",
+            "dapui_breakpoints",
+            "dapui_stacks",
+            "dapui_watches",
+            "NeogitStatus",
+            "octo",
+            "toggleterm",
+        }, vim.bo.filetype)
+        if buftype or filetype then
+            vim.opt_local.number = false
+            vim.opt_local.relativenumber = false
+            vim.opt_local.cursorcolumn = false
+            vim.opt_local.colorcolumn = "0"
+        end
+    end,
+    group = group,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = {
-		"c",
-		"cpp",
-		"dart",
-		"haskell",
-		"objc",
-		"objcpp",
-		"ruby",
-	},
-	command = "setlocal ts=2 sw=2",
-	group = group,
+    pattern = {
+        "c",
+        "cpp",
+        "dart",
+        "haskell",
+        "objc",
+        "objcpp",
+        "ruby",
+    },
+    command = "setlocal ts=2 sw=2",
+    group = group,
 })
+local status_ok, Snacks = pcall(require, "snacks")
+if status_ok then
+    vim.api.nvim_create_autocmd("User", {
+        pattern = "OilActionsPost",
+        callback = function(event)
+            if event.data.actions[1].type == "move" then
+                Snacks.rename.on_rename_file(
+                    event.data.actions[1].src_url,
+                    event.data.actions[1].dest_url
+                )
+            end
+        end,
+    })
+end
