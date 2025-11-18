@@ -130,10 +130,10 @@ local check_backspace = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0
         and vim.api
-                .nvim_buf_get_lines(0, line - 1, line, true)[1]
-                :sub(col, col)
-                :match("%s")
-            == nil
+        .nvim_buf_get_lines(0, line - 1, line, true)[1]
+        :sub(col, col)
+        :match("%s")
+        == nil
 end
 
 blink.setup({
@@ -736,7 +736,39 @@ local servers = {
     ),
     nil_ls = M.default_config("nix"),
     -- omnisharp = M.default_config({"cs", "vb"}),
-    pyright = M.default_config("python"),
+    basedpyright = {
+        cmd = "basedpyright",
+        filetypes = { "python" },
+        root_markers = {
+            "pyproject.toml",
+            "setup.py",
+            "setup.cfg",
+            "requirements.txt",
+            "Pipfile",
+            "pyrightconfig.json",
+        },
+        settings = {
+            python = {
+                analysis = {
+                    autoSearchPaths = true,
+                    useLibraryCodeForTypes = true,
+                },
+            },
+        },
+        on_attach = function(client, bufnr)
+            M.on_attach(client, bufnr)
+            M.omni(client, bufnr)
+            M.tag(client, bufnr)
+            M.document_highlight(client, bufnr)
+            navic.attach(client, bufnr)
+        end,
+        capabilities = capabilities,
+        disable_commands = false, -- prevent the plugin from creating Vim commands
+        debug = false,            -- enable debug logging for commands
+        go_to_source_definition = {
+            fallback = true,      -- fall back to standard LSP definition on failure
+        },
+    },
     -- rust_analyzer = { configured below servers },
     sqlls = M.default_config({ "sql", "mysql" }),
     stylelint_lsp = M.without_winbar_config({
@@ -765,9 +797,9 @@ local servers = {
         end,
         capabilities = capabilities,
         disable_commands = false, -- prevent the plugin from creating Vim commands
-        debug = false, -- enable debug logging for commands
+        debug = false,            -- enable debug logging for commands
         go_to_source_definition = {
-            fallback = true, -- fall back to standard LSP definition on failure
+            fallback = true,      -- fall back to standard LSP definition on failure
         },
         root_markers = { ".git", "package.json" },
         settings = {
@@ -806,12 +838,12 @@ local servers = {
 local function start_server_java()
     local jdtls_launcher = vim.fn.glob(
         global.mason_path
-            .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
+        .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
     )
     local jdtls_bundles = {
         vim.fn.glob(
             global.mason_path
-                .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
+            .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
             1
         ),
     }
@@ -820,7 +852,7 @@ local function start_server_java()
         vim.split(
             vim.fn.glob(
                 global.mason_path
-                    .. "/packages/java-test/extension/server/*.jar",
+                .. "/packages/java-test/extension/server/*.jar",
                 1
             ),
             "\n"
