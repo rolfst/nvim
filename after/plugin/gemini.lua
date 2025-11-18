@@ -42,9 +42,9 @@ vim.keymap.set(
 )
 vim.keymap.set(
     "n",
-    "<leader>ac",
+    "<leader>aw",
     gemini.clear_context,
-    { desc = "[A]i [C]lear Context" }
+    { desc = "[A]i [w]ipe [C]ontext" }
 )
 vim.keymap.set(
     "n",

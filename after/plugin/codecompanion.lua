@@ -1,5 +1,6 @@
 local codecompanion_status_ok, cc = pcall(require, "codecompanion")
 if not codecompanion_status_ok then
+    print("no codecompanion")
     return
 end
 -- local vc_status_ok, vc = pcall(require, "vectorcode")
@@ -110,20 +111,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 },
             },
             -- Set up keymaps for CodeCompanion. You can customize these as you wish.
-            keys = {
-                -- Open the chat window in a vertical split
-                {
-                    "<leader>ac",
-                    "<cmd>CodeCompanionChat<CR>",
-                    desc = "Open CodeCompanion Chat",
-                },
-                -- Run an inline assistant command on the current line or selection
-                {
-                    "<leader>ai",
-                    "<cmd>CodeCompanionInline<CR>",
-                    desc = "Inline Assistant",
-                },
-            },
             sources = {
                 per_filetype = {
                     codecompanion = { "codecompanion" },
@@ -146,3 +133,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
         })
     end,
 })
+
+-- Open the chat window in a vertical split
+vim.keymap.set(
+    "n",
+    "<leader>ac",
+    "<cmd>CodeCompanionChat<CR>",
+    { desc = "[A]i [C]hat" }
+)
+-- Run an inline assistant command on the current line or selection
+vim.keymap.set(
+    "n",
+    "<leader>ai",
+    "<cmd>CodeCompanionInline<CR>",
+    { desc = "[A]i [I]nline Assistant" }
+)
