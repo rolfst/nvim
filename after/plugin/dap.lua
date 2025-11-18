@@ -289,6 +289,18 @@ for i, ext in ipairs(exts) do
         },
         {
             type = "pwa-node",
+            request = "launch",
+            name = "Launch Test Current File (pwa-node with node testrunner)",
+            cwd = vim.fn.getcwd(),
+            program = "node",
+            args = { "--inspect", "--test", "${file}" },
+            autoAttachChildProcesses = true,
+            smartStep = true,
+            console = "integratedTerminal",
+            skipFiles = { "<node_internals>/**", "node_modules/**" },
+        },
+        {
+            type = "pwa-node",
             request = "attach",
             name = "Attach to Docker",
             cwd = vim.fn.getcwd(),
