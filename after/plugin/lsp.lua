@@ -609,6 +609,27 @@ local servers = {
     --     root_markers = { "angular.json" },
     -- },
     bashls = M.default_config({ "sh", "bash", "zsh", "csh", "ksh" }),
+    biome = {
+        cmd = "biome",
+        filetypes = {
+            "markdown",
+            "typescript",
+            "javascript",
+            "javascriptreact",
+            "typescriptreact",
+            "json",
+            "vue",
+            "css",
+            "scss",
+            "less",
+            "html",
+            "yaml",
+            "markdown",
+            "graphql",
+        },
+        root_markers = { "rome.json", "biome.json", "biome.jsonc" },
+    },
+
     -- clangd = {
     --     flags = {
     --         debounce_text_changes = default_debouce_time,
@@ -748,8 +769,14 @@ local servers = {
             "pyrightconfig.json",
         },
         settings = {
+            basedpyright = {
+                -- Using Ruff's import organizer
+                disableOrganizeImports = true,
+            },
             python = {
                 analysis = {
+                    -- Ignore all files for analysis to exclusively use Ruff for linting
+                    ignore = { "*" },
                     autoSearchPaths = true,
                     useLibraryCodeForTypes = true,
                 },
@@ -769,6 +796,7 @@ local servers = {
             fallback = true,      -- fall back to standard LSP definition on failure
         },
     },
+    ruff = {},
     -- rust_analyzer = { configured below servers },
     sqlls = M.default_config({ "sql", "mysql" }),
     stylelint_lsp = M.without_winbar_config({
@@ -1057,3 +1085,20 @@ lspconfig("lua_ls", {
     root_markers = servers["lua_ls"].root_markers,
 })
 -- }}}
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup(
+        "lsp_attach_disable_ruff_hover",
+        { clear = true }
+    ),
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client == nil then
+            return
+        end
+        if client.name == "ruff" then
+            -- Disable hover in favor of Pyright
+            client.server_capabilities.hoverProvider = false
+        end
+    end,
+    desc = "LSP: Disable hover capability from Ruff",
+})
