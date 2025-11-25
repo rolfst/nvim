@@ -380,6 +380,7 @@ require("lazy").setup({
             "nvim-lua/plenary.nvim",
         },
     },
+    { "OlegGulevskyy/better-ts-errors.nvim" },
     { "onsails/diaglist.nvim" },
     {
         "folke/todo-comments.nvim",
