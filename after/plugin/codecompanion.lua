@@ -89,25 +89,30 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 -- },
             },
             adapters = {
-                gemini = function()
-                    return require("codecompanion.adapters").extend("gemini", {
-                        env = {
-                            api_key = os.getenv("GEMINI_API_KEY"),
-                        },
-                        schema = {
-                            model = {
-                                default = "gemini-2.5-pro",
-                            },
-                        },
-                    })
-                end,
-                copilot = {
-                    -- Optional settings for copilot
-                    accept_keymap = "<Tab>", -- Keymap to accept suggestions
-                    next_keymap = "<C-]>",
-                    prev_keymap = "<C-[>",
-                    dismiss_keymap = "<C-/>",
-                    suggestion_color = "#6CC644", -- Color for suggestions
+                http = {
+                    gemini = function()
+                        return require("codecompanion.adapters").extend(
+                            "gemini",
+                            {
+                                env = {
+                                    api_key = os.getenv("GEMINI_API_KEY"),
+                                },
+                                schema = {
+                                    model = {
+                                        default = "gemini-2.5-pro",
+                                    },
+                                },
+                            }
+                        )
+                    end,
+                    copilot = {
+                        -- Optional settings for copilot
+                        accept_keymap = "<Tab>", -- Keymap to accept suggestions
+                        next_keymap = "<C-]>",
+                        prev_keymap = "<C-[>",
+                        dismiss_keymap = "<C-/>",
+                        suggestion_color = "#6CC644", -- Color for suggestions
+                    },
                 },
             },
             -- Set up keymaps for CodeCompanion. You can customize these as you wish.
