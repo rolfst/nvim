@@ -130,10 +130,10 @@ local check_backspace = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0
         and vim.api
-        .nvim_buf_get_lines(0, line - 1, line, true)[1]
-        :sub(col, col)
-        :match("%s")
-        == nil
+                .nvim_buf_get_lines(0, line - 1, line, true)[1]
+                :sub(col, col)
+                :match("%s")
+            == nil
 end
 
 blink.setup({
@@ -274,7 +274,7 @@ vim.fn.sign_define("DiagnosticSignInfo", {
 local M = {}
 M.on_attach = function(client, bufnr)
     if vim.lsp.inlay_hint then
-        vim.lsp.inlay_hint.enable(true)
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
     end
     local opts = { buffer = bufnr, remap = false }
     local describe = funcs.describe(opts)
@@ -285,14 +285,9 @@ M.on_attach = function(client, bufnr)
         vim.keymap.set("n", keys, func, describe(desc))
     end
 
-    nmap("gd", vim.cmd.LspDefinition, "[g]oto [d]efinition")
     nmap("gD", function()
         vim.lsp.buf.declaration()
     end, "[g]oto [D]eclaration")
-    -- nmap("gt", function()
-    --     vim.lsp.buf.type_definition()
-    -- end, "[g]oto [t]ype definition")
-    -- nmap("gI", vim.cmd.LspImplementation, "[G]oto [I]mplementation")
     -- nmap("dc", function()
     --     vim.diagnostic.open_float()
     -- end, "[d]iagnoti[c]s")
@@ -300,7 +295,6 @@ M.on_attach = function(client, bufnr)
         vim.lsp.buf.code_action()
     end, "[c]ode [a]ction")
     --
-    -- nmap("grn", vim.cmd.LspRename, "[r]e[n]ame")
     --
     nmap("<space>f", vim.cmd.LspFormat, "Format")
     vim.keymap.set("v", "<space>f", function()
@@ -315,7 +309,10 @@ M.on_attach = function(client, bufnr)
         })
     end, describe("range format"))
     nmap("<leader>i", function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+        vim.lsp.inlay_hint.enable(
+            not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }),
+            { bufnr = bufnr }
+        )
     end, "Toggle inlay hints")
     --
     nmap("cL", function()
@@ -325,9 +322,6 @@ M.on_attach = function(client, bufnr)
         vim.lsp.codelens.run()
     end, "[c]ode [l]ens run")
     --
-    -- nmap("K", function()
-    --     vim.lsp.buf.hover()
-    -- end, "Hover documentation")
     vim.keymap.set("i", "<c-k>", function()
         vim.lsp.buf.signature_help()
     end, describe("signature help"))
@@ -458,7 +452,22 @@ null_ls.setup({
         formatting.alejandra,
         formatting.black,
         formatting.codespell.with({ filetypes = { "markdown" } }),
-        -- formatting.biome,
+        -- formatting.biome.with({
+        --     filetypes = {
+        --         "javascriptreact",
+        --         "typescriptreact",
+        --         "javascript",
+        --         "typescript",
+        --     },
+        --     args = {
+        --         "check",
+        --         "--write",
+        --         "--unsafe",
+        --         "--formatter-enabled=true",
+        --         "--assist-enabled=true",
+        --         "--stdin-file-path=$FILENAME",
+        --     },
+        -- }),
         formatting.isort,
         -- formatting.dprint,
         formatting.prettier.with({
@@ -507,7 +516,6 @@ null_ls.setup({
 -- {{{ Lsp setup
 local default_debouce_time = 150
 vim.lsp.config("*", {
-    filetypes = { "codecompanion" },
     root_markers = { ".git" },
 })
 
@@ -518,7 +526,6 @@ M.default_config = function(file_types, settings)
         },
         filetypes = file_types,
         on_attach = function(client, bufnr)
-            -- languages_setup.keymaps(client, bufnr)
             M.on_attach(client, bufnr)
             M.omni(client, bufnr)
             M.tag(client, bufnr)
@@ -531,7 +538,7 @@ M.default_config = function(file_types, settings)
     }
 end
 
-M.without_formatting = function(file_types, settings)
+M.without_formatting = function(file_types, root_markers, settings)
     return {
         flags = {
             debounce_text_changes = default_debouce_time,
@@ -547,6 +554,7 @@ M.without_formatting = function(file_types, settings)
             navic.attach(client, bufnr)
         end,
         capabilities = capabilities,
+        root_markers = (root_markers == nil and {} or root_markers),
         settings = (settings == nil and {} or settings),
     }
 end
@@ -564,20 +572,21 @@ M.without_winbar_config = function(file_types)
     }
 end
 
-M.config_with_command = function(file_types, settings, command)
+M.config_with_command = function(file_types, command, root_pattern, settings)
     return {
         flags = {
             debounce_text_changes = default_debouce_time,
         },
+        root_markers = (root_pattern == nil and {} or root_pattern),
         autostart = true,
         command = command,
         filetypes = file_types,
         on_attach = function(client, bufnr)
-            -- languages_setup.keymaps(client, bufnr)
             M.on_attach(client, bufnr)
             M.omni(client, bufnr)
             M.tag(client, bufnr)
             M.document_highlight(client, bufnr)
+            M.document_formatting(client, bufnr)
             navic.attach(client, bufnr)
         end,
         capabilities = capabilities,
@@ -609,26 +618,22 @@ local servers = {
     --     root_markers = { "angular.json" },
     -- },
     bashls = M.default_config({ "sh", "bash", "zsh", "csh", "ksh" }),
-    biome = {
-        cmd = "biome",
-        filetypes = {
-            "markdown",
-            "typescript",
-            "javascript",
-            "javascriptreact",
-            "typescriptreact",
-            "json",
-            "vue",
-            "css",
-            "scss",
-            "less",
-            "html",
-            "yaml",
-            "markdown",
-            "graphql",
-        },
-        root_markers = { "rome.json", "biome.json", "biome.jsonc" },
-    },
+    biome = M.config_with_command({
+        "markdown",
+        "typescript",
+        "javascript",
+        "javascriptreact",
+        "typescriptreact",
+        "json",
+        "vue",
+        "css",
+        "scss",
+        "less",
+        "html",
+        "yaml",
+        "markdown",
+        "graphql",
+    }, { "biome", "lsp-proxy" }, { "biome.json" }),
 
     -- clangd = {
     --     flags = {
@@ -650,7 +655,10 @@ local servers = {
     -- },
     -- clojure_lsp = M.default_config({ "clojure", "edn" }),
     -- cmake = M.default_config("cmake"),
-    cssls = M.without_formatting({ "css", "scss", "less", "sass" }),
+    cssls = M.without_formatting(
+        { "css", "scss", "less", "sass" },
+        { "eslintrc.json", "eslintrc.js", "eslint.config.mjs" }
+    ),
     -- elixirls = {
     --     cmd = { global.mason_path .. "/bin/elixir-ls" },
     --     flags = {
@@ -677,7 +685,8 @@ local servers = {
         "typescriptreact",
     }),
     -- erlangls = M.default_config("erlang"),
-    eslint = M.without_winbar_config({
+
+    eslint = M.without_formatting({
         "javascript",
         "javascriptreact",
         "javascript.jsx",
@@ -685,7 +694,8 @@ local servers = {
         "typescriptreact",
         "typescript.tsx",
         "vue",
-    }),
+    }, { "eslintrc.json", "eslintrc.js", "eslint.config.mjs" }),
+
     -- gols = {
     --     flags = {
     --         debounce_text_changes = default_debouce_time,
@@ -750,11 +760,7 @@ local servers = {
         },
         workspace = { checkThirdParty = false },
     }),
-    marksman = M.config_with_command(
-        { "markdown", "telekasten" },
-        nil,
-        "marksman"
-    ),
+    marksman = M.config_with_command({ "markdown", "telekasten" }, "marksman"),
     nil_ls = M.default_config("nix"),
     -- omnisharp = M.default_config({"cs", "vb"}),
     basedpyright = {
@@ -791,9 +797,9 @@ local servers = {
         end,
         capabilities = capabilities,
         disable_commands = false, -- prevent the plugin from creating Vim commands
-        debug = false,            -- enable debug logging for commands
+        debug = false, -- enable debug logging for commands
         go_to_source_definition = {
-            fallback = true,      -- fall back to standard LSP definition on failure
+            fallback = true, -- fall back to standard LSP definition on failure
         },
     },
     ruff = {},
@@ -825,9 +831,9 @@ local servers = {
         end,
         capabilities = capabilities,
         disable_commands = false, -- prevent the plugin from creating Vim commands
-        debug = false,            -- enable debug logging for commands
+        debug = false, -- enable debug logging for commands
         go_to_source_definition = {
-            fallback = true,      -- fall back to standard LSP definition on failure
+            fallback = true, -- fall back to standard LSP definition on failure
         },
         root_markers = { ".git", "package.json" },
         settings = {
@@ -857,6 +863,7 @@ local servers = {
         flags = {
             debounce_text_changes = default_debouce_time,
         },
+        cmd = { "typescript-language-server", "--stdio" },
     },
     yamlls = M.without_formatting("yaml"),
 }
@@ -866,12 +873,12 @@ local servers = {
 local function start_server_java()
     local jdtls_launcher = vim.fn.glob(
         global.mason_path
-        .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
+            .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
     )
     local jdtls_bundles = {
         vim.fn.glob(
             global.mason_path
-            .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
+                .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
             1
         ),
     }
@@ -880,7 +887,7 @@ local function start_server_java()
         vim.split(
             vim.fn.glob(
                 global.mason_path
-                .. "/packages/java-test/extension/server/*.jar",
+                    .. "/packages/java-test/extension/server/*.jar",
                 1
             ),
             "\n"
@@ -1066,6 +1073,7 @@ for server_name, server in pairs(servers) do
     end
     if funcs.has_value(servers, server_name) then
         lspconfig(server_name, {
+            cmd = servers[server_name].cmd,
             capabilities = capabilities,
             on_attach = servers[server_name].on_attach,
             settings = servers[server_name].settings,
