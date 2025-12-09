@@ -454,7 +454,7 @@ require("lazy").setup({
             "nvim-telescope/telescope.nvim",
             "renerocksai/calendar-vim",
             "nvim-telescope/telescope-symbols.nvim",
-            -- "nvim-telescope/telescope-media-files.nvim"
+            "nvim-telescope/telescope-media-files.nvim",
         },
     },
     {
