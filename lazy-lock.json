@@ -31,6 +31,7 @@
   "mini.diff": { "branch": "main", "commit": "fbb93ea1728e7c9d0944df8bd022a68402bd2e7e" },
   "mini.move": { "branch": "main", "commit": "4d214202d71e0a4066b6288176bbe88f268f9777" },
   "mini.nvim": { "branch": "main", "commit": "72b0194c56c984476c5975b62eb340fd1aa1686a" },
+  "mini.sessions": { "branch": "main", "commit": "6b69f4cf206ed8560669446a0310937d88e1c871" },
   "neo-minimap": { "branch": "master", "commit": "263edc3ee8964949f8a2877c0e3bf706f9f172ff" },
   "neogen": { "branch": "main", "commit": "d7f9461727751fb07f82011051338a9aba07581d" },
   "neogit": { "branch": "master", "commit": "451e57fa3633c935c4c32c669ad5aa447d3db257" },

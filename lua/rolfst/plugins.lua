@@ -73,7 +73,7 @@ require("lazy").setup({
     { "ThePrimeagen/harpoon" },
     { "rgroli/other.nvim" },
     -- { "mbbill/undotree" },
-    { "XXiaoA/atone.nvim", cmd = "Atone" },
+    { "XXiaoA/atone.nvim",         cmd = "Atone" },
     {
         "neovim/nvim-lspconfig",
     },
@@ -112,7 +112,7 @@ require("lazy").setup({
         version = "1.*",
         build = "cargo build --release",
         dependencies = {
-            { "L3MON4D3/LuaSnip", version = "v2.*" },
+            { "L3MON4D3/LuaSnip",            version = "v2.*" },
             { "rafamadriz/friendly-snippets" },
         },
         sources = {
@@ -204,13 +204,12 @@ require("lazy").setup({
         },
         cmd = "CtrlSpace",
     },
-    { "echasnovski/mini.nvim", version = false },
-    { "echasnovski/mini.move", version = false },
-    { "echasnovski/mini.ai", version = false },
-    { "echasnovski/mini.diff", version = false },
-    {
-        "HakonHarnes/img-clip.nvim",
-    },
+    { "echasnovski/mini.nvim",     version = false },
+    { "echasnovski/mini.move",     version = false },
+    { "echasnovski/mini.ai",       version = false },
+    { "echasnovski/mini.diff",     version = false },
+    { "echasnovski/mini.sessions", version = false },
+    { "HakonHarnes/img-clip.nvim" },
 
     {
         "Dkendal/nvim-treeclimber",
@@ -264,7 +263,7 @@ require("lazy").setup({
     { "ziontee113/neo-minimap" },
     -- DAP plugins
     { "mfussenegger/nvim-dap" },
-    { "rolfst/nvim-dap-vscode-js", lazy = true },
+    { "rolfst/nvim-dap-vscode-js",         lazy = true },
     -- {
     --     "microsoft/vscode-js-debug",
     --     build = "npm install --legacy-peer-deps --ignore-scripts --production && npx gulp vsDebugServerBundle && mv dist out && ln -s "
@@ -343,7 +342,7 @@ require("lazy").setup({
     {
         "mrcjkb/rustaceanvim",
         version = "^6", -- Recommended
-        lazy = false, -- This plugin is already lazy
+        lazy = false,   -- This plugin is already lazy
     },
     {
         "mrcjkb/haskell-tools.nvim",
@@ -419,7 +418,7 @@ require("lazy").setup({
     {
         "saxon1964/neovim-tips",
         version = "*", -- Only update on tagged releases
-        lazy = true, -- Load only when keybinds are triggered
+        lazy = true,   -- Load only when keybinds are triggered
         dependencies = {
             "MunifTanjim/nui.nvim",
             -- OPTIONAL: Choose your preferred markdown renderer (or omit for raw markdown)
@@ -436,15 +435,15 @@ require("lazy").setup({
             bookmark_symbol = "🌟 ",
         },
         keys = {
-            { "<leader>nto", ":NeovimTips<CR>", desc = "Neovim tips" },
+            { "<leader>nto", ":NeovimTips<CR>",     desc = "Neovim tips" },
             {
                 "<leader>ntr",
                 ":NeovimTipsRandom<CR>",
                 desc = "Show random tip",
             },
             { "<leader>nte", ":NeovimTipsEdit<CR>", desc = "Edit your tips" },
-            { "<leader>nta", ":NeovimTipsAdd<CR>", desc = "Add your tip" },
-            { "<leader>ntp", ":NeovimTipsPdf<CR>", desc = "Open tips PDF" },
+            { "<leader>nta", ":NeovimTipsAdd<CR>",  desc = "Add your tip" },
+            { "<leader>ntp", ":NeovimTipsPdf<CR>",  desc = "Open tips PDF" },
         },
     },
     { "sotte/presenting.vim" },

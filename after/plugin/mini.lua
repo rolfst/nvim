@@ -13,3 +13,13 @@ if mini_diff_ok then
         source = mini_diff.gen_source.none(),
     })
 end
+local mini_session_ok, mini_session = pcall(require, "mini.sessions")
+if mini_session_ok then
+    mini_session.setup({ autoread = true })
+    vim.keymap.set("n", "<leader>ps", function()
+        mini_session.write(vim.fn.fnamemodify(vim.loop.cwd(), ":t"))
+    end, { desc = "Session save" })
+    vim.keymap.set("n", "<leader>pd", function()
+        mini_session.delete(nil, { force = true })
+    end, { desc = "Session delete" })
+end
