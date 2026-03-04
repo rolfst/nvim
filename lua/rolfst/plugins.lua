@@ -109,6 +109,7 @@ require("lazy").setup({
     { "rafamadriz/friendly-snippets" },
     {
         "saghen/blink.cmp",
+        version = "1.*",
         dependencies = {
             { "L3MON4D3/LuaSnip",            version = "v2.*" },
             { "rafamadriz/friendly-snippets" },
