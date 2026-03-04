@@ -109,14 +109,16 @@ require("lazy").setup({
     { "rafamadriz/friendly-snippets" },
     {
         "saghen/blink.cmp",
-        version = "1.*",
-        build = "cargo build --release",
         dependencies = {
             { "L3MON4D3/LuaSnip",            version = "v2.*" },
             { "rafamadriz/friendly-snippets" },
         },
         sources = {
             default = { "luasnip", "lsp", "path", "buffer" },
+        },
+        fuzzy = { implementation = "prefer_rust_with_warning" },
+        prebuilt_binaries = {
+            download = true,
         },
     },
     {
