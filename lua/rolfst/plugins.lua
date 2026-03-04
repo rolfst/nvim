@@ -119,6 +119,7 @@ require("lazy").setup({
         fuzzy = { implementation = "prefer_rust_with_warning" },
         prebuilt_binaries = {
             download = true,
+            ignore_version_mismatch = true,
         },
     },
     {
