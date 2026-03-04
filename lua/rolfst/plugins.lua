@@ -160,17 +160,27 @@ require("lazy").setup({
         dependencies = { "nvim-lua/plenary.nvim" },
     },
     { "flyingshutter/gemini-autocomplete.nvim", opts = {} },
+    -- {
+    --     "olimorris/codecompanion.nvim",
+    --     lazy = true,
+    --     dependencies = {
+    --         "nvim-lua/plenary.nvim",
+    --         "nvim-treesitter/nvim-treesitter",
+    --         "ravitemer/mcphub.nvim",
+    --         {
+    --             "echasnovski/mini.diff",
+    --         },
+    --         "HakonHarnes/img-clip.nvim",
+    --     },
+    -- },
     {
-        "olimorris/codecompanion.nvim",
-        lazy = true,
+        "nickjvandyke/opencode.nvim",
+        version = "*",
         dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
-            "ravitemer/mcphub.nvim",
             {
-                "echasnovski/mini.diff",
+                "folke/snacks.nvim",
+                optional = true,
             },
-            "HakonHarnes/img-clip.nvim",
         },
     },
     -- { "zbirenbaum/copilot.lua" },

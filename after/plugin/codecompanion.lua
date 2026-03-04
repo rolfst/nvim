@@ -1,6 +1,5 @@
 local codecompanion_status_ok, cc = pcall(require, "codecompanion")
 if not codecompanion_status_ok then
-    print("no codecompanion")
     return
 end
 -- local vc_status_ok, vc = pcall(require, "vectorcode")
