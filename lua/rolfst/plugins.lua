@@ -51,7 +51,7 @@ require("lazy").setup({
         build = ":TSUpdate",
         -- dependencies = { "mrjones2014/nvim-ts-rainbow" },
     },
-    { "nvim-treesitter/playground" },
+    -- { "nvim-treesitter/playground" },
 
     {
         "TimUntersberger/neogit",
@@ -73,7 +73,7 @@ require("lazy").setup({
     { "ThePrimeagen/harpoon" },
     { "rgroli/other.nvim" },
     -- { "mbbill/undotree" },
-    { "XXiaoA/atone.nvim",         cmd = "Atone" },
+    { "XXiaoA/atone.nvim",      cmd = "Atone" },
     {
         "neovim/nvim-lspconfig",
     },
