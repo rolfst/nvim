@@ -4,6 +4,7 @@ if not snacks_ok then
 end
 snacks.setup({
     opts = {
+        input = {},
         picker = {
             enabled = true,
             actions = {

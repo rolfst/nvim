@@ -8,6 +8,7 @@
   "better-ts-errors.nvim": { "branch": "main", "commit": "d57a7794b271e1a0010d0328e5d3f18e20f1face" },
   "blink.cmp": { "branch": "main", "commit": "4b18c32adef2898f95cdef6192cbd5796c1a332d" },
   "calendar-vim": { "branch": "master", "commit": "a7e73e02c92566bf427b2a1d6a61a8f23542cc21" },
+  "codecompanion.nvim": { "branch": "main", "commit": "f22fe1b04e47110a26abe70bad537cb9baf9c665" },
   "crates.nvim": { "branch": "main", "commit": "ac9fa498a9edb96dc3056724ff69d5f40b898453" },
   "diaglist.nvim": { "branch": "master", "commit": "8aba9fcf62cc60e1d5ce941faedecc399d9a1e8b" },
   "editorconfig.nvim": { "branch": "master", "commit": "67758c3e8a2f79019322a60013e4ce0aad09dafa" },
