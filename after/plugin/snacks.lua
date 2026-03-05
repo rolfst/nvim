@@ -3,29 +3,12 @@ if not snacks_ok then
     return
 end
 snacks.setup({
-    opts = {
-        input = {},
-        picker = {
-            enabled = true,
-            actions = {
-                opencode_send = function(...)
-                    return require("opencode").snacks_picker_send(...)
-                end,
-            },
-            win = {
-                input = {
-                    keys = {
-                        ["<a-a>"] = {
-                            "opencode_send",
-                            mode = { "n", "i" },
-                        },
-                    },
-                },
-            },
-        },
-        zen = { enabled = true },
-    },
+    opts = {},
 
+    input = {
+        enabled = true,
+    },
+    zen = { enabled = true },
     dim = {
         ---@type snacks.scope.Config
         scope = {
@@ -101,6 +84,11 @@ snacks.setup({
         prompt = " ",
         sources = {},
         focus = "input",
+        actions = {
+            opencode_send = function(...)
+                return require("opencode").snacks_picker_send(...)
+            end,
+        },
         layout = {
             cycle = true,
             --- Use the default layout or vertical if the window is too narrow
@@ -196,6 +184,10 @@ snacks.setup({
                     },
                     ["<C-Up>"] = { "history_back", mode = { "i", "n" } },
                     ["<C-c>"] = { "cancel", mode = "i" },
+                    ["<a-a>"] = {
+                        "opencode_send",
+                        mode = { "n", "i" },
+                    },
                     ["<C-w>"] = {
                         "<c-s-w>",
                         mode = { "i" },
