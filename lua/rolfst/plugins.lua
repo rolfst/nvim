@@ -25,7 +25,9 @@ require("lazy").setup({
     -- },
     {
         "ibhagwan/fzf-lua",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
+        dependencies = {
+            "echasnovski/mini.icons",
+        },
         cmd = "FzfLua",
     },
     {
@@ -140,16 +142,16 @@ require("lazy").setup({
             "BufRead",
         },
     },
-    {
-        "ravitemer/mcphub.nvim",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-        },
-        build = "npm install -g mcp-hub@latest", -- Installs `mcp-hub` node binary globally
-        config = function()
-            require("mcphub").setup()
-        end,
-    },
+    -- {
+    --     "ravitemer/mcphub.nvim",
+    --     dependencies = {
+    --         "nvim-lua/plenary.nvim",
+    --     },
+    --     build = "npm install -g mcp-hub@latest", -- Installs `mcp-hub` node binary globally
+    --     config = function()
+    --         require("mcphub").setup()
+    --     end,
+    -- },
     { "HakonHarnes/img-clip.nvim" },
     {
         "Davidyz/VectorCode",
@@ -160,19 +162,19 @@ require("lazy").setup({
         dependencies = { "nvim-lua/plenary.nvim" },
     },
     { "flyingshutter/gemini-autocomplete.nvim", opts = {} },
-    -- {
-    --     "olimorris/codecompanion.nvim",
-    --     lazy = true,
-    --     dependencies = {
-    --         "nvim-lua/plenary.nvim",
-    --         "nvim-treesitter/nvim-treesitter",
-    --         "ravitemer/mcphub.nvim",
-    --         {
-    --             "echasnovski/mini.diff",
-    --         },
-    --         "HakonHarnes/img-clip.nvim",
-    --     },
-    -- },
+    {
+        "olimorris/codecompanion.nvim",
+        lazy = true,
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            -- "ravitemer/mcphub.nvim",
+            {
+                "echasnovski/mini.diff",
+            },
+            "HakonHarnes/img-clip.nvim",
+        },
+    },
     {
         "nickjvandyke/opencode.nvim",
         version = "*",
@@ -219,6 +221,7 @@ require("lazy").setup({
         cmd = "CtrlSpace",
     },
     { "echasnovski/mini.nvim",     version = false },
+    { "echasnovski/mini.icons",    version = false },
     { "echasnovski/mini.move",     version = false },
     { "echasnovski/mini.ai",       version = false },
     { "echasnovski/mini.diff",     version = false },
@@ -426,7 +429,7 @@ require("lazy").setup({
         lazy = false,
     },
     { "folke/which-key.nvim" },
-    { "folke/snacks.nvim" },
+    { "folke/snacks.nvim",       priority = 1000 },
 
     -- tools
     {

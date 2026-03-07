@@ -38,14 +38,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
             -- your configuration comes here
             -- or leave it empty to use the default settings
             extensions = {
-                mcphub = {
-                    callback = "mcphub.extensions.codecompanion",
-                    opts = {
-                        make_vars = true,
-                        make_slash_commands = true,
-                        show_result_in_chat = true,
-                    },
-                },
+                -- mcphub = {
+                --     callback = "mcphub.extensions.codecompanion",
+                --     opts = {
+                --         make_vars = true,
+                --         make_slash_commands = true,
+                --         show_result_in_chat = true,
+                --     },
+                -- },
                 -- vectorcode = {
                 --     ---@type VectorCode.CodeCompanion.ExtensionOpts
                 --     opts = {

@@ -13,6 +13,10 @@ if mini_diff_ok then
         source = mini_diff.gen_source.none(),
     })
 end
+local mini_icons_ok, mini_icons = pcall(require, "mini.icons")
+if mini_icons_ok then
+    mini_icons.setup()
+end
 local mini_session_ok, mini_session = pcall(require, "mini.sessions")
 if mini_session_ok then
     local SaveProject = function()
