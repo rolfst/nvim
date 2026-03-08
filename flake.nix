@@ -30,22 +30,14 @@
           coreutils
           findutils
           gnugrep
-          gnused
-          gawk
           diffutils
           git
           openssh
           curl
-          wget
-          jq
           ripgrep
-          fd
           gnutar
-          gzip
           unzip
           nodejs_24
-          lua5_1
-          luarocks
         ];
 
         # Wrapper that executes the npm-installed OpenCode binary.
@@ -120,6 +112,12 @@
               "GEMINI_API_KEY"
               "GITHUB_TOKEN"
             ];
+            # Enable Exa-powered web search and code search in opencode.
+            # Requires a non-Zen provider. Gives the agent websearch,
+            # codesearch, and webfetch tools for looking up docs and APIs.
+            set = {
+              OPENCODE_ENABLE_EXA = "true";
+            };
           };
         };
       in
