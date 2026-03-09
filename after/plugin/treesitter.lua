@@ -1,33 +1,20 @@
-require("nvim-treesitter.config").setup({
-    -- A list of parser names, or "all"
-    ensure_installed = {
-        "c",
-        "vimdoc",
-        "typescript",
-        "lua",
-        "rust",
-        "python",
-        "javascript",
-        "haskell",
-    },
+local languages = {
+    "c",
+    "vimdoc",
+    "typescript",
+    "lua",
+    "rust",
+    "python",
+    "javascript",
+    "haskell",
+}
 
-    -- Install parsers synchronously (only applied to `ensure_installed`)
-    sync_install = false,
+require("nvim-treesitter").install(languages)
 
-    -- Automatically install missing parsers when entering buffer
-    -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-    auto_install = false,
-
-    highlight = {
-        -- `false` will disable the whole extension
-        enable = true,
-
-        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-        -- Using this option may slow down your editor, and you may see some duplicate highlights.
-        -- Instead of true it can also be a list of languages
-        additional_vim_regex_highlighting = false,
-    },
-    ident = { enable = true },
-    -- rainbow = { enable = true, extended_mode = true, max_file_lines = false },
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = languages,
+    callback = function()
+        vim.treesitter.start()
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end,
 })
