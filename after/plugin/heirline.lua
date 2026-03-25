@@ -580,6 +580,7 @@ local file_icon_name = {
     end,
     hl = { fg = theme_colors.rose },
 }
+-- {{{
 local navic = {
     condition = require("nvim-navic").is_available(),
     static = {
@@ -640,6 +641,7 @@ local navic = {
     hl = { bg = theme_colors.bg, fg = theme_colors.fg_01, bold = true },
     update = "CursorMoved",
 }
+-- }}}
 local terminal_name = {
     provider = function()
         local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
