@@ -9,7 +9,12 @@ local languages = {
     "haskell",
 }
 
-require("nvim-treesitter").install(languages)
+local treesitter = require("nvim-treesitter.configs")
+treesitter.setup({
+    ensure_installed = languages,
+    highlight = { enable = true },
+    additional_vim_regex_highlighting = false,
+})
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = languages,

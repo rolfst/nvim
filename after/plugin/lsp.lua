@@ -8,6 +8,14 @@ function find_git_ancestor(fname)
     )
 end
 
+local function is_bun_project(fname)
+    return vim.fs.root(fname, { "bun.lockb", "bunfig.toml" }) ~= nil
+end
+
+local function has_biome_config(fname)
+    return vim.fs.root(fname, { "biome.json", "biome.jsonc" }) ~= nil
+end
+
 -- {{{ Snippets setup
 local blink_status_ok, blink = pcall(require, "blink.cmp")
 if not blink_status_ok then
@@ -435,13 +443,21 @@ null_ls.setup({
     debug = false,
     sources = {
         require("none-ls.diagnostics.flake8"),
-        require("none-ls.code_actions.eslint"),
+        require("none-ls.code_actions.eslint").with({
+            condition = function(utils)
+                return not utils.root_has_file({ "biome.json", "biome.jsonc" })
+            end,
+        }),
         -- actions.eslint_d,
         actions.gitsigns,
         actions.refactoring,
         diagnostics.cfn_lint,
         -- diagnostics.deadnix,
-        require("none-ls.diagnostics.eslint"),
+        require("none-ls.diagnostics.eslint").with({
+            condition = function(utils)
+                return not utils.root_has_file({ "biome.json", "biome.jsonc" })
+            end,
+        }),
         -- diagnostics.eslint_d,
         diagnostics.selene,
         diagnostics.markdownlint,
@@ -471,6 +487,9 @@ null_ls.setup({
         formatting.isort,
         -- formatting.dprint,
         formatting.prettier.with({
+            condition = function(utils)
+                return not utils.root_has_file({ "biome.json", "biome.jsonc" })
+            end,
             filetypes = {
                 -- "javascript",
                 -- "javascriptreact",
@@ -618,22 +637,36 @@ local servers = {
     --     root_markers = { "angular.json" },
     -- },
     bashls = M.default_config({ "sh", "bash", "zsh", "csh", "ksh" }),
-    biome = M.config_with_command({
-        "markdown",
-        "typescript",
-        "javascript",
-        "javascriptreact",
-        "typescriptreact",
-        "json",
-        "vue",
-        "css",
-        "scss",
-        "less",
-        "html",
-        "yaml",
-        "markdown",
-        "graphql",
-    }, { "biome", "lsp-proxy" }, { "biome.json" }),
+    biome = {
+        filetypes = {
+            "markdown",
+            "typescript",
+            "javascript",
+            "javascriptreact",
+            "typescriptreact",
+            "json",
+            "vue",
+            "css",
+            "scss",
+            "less",
+            "html",
+            "yaml",
+            "graphql",
+        },
+        cmd = { "biome", "lsp-proxy" },
+        root_dir = function(fname)
+            return vim.fs.root(fname, { "biome.json", "biome.jsonc" })
+        end,
+        on_attach = function(client, bufnr)
+            M.on_attach(client, bufnr)
+            M.omni(client, bufnr)
+            M.tag(client, bufnr)
+            M.document_highlight(client, bufnr)
+            M.document_formatting(client, bufnr)
+            navic.attach(client, bufnr)
+        end,
+        capabilities = capabilities,
+    },
 
     -- clangd = {
     --     flags = {
@@ -686,15 +719,42 @@ local servers = {
     }),
     -- erlangls = M.default_config("erlang"),
 
-    eslint = M.without_formatting({
-        "javascript",
-        "javascriptreact",
-        "javascript.jsx",
-        "typescript",
-        "typescriptreact",
-        "typescript.tsx",
-        "vue",
-    }, { "eslintrc.json", "eslintrc.js", "eslint.config.mjs" }),
+    eslint = {
+        filetypes = {
+            "javascript",
+            "javascriptreact",
+            "javascript.jsx",
+            "typescript",
+            "typescriptreact",
+            "typescript.tsx",
+            "vue",
+        },
+        root_dir = function(fname)
+            if has_biome_config(fname) then
+                return nil
+            end
+            return vim.fs.root(fname, {
+                ".eslintrc",
+                ".eslintrc.js",
+                ".eslintrc.cjs",
+                ".eslintrc.yaml",
+                ".eslintrc.yml",
+                ".eslintrc.json",
+                "eslint.config.js",
+                "eslint.config.mjs",
+                "eslint.config.cjs",
+                "package.json",
+            })
+        end,
+        on_attach = function(client, bufnr)
+            M.on_attach(client, bufnr)
+            M.omni(client, bufnr)
+            M.tag(client, bufnr)
+            M.document_highlight(client, bufnr)
+            navic.attach(client, bufnr)
+        end,
+        capabilities = capabilities,
+    },
 
     -- gols = {
     --     flags = {
@@ -815,6 +875,24 @@ local servers = {
     }),
     -- volar = M.default_config("vue"),
     taplo = M.default_config("toml"),
+    bun = {
+        filetypes = {
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+        },
+        on_attach = function(client, bufnr)
+            M.on_attach(client, bufnr)
+            M.omni(client, bufnr)
+            M.tag(client, bufnr)
+            M.document_highlight(client, bufnr)
+            navic.attach(client, bufnr)
+        end,
+        capabilities = capabilities,
+        root_markers = { "bun.lockb", "bunfig.toml" },
+        cmd = { "bun", "lsp" },
+    },
     ts_ls = {
         filetypes = {
             "javascript",
@@ -835,7 +913,15 @@ local servers = {
         go_to_source_definition = {
             fallback = true, -- fall back to standard LSP definition on failure
         },
-        root_markers = { ".git", "package.json" },
+        root_dir = function(fname)
+            if is_bun_project(fname) then
+                return nil
+            end
+            return vim.fs.root(
+                fname,
+                { ".git", "package.json", "tsconfig.json", "jsconfig.json" }
+            )
+        end,
         settings = {
             javascript = {
                 inlayHints = {
@@ -1072,14 +1158,19 @@ for server_name, server in pairs(servers) do
         )
     end
     if funcs.has_value(servers, server_name) then
-        lspconfig(server_name, {
+        local config = {
             cmd = servers[server_name].cmd,
             capabilities = capabilities,
             on_attach = servers[server_name].on_attach,
             settings = servers[server_name].settings,
             flags = servers[server_name].flags,
-            root_markers = servers[server_name].root_markers,
-        })
+        }
+        if servers[server_name].root_dir then
+            config.root_dir = servers[server_name].root_dir
+        else
+            config.root_markers = servers[server_name].root_markers
+        end
+        lspconfig(server_name, config)
     end
     vim.lsp.enable(server_name)
 end
