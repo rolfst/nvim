@@ -8,10 +8,6 @@ function find_git_ancestor(fname)
     )
 end
 
-local function is_bun_project(fname)
-    return vim.fs.root(fname, { "bun.lockb", "bunfig.toml" }) ~= nil
-end
-
 local function has_biome_config(fname)
     return vim.fs.root(fname, { "biome.json", "biome.jsonc" }) ~= nil
 end
@@ -138,10 +134,10 @@ local check_backspace = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0
         and vim.api
-                .nvim_buf_get_lines(0, line - 1, line, true)[1]
-                :sub(col, col)
-                :match("%s")
-            == nil
+        .nvim_buf_get_lines(0, line - 1, line, true)[1]
+        :sub(col, col)
+        :match("%s")
+        == nil
 end
 
 blink.setup({
@@ -293,9 +289,11 @@ M.on_attach = function(client, bufnr)
         vim.keymap.set("n", keys, func, describe(desc))
     end
 
-    nmap("gD", function()
-        vim.lsp.buf.declaration()
-    end, "[g]oto [D]eclaration")
+    nmap("gd", vim.cmd.LspDefinition, "[g]oto [d]efinition")
+    -- nmap("gD", vim.cmd.LspDeclaration, "[g]oto [D]eclaration")
+    -- nmap("gD", function()
+    --     vim.lsp.buf.declaration()
+    -- end, "[g]oto [D]eclaration")
     -- nmap("dc", function()
     --     vim.diagnostic.open_float()
     -- end, "[d]iagnoti[c]s")
@@ -729,6 +727,7 @@ local servers = {
             "typescript.tsx",
             "vue",
         },
+        cmd = { "vscode-eslint-language-server", "--stdio" },
         root_dir = function(fname)
             if has_biome_config(fname) then
                 return nil
@@ -790,10 +789,10 @@ local servers = {
     -- hls = M.default_config({ "haskell", "lhaskell" }),
     -- html = M.without_formatting("html"),
     -- java language server is configured below servers
-    jsonls = M.default_config("json"),
+    jsonls = M.default_config({ "json" }),
     -- kotlin_language_server = M.default_config("kotlin"),
     -- lemminx = M.default_config({ "xml", "xsd", "xsl", "xslt", "svg" }),
-    lua_ls = M.default_config("lua", {
+    lua_ls = M.default_config({ "lua" }, {
         hint = {
             enable = true,
             arrayIndex = "All",
@@ -821,7 +820,7 @@ local servers = {
         workspace = { checkThirdParty = false },
     }),
     marksman = M.config_with_command({ "markdown", "telekasten" }, "marksman"),
-    nil_ls = M.default_config("nix"),
+    nil_ls = M.default_config({ "nix" }),
     -- omnisharp = M.default_config({"cs", "vb"}),
     basedpyright = {
         cmd = "basedpyright",
@@ -857,9 +856,9 @@ local servers = {
         end,
         capabilities = capabilities,
         disable_commands = false, -- prevent the plugin from creating Vim commands
-        debug = false, -- enable debug logging for commands
+        debug = false,            -- enable debug logging for commands
         go_to_source_definition = {
-            fallback = true, -- fall back to standard LSP definition on failure
+            fallback = true,      -- fall back to standard LSP definition on failure
         },
     },
     ruff = {},
@@ -874,7 +873,7 @@ local servers = {
         "sugarss",
     }),
     -- volar = M.default_config("vue"),
-    taplo = M.default_config("toml"),
+    taplo = M.default_config({ "toml" }),
     bun = {
         filetypes = {
             "javascript",
@@ -890,8 +889,8 @@ local servers = {
             navic.attach(client, bufnr)
         end,
         capabilities = capabilities,
-        root_markers = { "bun.lockb", "bunfig.toml" },
-        cmd = { "bun", "lsp" },
+        root_markers = { "bun.lockb", "bun.lock", "bunfig.toml" },
+        cmd = { "bunx", "--bun", "typescript-language-server", "--stdio" },
     },
     ts_ls = {
         filetypes = {
@@ -909,19 +908,11 @@ local servers = {
         end,
         capabilities = capabilities,
         disable_commands = false, -- prevent the plugin from creating Vim commands
-        debug = false, -- enable debug logging for commands
+        debug = false,            -- enable debug logging for commands
         go_to_source_definition = {
-            fallback = true, -- fall back to standard LSP definition on failure
+            fallback = true,      -- fall back to standard LSP definition on failure
         },
-        root_dir = function(fname)
-            if is_bun_project(fname) then
-                return nil
-            end
-            return vim.fs.root(
-                fname,
-                { ".git", "package.json", "tsconfig.json", "jsconfig.json" }
-            )
-        end,
+        root_markers = { ".git", "package.json" },
         settings = {
             javascript = {
                 inlayHints = {
@@ -951,7 +942,7 @@ local servers = {
         },
         cmd = { "typescript-language-server", "--stdio" },
     },
-    yamlls = M.without_formatting("yaml"),
+    yamlls = M.without_formatting({ "yaml" }),
 }
 -- }}}
 
@@ -959,12 +950,12 @@ local servers = {
 local function start_server_java()
     local jdtls_launcher = vim.fn.glob(
         global.mason_path
-            .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
+        .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
     )
     local jdtls_bundles = {
         vim.fn.glob(
             global.mason_path
-                .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
+            .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
             1
         ),
     }
@@ -973,7 +964,7 @@ local function start_server_java()
         vim.split(
             vim.fn.glob(
                 global.mason_path
-                    .. "/packages/java-test/extension/server/*.jar",
+                .. "/packages/java-test/extension/server/*.jar",
                 1
             ),
             "\n"
@@ -1150,6 +1141,13 @@ lspconfig("rust_analyzer", {
 
 -- {{{ Lsp activation
 
+local function has_bun_lock()
+    return vim.fs.find(
+        { "bun.lockb", "bun.lock" },
+        { upward = true, stop = vim.uv.os_homedir() }
+    )[1] ~= nil
+end
+
 for server_name, server in pairs(servers) do
     if not funcs.has_value(servers, server_name) then
         vim.notify(
@@ -1158,21 +1156,33 @@ for server_name, server in pairs(servers) do
         )
     end
     if funcs.has_value(servers, server_name) then
-        local config = {
-            cmd = servers[server_name].cmd,
-            capabilities = capabilities,
-            on_attach = servers[server_name].on_attach,
-            settings = servers[server_name].settings,
-            flags = servers[server_name].flags,
-        }
-        if servers[server_name].root_dir then
-            config.root_dir = servers[server_name].root_dir
-        else
-            config.root_markers = servers[server_name].root_markers
+        local skip = false
+        if server_name == "ts_ls" and has_bun_lock() then
+            skip = true
+        elseif server_name == "bun" and not has_bun_lock() then
+            skip = true
         end
-        lspconfig(server_name, config)
+
+        if not skip then
+            local config = {
+                capabilities = capabilities,
+                on_attach = servers[server_name].on_attach,
+                settings = servers[server_name].settings,
+                flags = servers[server_name].flags,
+                filetypes = servers[server_name].filetypes,
+            }
+            if servers[server_name].cmd then
+                config.cmd = servers[server_name].cmd
+            end
+            if servers[server_name].root_dir then
+                config.root_dir = servers[server_name].root_dir
+            else
+                config.root_markers = servers[server_name].root_markers
+            end
+            lspconfig(server_name, config)
+            vim.lsp.enable(server_name)
+        end
     end
-    vim.lsp.enable(server_name)
 end
 
 lspconfig("lua_ls", {
@@ -1182,6 +1192,7 @@ lspconfig("lua_ls", {
     settings = servers["lua_ls"].settings,
     flags = servers["lua_ls"].flags,
     root_markers = servers["lua_ls"].root_markers,
+    filetypes = servers["lua_ls"].filetypes,
 })
 -- }}}
 vim.api.nvim_create_autocmd("LspAttach", {
