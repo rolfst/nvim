@@ -1,11 +1,1 @@
-vim.cmd("hi clear")
-if vim.fn.exists("syntax_on") then
-    vim.cmd("syntax reset")
-end
-
-vim.g.colors_name = "dark-pastel"
-vim.o.termguicolors = true
-vim.o.background = "dark"
-
-package.loaded["rolfst.dark-pastel"] = nil
-require("rolfst.dark-pastel")
+/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/colors/dark-pastel.lua

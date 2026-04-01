@@ -1,5 +1,1 @@
-local nvim_surround_status_ok, nvim_surround = pcall(require, "nvim-surround")
-if not nvim_surround_status_ok then
-    return
-end
-nvim_surround.setup()
+/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/after/plugin/surround.lua

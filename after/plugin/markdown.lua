@@ -1,5 +1,1 @@
-
-	vim.keymap.set("n", "<S-m>", function()
-		vim.cmd("MarkdownPreviewToggle")
-	end, { noremap = true, silent = true, desc = "MarkdownPreviewToggle" })
-
+/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/after/plugin/markdown.lua

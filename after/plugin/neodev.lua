@@ -1,6 +1,1 @@
-local status_ok, neodev = pcall(require, "neodev")
-if not status_ok then
-    return
-end
-
-neodev.setup()
+/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/after/plugin/neodev.lua

@@ -1,5 +1,1 @@
-local status_ok, fold = pcall(require, "pretty-fold")
-if not status_ok then
-    return
-end
-fold.setup()
+/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/after/plugin/fold.lua

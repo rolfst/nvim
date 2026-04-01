@@ -1,11 +1,1 @@
-local status_ok, atone = pcall(require, "atone")
-if not status_ok then
-    return
-end
-atone.setup()
-vim.keymap.set(
-    "n",
-    "<leader>u",
-    "<cmd>Atone toggle<cr>",
-    { desc = "Undo tree toggle" }
-)
+/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/after/plugin/undotree.lua

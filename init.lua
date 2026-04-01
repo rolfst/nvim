@@ -1,1 +1,1 @@
-require("rolfst")
+/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/init.lua

@@ -1,2 +1,1 @@
-# Your personal Neovim tips
-
+/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/neovim_tips/user_tips.md

@@ -1,3 +1,1 @@
-#! /usr/bin/env zsh
-
-find . -name "*.backup" -exec sh -c 'mv "$1" "${1%.backup}"' _ {} \;
+/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/clean.sh

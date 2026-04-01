@@ -1,1 +1,1 @@
-/nix/store/drssl2hfb19bd9wljsqdaldrj4ilb869-home-manager-files/.config/nvim/after/plugin/dap-js.lua
+/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/after/plugin/dap-js.lua
