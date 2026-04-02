@@ -1,1 +1,9 @@
-/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/after/plugin/treeclimber.lua
+local status_ok, treeclimber = pcall(require, "nvim-treeclimber")
+if not status_ok then
+    print("No treeclimber plugin loaded!")
+    return
+end
+
+treeclimber.setup({
+    highight = true,
+})

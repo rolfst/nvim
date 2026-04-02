@@ -1,1 +1,5 @@
-/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/after/plugin/sad.lua
+local status_ok, sad = pcall(require, "sad")
+if not status_ok then
+    return
+end
+sad.setup({})

@@ -1,1 +1,5 @@
-/nix/store/dfghp40bvgx5frhf73jncp38y2mk59ds-home-manager-files/.config/nvim/after/plugin/pqf.lua
+local pqf_status_ok, pqf = pcall(require, "pqf")
+if not pqf_status_ok then
+    return
+end
+pqf.setup()
