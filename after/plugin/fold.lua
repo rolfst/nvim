@@ -1,1 +1,0 @@
-/nix/store/p3rgy586wlphaxxdd1c2w1rpxx09508y-home-manager-files/.config/nvim/after/plugin/fold.lua
