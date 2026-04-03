@@ -365,6 +365,7 @@ hi("DiffAdd", { bg = "#0d2a0d" })
 hi("DiffChange", { bg = "#2a2a0d" })
 hi("DiffDelete", { bg = "#2a0d0d" })
 hi("DiffText", { bg = "#3a3a0d", bold = true })
+hi("DiffTextAdd", { bg = "#1a3a1a", bold = true })
 
 hi("diffAdded", { fg = c.green })
 hi("diffRemoved", { fg = c.red })
