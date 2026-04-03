@@ -163,22 +163,131 @@ map("n", "<leader>dfh", diff_against_head, "Dif against git HEAD")
 map("n", "<leader>dfr", diff_against_ref, "Dif against git ref")
 map("n", "<leader>dfc", diff_against_clipboard, "Dif against clipboard")
 
-map("n", "<leader>dft", function()
-    local left = vim.fn.input("Left path: ", vim.fn.getcwd() .. "/", "file")
-    if left == "" then
+-- ── Snacks picker-based DiffTool path selection ─────────────────
+local function pick_difftool_paths()
+    local snacks_ok, Snacks = pcall(require, "snacks")
+    if not snacks_ok then
+        vim.notify("snacks.nvim not available", vim.log.levels.WARN)
         return
     end
-    local right = vim.fn.input("Right path: ", vim.fn.getcwd() .. "/", "file")
-    if right == "" then
-        return
+
+    local explorer_confirm = require("snacks.explorer.actions").actions.confirm
+    local state = { left = nil, right = nil }
+
+    local function short(path)
+        return path and vim.fn.fnamemodify(path, ":~:.") or "…"
     end
-    vim.cmd(
-        "DiffTool "
-        .. vim.fn.fnameescape(left)
-        .. " "
-        .. vim.fn.fnameescape(right)
-    )
-end, "Dif tool: compare paths")
+
+    local function refresh_title(picker)
+        picker.title = "L: " .. short(state.left) .. "  R: " .. short(state.right)
+        picker:update_titles()
+    end
+
+    Snacks.picker.explorer({
+        title = "L: …  R: …",
+        tree = true,
+        hidden = true,
+        follow_file = false,
+        layout = {
+            hidden = { "preview" },
+            layout = {
+                box = "vertical",
+                border = true,
+                title = "{title}",
+                title_pos = "center",
+                footer = {
+                    { " C-l ", "SnacksPickerInputKey" },
+                    { " left ", "SnacksPickerInputBorder" },
+                    { " C-r ", "SnacksPickerInputKey" },
+                    { " right ", "SnacksPickerInputBorder" },
+                    { " S-CR ", "SnacksPickerInputKey" },
+                    { " diff ", "SnacksPickerInputBorder" },
+                    { " CR ", "SnacksPickerInputKey" },
+                    { " expand ", "SnacksPickerInputBorder" },
+                },
+                footer_pos = "center",
+                width = 0.4,
+                min_width = 60,
+                height = 0.6,
+                { win = "input", height = 1, border = "bottom" },
+                { win = "list", border = "none" },
+            },
+        },
+        actions = {
+            confirm = function(picker, item, action)
+                if not item then
+                    return
+                end
+                if item.dir then
+                    explorer_confirm(picker, item, action)
+                end
+            end,
+            set_left = function(picker, item)
+                if not item or not item.file then
+                    return
+                end
+                state.left = item.file
+                refresh_title(picker)
+            end,
+            set_right = function(picker, item)
+                if not item or not item.file then
+                    return
+                end
+                state.right = item.file
+                refresh_title(picker)
+            end,
+            run_diff = function(picker)
+                if not state.left or not state.right then
+                    vim.notify(
+                        "Select both paths first (l=left, r=right)",
+                        vim.log.levels.WARN
+                    )
+                    return
+                end
+                picker:close()
+                vim.schedule(function()
+                    vim.cmd(
+                        "DiffTool "
+                        .. vim.fn.fnameescape(state.left)
+                        .. " "
+                        .. vim.fn.fnameescape(state.right)
+                    )
+                end)
+            end,
+        },
+        win = {
+            input = {
+                keys = {
+                    ["<C-l>"] = { "set_left", mode = { "n", "i" }, desc = "set left path" },
+                    ["<C-r>"] = { "set_right", mode = { "n", "i" }, desc = "set right path" },
+                    ["<CR>"] = { "run_diff", mode = { "n", "i" }, desc = "run DiffTool" },
+                },
+            },
+            list = {
+                keys = {
+                    ["<C-l>"] = { "set_left", mode = { "n" }, desc = "set left path" },
+                    ["<C-r>"] = { "set_right", mode = { "n" }, desc = "set right path" },
+                    ["<CR>"] = { "confirm", mode = { "n" }, desc = "expand dir" },
+                    ["<S-CR>"] = { "run_diff", mode = { "n" }, desc = "run DiffTool" },
+                    ["a"] = false,
+                    ["d"] = false,
+                    ["r"] = false,
+                    ["c"] = false,
+                    ["m"] = false,
+                    ["o"] = false,
+                    ["p"] = false,
+                    ["y"] = false,
+                    ["u"] = false,
+                    ["<c-c>"] = false,
+                    ["<c-t>"] = false,
+                    ["<leader>/"] = false,
+                },
+            },
+        },
+    })
+end
+
+map("n", "<leader>dft", pick_difftool_paths, "Dif tool: compare paths")
 
 map(
     "v",
