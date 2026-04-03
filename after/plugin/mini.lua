@@ -9,8 +9,15 @@ end
 local mini_diff_ok, mini_diff = pcall(require, "mini.diff")
 if mini_diff_ok then
     mini_diff.setup({
-        -- Disabled by default
-        source = mini_diff.gen_source.none(),
+        source = mini_diff.gen_source.save(),
+        view = {
+            style = "number",
+        },
+        mappings = {
+            apply = "gh",
+            reset = "gH",
+            textobject = "gh",
+        },
     })
 end
 local mini_icons_ok, mini_icons = pcall(require, "mini.icons")
