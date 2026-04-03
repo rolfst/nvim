@@ -74,8 +74,6 @@ require("lazy").setup({
     { "akinsho/toggleterm.nvim" },
     { "ThePrimeagen/harpoon" },
     { "rgroli/other.nvim" },
-    -- { "mbbill/undotree" },
-    { "XXiaoA/atone.nvim",      cmd = "Atone" },
     {
         "neovim/nvim-lspconfig",
     },

@@ -39,7 +39,7 @@ provides. Plugins are installed using [Lazy](https://github.com/folke/lazy.nvim)
     lewis6991/gitsigns.nvim
     akinsho/toggleterm.nvim
     ThePrimeagen/harpoon
-    mbbill/undotree
+    nvim.undotree (native, Neovim 0.12+)
     danymat/neogen
     tpope/vim-repeat
     folke/trouble.nvim
