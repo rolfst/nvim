@@ -1,5 +1,4 @@
 local languages = {
-    "c",
     "vimdoc",
     "typescript",
     "lua",
@@ -7,14 +6,17 @@ local languages = {
     "python",
     "javascript",
     "haskell",
+    "markdown",
 }
 
-local treesitter = require("nvim-treesitter.configs")
-treesitter.setup({
-    ensure_installed = languages,
-    highlight = { enable = true },
-    additional_vim_regex_highlighting = false,
-})
+local installed = require("nvim-treesitter.config").get_installed()
+local missing = vim.tbl_filter(function(lang)
+    return not vim.tbl_contains(installed, lang)
+end, languages)
+
+if #missing > 0 then
+    require("nvim-treesitter.install").install(missing)
+end
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = languages,

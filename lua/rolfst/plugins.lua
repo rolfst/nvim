@@ -50,7 +50,7 @@ require("lazy").setup({
     },
     {
         "nvim-treesitter/nvim-treesitter",
-        branch = "master",
+        branch = "main",
         build = ":TSUpdate",
         -- dependencies = { "mrjones2014/nvim-ts-rainbow" },
     },
