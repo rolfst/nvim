@@ -824,7 +824,7 @@ local servers = {
         },
         workspace = { checkThirdParty = false },
     }),
-    marksman = M.config_with_command({ "markdown", "telekasten" }, "marksman"),
+    markdown_oxide = M.config_with_command({ "markdown", "telekasten" }, "markdown-oxide"),
     nil_ls = M.default_config({ "nix" }),
     -- omnisharp = M.default_config({"cs", "vb"}),
     basedpyright = {
