@@ -37,6 +37,7 @@ ufo.setup({
 		return { "treesitter", "indent" }
 	end,
 	fold_virt_text_handler = handler,
+	close_fold_kinds_for_ft = { default = {} },
 })
 
 vim.keymap.set("n", "zR", ufo.openAllFolds, { desc = "Open all folds" })
