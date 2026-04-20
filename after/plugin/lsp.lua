@@ -27,7 +27,6 @@ local eslint_config_files = {
 local function has_eslint_config(fname)
     return vim.fs.root(fname, eslint_config_files) ~= nil
 end
-
 -- {{{ Snippets setup
 local blink_status_ok, blink = pcall(require, "blink.cmp")
 if not blink_status_ok then
