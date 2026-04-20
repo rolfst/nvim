@@ -271,23 +271,14 @@ vim.diagnostic.config({
     update_in_insert = true,
     underline = true,
     severity_sort = true,
-})
-
-vim.fn.sign_define("DiagnosticSignError", {
-    text = icons.error,
-    texthl = "DiagnosticError",
-})
-vim.fn.sign_define("DiagnosticSignWarn", {
-    text = icons.warn,
-    texthl = "DiagnosticWarn",
-})
-vim.fn.sign_define("DiagnosticSignHint", {
-    text = icons.hint,
-    texthl = "DiagnosticHint",
-})
-vim.fn.sign_define("DiagnosticSignInfo", {
-    text = icons.info,
-    texthl = "DiagnosticInfo",
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = icons.diagnostic_icons.Error,
+            [vim.diagnostic.severity.WARN] = icons.diagnostic_icons.Warn,
+            [vim.diagnostic.severity.HINT] = icons.diagnostic_icons.Hint,
+            [vim.diagnostic.severity.INFO] = icons.diagnostic_icons.Info,
+        },
+    },
 })
 
 local M = {}
