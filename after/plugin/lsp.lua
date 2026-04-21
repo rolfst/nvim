@@ -867,12 +867,14 @@ local servers = {
     }),
     -- volar = M.default_config("vue"),
     taplo = M.default_config({ "toml" }),
-    bun = {
+    vtsls = {
         filetypes = {
             "javascript",
             "javascriptreact",
+            "javascript.jsx",
             "typescript",
             "typescriptreact",
+            "typescript.tsx",
         },
         on_attach = function(client, bufnr)
             M.on_attach(client, bufnr)
@@ -880,60 +882,58 @@ local servers = {
             M.tag(client, bufnr)
             M.document_highlight(client, bufnr)
             navic.attach(client, bufnr)
+            require("vtsls").on_attach(client, bufnr)
         end,
         capabilities = capabilities,
-        root_markers = { "bun.lockb", "bun.lock", "bunfig.toml" },
-        cmd = { "bunx", "--bun", "typescript-language-server", "--stdio" },
-    },
-    ts_ls = {
-        filetypes = {
-            "javascript",
-            "javascriptreact",
-            "typescript",
-            "typescriptreact",
-        },
-        on_attach = function(client, bufnr)
-            M.on_attach(client, bufnr)
-            M.omni(client, bufnr)
-            M.tag(client, bufnr)
-            M.document_highlight(client, bufnr)
-            navic.attach(client, bufnr)
+        cmd = function()
+            if vim.fn.executable("vtsls") == 1 then
+                return { "vtsls", "--stdio" }
+            elseif has_bun_lock() and vim.fn.executable("bunx") == 1 then
+                return { "bunx", "--bun", "typescript-language-server", "--stdio" }
+            else
+                return { "typescript-language-server", "--stdio" }
+            end
         end,
-        capabilities = capabilities,
-        disable_commands = false, -- prevent the plugin from creating Vim commands
-        debug = false,            -- enable debug logging for commands
-        go_to_source_definition = {
-            fallback = true,      -- fall back to standard LSP definition on failure
-        },
-        root_markers = { ".git", "package.json" },
+        root_markers = { "tsconfig.json", "package.json", "jsconfig.json", ".git" },
         settings = {
-            javascript = {
-                inlayHints = {
-                    includeInlayEnumMemberValueHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayfunctionParameterTypeHints = true,
-                    includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all',
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                    includeInlayPropertyDeclarationtypeHints = true,
-                    includeInlayVariableTypeHints = true,
+            complete_function_calls = true,
+            vtsls = {
+                enableMoveToFileCodeAction = true,
+                autoUseWorkspaceTsdk = true,
+                experimental = {
+                    completion = {
+                        enableServerSideFuzzyMatch = true,
+                    },
                 },
             },
             typescript = {
+                updateImportsOnFileMove = { enabled = "always" },
+                suggest = { completeFunctionCalls = true },
                 inlayHints = {
-                    includeInlayEnumMemberValueHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayfunctionParameterTypeHints = true,
-                    includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all',
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                    includeInlayPropertyDeclarationtypeHints = true,
-                    includeInlayVariableTypeHints = true,
+                    enumMemberValues = { enabled = true },
+                    functionLikeReturnTypes = { enabled = true },
+                    parameterNames = { enabled = "all" },
+                    parameterTypes = { enabled = true },
+                    propertyDeclarationTypes = { enabled = true },
+                    variableTypes = { enabled = false },
+                },
+            },
+            javascript = {
+                updateImportsOnFileMove = { enabled = "always" },
+                suggest = { completeFunctionCalls = true },
+                inlayHints = {
+                    enumMemberValues = { enabled = true },
+                    functionLikeReturnTypes = { enabled = true },
+                    parameterNames = { enabled = "literals" },
+                    parameterTypes = { enabled = true },
+                    propertyDeclarationTypes = { enabled = true },
+                    variableTypes = { enabled = false },
                 },
             },
         },
         flags = {
             debounce_text_changes = default_debouce_time,
         },
-        cmd = { "typescript-language-server", "--stdio" },
     },
     yamlls = M.without_formatting({ "yaml" }),
 }

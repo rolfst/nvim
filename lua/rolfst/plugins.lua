@@ -375,17 +375,9 @@ require("lazy").setup({
     },
     { "mfussenegger/nvim-jdtls" },
 
+
     {
-        "jose-elias-alvarez/typescript.nvim",
-        ft = {
-            "javascript",
-            "javascriptreact",
-            "typescript",
-            "typescriptreact",
-        },
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-        },
+        "yioneko/nvim-vtsls",
     },
     { "OlegGulevskyy/better-ts-errors.nvim" },
     { "onsails/diaglist.nvim" },
