@@ -75,8 +75,8 @@ vim.api.nvim_create_autocmd("BufReadPost", {
         local attempts = 0
         local function try_close()
             attempts = attempts + 1
-            local info = require("ufo.main").inspectBuf(bufnr)
-            if info then
+            local ok_inspect, info = pcall(require("ufo.main").inspectBuf, bufnr)
+            if ok_inspect and info then
                 vim.api.nvim_buf_call(bufnr, function()
                     ufo.closeAllFolds()
                 end)

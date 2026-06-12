@@ -619,6 +619,13 @@ M.config_with_command = function(file_types, command, root_pattern, settings)
     }
 end
 
+local function has_bun_lock()
+    return vim.fs.find(
+        { "bun.lockb", "bun.lock" },
+        { upward = true, stop = vim.uv.os_homedir() }
+    )[1] ~= nil
+end
+
 local servers = {
     -- angularls = {
     --     flags = {
@@ -882,10 +889,10 @@ local servers = {
             M.tag(client, bufnr)
             M.document_highlight(client, bufnr)
             navic.attach(client, bufnr)
-            require("vtsls").on_attach(client, bufnr)
+
         end,
         capabilities = capabilities,
-        cmd = function()
+        cmd = (function()
             if vim.fn.executable("vtsls") == 1 then
                 return { "vtsls", "--stdio" }
             elseif has_bun_lock() and vim.fn.executable("bunx") == 1 then
@@ -893,7 +900,7 @@ local servers = {
             else
                 return { "typescript-language-server", "--stdio" }
             end
-        end,
+        end)(),
         root_markers = { "tsconfig.json", "package.json", "jsconfig.json", ".git" },
         settings = {
             complete_function_calls = true,
@@ -1133,13 +1140,6 @@ lspconfig("rust_analyzer", {
 -- }}}
 
 -- {{{ Lsp activation
-
-local function has_bun_lock()
-    return vim.fs.find(
-        { "bun.lockb", "bun.lock" },
-        { upward = true, stop = vim.uv.os_homedir() }
-    )[1] ~= nil
-end
 
 for server_name, server in pairs(servers) do
     if not funcs.has_value(servers, server_name) then
